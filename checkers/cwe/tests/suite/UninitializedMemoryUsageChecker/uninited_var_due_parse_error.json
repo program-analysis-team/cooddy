@@ -1,0 +1,7 @@
+{
+  "description": "The variable '' is an uninitialized value.",
+  "kind": "UNINIT.VAR",
+  "allowed_parse_error": true,
+  "allowed_tool_error": true,
+  "positive": false
+}

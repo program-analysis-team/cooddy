@@ -1,0 +1,7 @@
+{
+  "description": "Underrunning array \"arr\" of 10 elements by accessing it with index \"idx - 1\" equal to {*}",
+  "kind": "MEM.BUF.INDEX.BOUNDS",
+  "line": 14,
+  "pos": 12,
+  "positive": true
+}

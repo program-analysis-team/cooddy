@@ -1,0 +1,19 @@
+{
+  "description": "Defaulted operators and ctors are found",
+  "expression": "//FunctionDecl[@IsDefaulted='1']",
+  "file_path": "ClassesAndFunctions.cpp",
+  "matches": [
+    {
+      "line": 14,
+      "column": 5
+    },
+    {
+      "line": 18,
+      "column": 5
+    },
+    {
+      "line": 21,
+      "column": 5
+    }
+  ]
+}

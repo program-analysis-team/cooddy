@@ -1,0 +1,22 @@
+{
+  "description": "Memory size of \"srcBuff\" (equal to 100 bytes) can be less than \"size1 + size2\" (equal to 110). This may lead to a buffer overflow",
+  "kind": "MEM.BUF.SIZE.UNTRUSTED",
+  "line": 9,
+  "pos": 49,
+  "trace": [
+    {
+      "file": "multiple_sources.cpp",
+      "line": 7,
+      "col": 17,
+      "desc": "Memory size source (equal to 100)"
+    },
+    {
+      "file": "multiple_sources.cpp",
+      "line": 9,
+      "col": 49,
+      "desc": "Memory size of \"srcBuff\" (equal to 100 bytes) can be less than \"size1 + size2\" (equal to 110). This may lead to a buffer overflow"
+    }
+  ],
+  "positive": true,
+  "sink_function": "memcpy_s"
+}

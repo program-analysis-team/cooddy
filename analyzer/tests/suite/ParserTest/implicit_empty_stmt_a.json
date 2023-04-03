@@ -1,0 +1,6 @@
+{
+  "description": "Empty statement isn't found because there isn't template instantiation",
+  "expression": "//EmptyStmt",
+  "matches": [
+  ]
+}

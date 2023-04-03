@@ -1,0 +1,27 @@
+{
+  "description": "Class members are found",
+  "expression": "//VarDecl[@IsClassMember='1']",
+  "file_path": "VariablesMembersAndParameters.cpp",
+  "matches": [
+    {
+      "line": 30,
+      "column": 5
+    },
+    {
+      "line": 31,
+      "column": 5
+    },
+    {
+      "line": 45,
+      "column": 5
+    },
+    {
+      "line": 46,
+      "column": 5
+    },
+    {
+      "line": 49,
+      "column": 1
+    }
+  ]
+}

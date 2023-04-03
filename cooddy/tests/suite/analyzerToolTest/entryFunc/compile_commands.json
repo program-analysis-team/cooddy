@@ -1,0 +1,17 @@
+[
+  {
+    "directory": ".",
+    "command": "g++ boo.cpp",
+    "file": "boo.cpp"
+  },
+  {
+    "directory": ".",
+    "command": "g++ foo.cpp",
+    "file": "foo.cpp"
+  },
+  {
+    "directory": ".",
+    "command": "gcc goo.c",
+    "file": "goo.c"
+  }
+]

@@ -1,0 +1,7 @@
+{
+  "description": "Cast from derived to base is not found due to typo in the attribute name but there aren't any core dump(and code coverage is 100%)",
+  "expression": "//[@CastKindWithTypo='DerivedToBase']",
+  "file_path": "derived_to_base_cast.cpp",
+  "matches": []
+}
+

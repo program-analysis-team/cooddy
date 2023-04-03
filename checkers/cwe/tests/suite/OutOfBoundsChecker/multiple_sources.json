@@ -1,0 +1,27 @@
+{
+  "description": "Underrunning array \"buff\" of 20 elements by accessing it with index \"idx\" equal to -1",
+  "kind": "MEM.BUF.INDEX.BOUNDS",
+  "line": 16,
+  "pos": 12,
+  "trace": [
+    {
+      "file": "multiple_sources.cpp",
+      "line": 8,
+      "col": 16,
+      "desc": "Untrusted data source (undefined function: some_func2)"
+    },
+    {
+      "file": "multiple_sources.cpp",
+      "line": 11,
+      "col": 9,
+      "desc": "a > b is false"
+    },
+    {
+      "file": "multiple_sources.cpp",
+      "line": 16,
+      "col": 12,
+      "desc": "Underrunning array \"buff\" of 20 elements by accessing it with index \"idx\" equal to -1"
+    }
+  ],
+  "positive": true
+}

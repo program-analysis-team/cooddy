@@ -1,0 +1,7 @@
+{
+  "description": "Nothing is found due to typo in the HAST-expression. It is required for coverage",
+  "expression": "//FunctionDecl[@FuuuuuuuuuuuuuuuncKind='Function']",
+  "file_path": "ClassesAndFunctions.cpp",
+  "matches": [
+  ]
+}

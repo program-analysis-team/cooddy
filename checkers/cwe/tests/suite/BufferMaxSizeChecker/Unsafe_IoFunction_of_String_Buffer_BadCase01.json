@@ -1,0 +1,9 @@
+{
+  "description": "Memory size of \"cmd\" (equal to 20 bytes) can be less than \"userinput\" (equal to 765407). This may lead to a buffer overflow",
+  "kind": "MEM.BUF.SIZE.UNTRUSTED",
+  "positive": true,
+  "line": 8,
+  "pos": 17,
+  "taint_options": "sup"
+
+}

@@ -1,0 +1,5 @@
+{
+  "description": "Size of the destination buffer 'sizeof(STASH_OP_KEY_S)' can be less than 'sizeof(SRC_STR)' parameter, this may lead to undefined behavior",
+  "kind": "MEM.BUF.SIZE.OVERFLOW",
+  "positive": false
+}

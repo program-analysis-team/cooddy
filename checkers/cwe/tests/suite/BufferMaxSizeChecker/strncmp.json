@@ -1,0 +1,8 @@
+{
+  "description": "Memory size of \"buffer.buff\" (equal to 10 bytes) can be less than \"size\" (equal to 11). This may lead to a buffer overflow",
+  "kind": "MEM.BUF.SIZE.UNTRUSTED",
+  "line": 13,
+  "pos": 39,
+  "positive": true,
+  "sink_function": "strncmp"
+}

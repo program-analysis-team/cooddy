@@ -1,0 +1,11 @@
+{
+  "description": "We are checking HAST 'AND' operator, we are trying to get all ctors but move and copy. We want to ignore explicit ctors, too",
+  "expression": "//CxxCtorDecl[@IsCopy='0' AND @IsMove='0' AND @IsExplicit='0']",
+  "file_path": "HastAndOperator.cpp",
+  "matches": [
+    {
+      "line": 2,
+      "column": 5
+    }
+  ]
+}

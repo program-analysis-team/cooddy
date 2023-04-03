@@ -1,0 +1,8 @@
+{
+  "description": "Size of the destination buffer 'sizeof(dstBuff)' can be less than 'sizeof(srcBuff)' parameter, this may lead to undefined behavior",
+  "kind": "MEM.BUF.SIZE.OVERFLOW",
+  "line": 7,
+  "pos": 49,
+  "positive": true,
+  "sink_function": "memcpy_s"
+}

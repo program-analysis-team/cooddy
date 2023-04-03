@@ -1,0 +1,9 @@
+{
+  "description": "Dynamic cast is found, static cast is ignored",
+  "expression": "//CastExpression[@CastTypeKind='DynamicCast']",
+  "file_path": "distinguish_static_and_dynamic_casts.cpp",
+  "matches": [ {
+    "line": 10,
+    "column": 19
+  }]
+}

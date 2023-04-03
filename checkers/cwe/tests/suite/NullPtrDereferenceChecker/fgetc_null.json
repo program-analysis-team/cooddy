@@ -1,0 +1,8 @@
+{
+  "description": "Null dereference",
+  "kind": "NULL.DEREF",
+  "positive": true,
+  "line": 6,
+  "pos": 22,
+  "sink_function": "fgetc"
+}

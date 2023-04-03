@@ -1,0 +1,8 @@
+{
+  "description": "Dynamic cast is found",
+  "expression": "//CastExpression[@CastTypeKind='DynamicCast']",
+  "matches": [ {
+    "line": 7,
+    "column": 14
+  }]
+}

@@ -1,0 +1,13 @@
+{
+  "description": "Use after free",
+  "file_path": "CWE416_Use_After_Free__malloc_free_int_17.c",
+  "kind": "MEM.USE.FREE",
+  "positive": true,
+  "problems": [
+    {
+      "file_path": "CWE416_Use_After_Free__malloc_free_int_17.c",
+      "line": 46,
+      "pos": 22
+    }
+  ]
+}

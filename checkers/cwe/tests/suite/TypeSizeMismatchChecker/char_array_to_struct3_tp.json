@@ -1,0 +1,8 @@
+{
+  "description": "Found access by wrong offset",
+  "kind": "BOO.TYPESIZE.MISMATCH",
+  "file_path": "char_array_to_struct3_tp.cpp",
+  "positive": true,
+  "line": 16,
+  "pos": 5
+}

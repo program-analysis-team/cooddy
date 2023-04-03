@@ -1,0 +1,11 @@
+{
+  "description": "TypeAliasDecl is found, typedef isn't",
+  "expression": "//TypeAliasDecl",
+  "file_path": "TypesAlias.cpp",
+  "matches": [
+    {
+      "line": 3,
+      "column": 1
+    }
+  ]
+}

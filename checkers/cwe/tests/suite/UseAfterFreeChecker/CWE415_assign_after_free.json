@@ -1,0 +1,6 @@
+{
+  "description": "Double free",
+  "file_path": "CWE415_assign_after_free.c",
+  "kind": "MEM.DOUBLE.FREE",
+  "positive": false
+}

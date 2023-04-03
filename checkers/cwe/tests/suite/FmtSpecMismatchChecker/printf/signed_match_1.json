@@ -1,0 +1,5 @@
+{
+	"description": "Provide a matching list of arguments for printf-style format strings",
+	"kind": "FMT.SPEC.MISMATCH",
+	"positive": false
+}

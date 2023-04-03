@@ -1,0 +1,8 @@
+{
+  "description": "Underrunning array \"arr\" of 1234 elements by accessing it with index \"c\" equal to -1",
+  "kind": "MEM.BUF.INDEX.BOUNDS",
+  "line": 6,
+  "pos": 5,
+  "positive": true,
+  "taint_options": "none"
+}

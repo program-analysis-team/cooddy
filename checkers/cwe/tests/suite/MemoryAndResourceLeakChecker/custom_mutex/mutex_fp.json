@@ -1,0 +1,5 @@
+{
+  "description": "Attempt to unlock resource, with call of incompatible release function.",
+  "kind": "LOCK.FUNC.MISMATCH",
+  "positive": false
+}

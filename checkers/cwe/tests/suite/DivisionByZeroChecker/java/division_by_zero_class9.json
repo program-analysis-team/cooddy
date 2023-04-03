@@ -1,0 +1,8 @@
+{
+  "description": "Division by zero",
+  "kind": "DBZ",
+  "positive": true,
+  "line": 8,
+  "pos": 21,
+  "skipped": true
+}

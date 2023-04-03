@@ -1,0 +1,9 @@
+{
+  "description": "The variable '' is an uninitialized value.",
+  "kind": "UNINIT.VAR",
+  "line": 15,
+  "pos": 5,
+  "positive": true,
+  "skipped": true,
+  "testcase_goal": "Error when using double short pointer and aliasing"
+}

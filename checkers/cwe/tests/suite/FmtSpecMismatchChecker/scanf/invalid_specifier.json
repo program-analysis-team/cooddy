@@ -1,0 +1,7 @@
+{
+	"description": "Invalid format specifier \"%Ld\"",
+	"kind": "FMT.SPEC.MISMATCH",
+	"positive": true,
+	"line": 6,
+	"pos": 18
+}

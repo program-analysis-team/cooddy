@@ -1,0 +1,8 @@
+{
+  "description": "Possible integer overflow or wraparound.",
+  "kind": "INT.OVERFLOW",
+  "positive": true,
+  "line": 10,
+  "pos": 10,
+  "skipped": true
+}

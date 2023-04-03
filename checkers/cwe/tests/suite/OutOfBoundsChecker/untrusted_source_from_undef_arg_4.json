@@ -1,0 +1,7 @@
+{
+  "description": "Underrunning array \"bar->arr\" of 66 elements by accessing it with index \"bar->sz\" equal to -1",
+  "kind": "MEM.BUF.INDEX.BOUNDS",
+  "line": 13,
+  "pos": 5,
+  "positive": true
+}

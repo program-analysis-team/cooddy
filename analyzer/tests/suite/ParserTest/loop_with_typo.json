@@ -1,0 +1,7 @@
+{
+  "description": "Loop isn't found due to typo",
+  "expression": "//LoopStatement[@Kiiiiiiiiiiiiind='For']",
+  "file_path": "LoopsAndRanges.cpp",
+  "matches": [
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "description": "Null dereference",
+  "kind": "NULL.DEREF",
+  "positive": false,
+  "testcase_goal": "Shadowing variable + access through memory address (but with checks or in dead code)"
+}

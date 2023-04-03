@@ -1,0 +1,9 @@
+{
+  "description": "PARAM_VAR_DECL expression as child of FUNCTION_DECL is found",
+  "expression": "//FunctionDecl/ParamVarDecl",
+  "file_path": "param_var_decl.cpp",
+  "matches": [ {
+    "line": 2,
+    "column": 14
+  }]
+}

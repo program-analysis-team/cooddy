@@ -1,0 +1,15 @@
+{
+  "_resultIsEq42": [["Result::40 + 2"]],
+  "_resultIsNe42": [["Condition::!=40 + 2"]],
+  "_emptyCondition": [["Result::"]],
+  "_add": [["Result::$1 + $2 + $3"]],
+  "_sub": [["Result::$1 - $2"]],
+  "_mul": [["Result::$1 * $2"]],
+  "_div": [["Result::$1 / $2"]],
+  "_rem": [["Result::$1 % $2"]],
+  "_setPtrValue": [[], ["Condition::!=0"], ["Result:*:10"], []],
+  "_ite_or": [["Result::ite($1 != 0 || $2 != 0, 100, 10)"], [], []],
+  "_ite_and": [["Result::ite($1 != 0 && $2 != 0, 100, 10)"], [], []],
+  "_priority": [["Result::5 + (2 + 1) * 10 - 30 / 2"]],
+  "_free_symbol_cond": [[], ["Result::ite($0==0, $$, $1)"]]
+}

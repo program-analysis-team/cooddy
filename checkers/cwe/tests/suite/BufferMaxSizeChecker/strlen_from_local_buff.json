@@ -1,0 +1,8 @@
+{
+  "description": "Size of the destination buffer 'sizeof(buff)' can be less than 'strlen(str2) + 2' parameter, this may lead to undefined behavior",
+  "kind": "MEM.BUF.SIZE.OVERFLOW",
+  "line": 15,
+  "pos": 41,
+  "positive": true,
+  "sink_function": "strncat_s"
+}

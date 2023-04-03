@@ -1,0 +1,27 @@
+{
+  "description": "Memory size of \"name\" (equal to 10 bytes) can be less than the 3rd argument (equal to 10). This may lead to a buffer overflow or the null terminator not being written",
+  "kind": "CHAR.BUF.SIZE.OVERFLOW",
+  "positive": true,
+  "line": 11,
+  "pos": 5,
+  "trace": [
+    {
+      "file": "untrusted_propagation_with_names_trace.c",
+      "line": 9,
+      "col": 23,
+      "desc": "Untrusted data source (annotated by macro: foo)"
+    },
+    {
+      "file": "untrusted_propagation_with_names_trace.c",
+      "line": 11,
+      "col": 43,
+      "desc": "Untrusted data propagated from the \"src\" to the result of \"strlen\""
+    },
+    {
+      "file": "untrusted_propagation_with_names_trace.c",
+      "line": 11,
+      "col": 5,
+      "desc": "Memory size of \"name\" (equal to 10 bytes) can be less than the 3rd argument (equal to 10). This may lead to a buffer overflow or the null terminator not being written"
+    }
+  ]
+}

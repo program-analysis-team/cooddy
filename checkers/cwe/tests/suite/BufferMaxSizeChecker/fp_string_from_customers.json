@@ -1,0 +1,5 @@
+{
+  "description": "Size of the destination buffer 'sizeof(iv)' can be less than 'baseIV.size()' parameter, this may lead to undefined behavior",
+  "kind": "MEM.BUF.SIZE.OVERFLOW",
+  "positive": false
+}

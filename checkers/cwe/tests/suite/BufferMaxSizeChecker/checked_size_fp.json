@@ -1,0 +1,5 @@
+{
+  "description": "Size of the destination buffer 'strlen(name)' can be less than 'srcSize' parameter, this may lead to undefined behavior",
+  "kind": "MEM.BUF.SIZE.OVERFLOW",
+  "positive": false
+}

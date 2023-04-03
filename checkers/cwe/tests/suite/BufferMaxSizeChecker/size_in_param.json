@@ -1,0 +1,8 @@
+{
+  "description": "Size of the destination buffer 'sizeof(dstBuff)' can be less than 'size' parameter, this may lead to undefined behavior",
+  "kind": "MEM.BUF.SIZE.OVERFLOW",
+  "line": 8,
+  "pos": 54,
+  "positive": true,
+  "sink_function": "strncat_s"
+}

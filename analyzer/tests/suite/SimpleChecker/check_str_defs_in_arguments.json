@@ -1,0 +1,9 @@
+{
+  "description": "Main declaration",
+  "testcase_directory": "check_str_defs_in_arguments",
+  "kind": "AstParser",
+  "file_path": "check_str_defs_in_arguments/bar.cpp",
+  "positive": true,
+  "line": 3,
+  "pos": 1
+}

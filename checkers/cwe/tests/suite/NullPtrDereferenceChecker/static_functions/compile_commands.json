@@ -1,0 +1,22 @@
+[
+  {
+    "directory": ".",
+    "command": "gcc",
+    "file": "foo.c"
+  },
+  {
+    "directory": ".",
+    "command": "gcc",
+    "file": "get_ptr.c"
+  },
+  {
+    "directory": ".",
+    "command": "gcc",
+    "file": "bar.c"
+  },
+  {
+    "directory": ".",
+    "command": "gcc",
+    "file": "bar1.c"
+  }
+]

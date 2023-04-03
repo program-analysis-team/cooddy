@@ -1,0 +1,7 @@
+{
+  "description": "Overrunning array \"g_FooArray\" of 8 elements by accessing it with index \"id\" equal to 8",
+  "kind": "MEM.BUF.INDEX.BOUNDS",
+  "line": 10,
+  "pos": 12,
+  "positive": true
+}

@@ -1,0 +1,15 @@
+{
+  "description": "Use after free",
+  "kind": "MEM.USE.FREE",
+  "positive": true,
+  "problems": [
+    {
+      "line": 13,
+      "pos": 6
+    },
+    {
+      "line": 12,
+      "pos": 6
+    }
+  ]
+}

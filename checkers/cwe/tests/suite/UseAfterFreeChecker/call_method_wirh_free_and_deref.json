@@ -1,0 +1,5 @@
+{
+  "description": "There is referencing memory below after it has been freed",
+  "kind": "MEM.USE.FREE",
+  "positive": false
+}

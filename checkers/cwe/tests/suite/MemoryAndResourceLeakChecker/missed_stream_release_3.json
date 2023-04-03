@@ -1,0 +1,19 @@
+{
+  "description": "Missing release of descriptor after effective lifetime",
+  "kind": "DESCRIPTOR.LEAK",
+  "positive": true,
+  "problems": [
+    {
+      "line": 38,
+      "pos": 9
+    },
+    {
+      "line": 26,
+      "pos": 9
+    },
+    {
+      "line": 13,
+      "pos": 9
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "description": "Missing resource unlock",
+  "kind": "RESOURCE.LEAK",
+  "line": 13,
+  "pos": 9,
+  "positive": true,
+  "skipped": true
+}

@@ -1,0 +1,5 @@
+{
+	"description": "Expected a non-pointer argument for format specifier \"%d\"",
+	"kind": "FMT.SPEC.MISMATCH",
+	"positive": false
+}

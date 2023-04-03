@@ -1,0 +1,8 @@
+{
+  "description": "Null dereference",
+  "kind": "NULL.DEREF",
+  "positive": true,
+  "line": 18,
+  "pos": 31,
+  "testcase_goal": "Check for NULL, but still dereference the pointer"
+}

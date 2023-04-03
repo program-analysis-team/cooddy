@@ -1,0 +1,20 @@
+{
+  "description": "Static asserts with empty 'Message' attribute are found",
+  "expression": "//StaticAssertDecl[@Message='']",
+  "file_path": "static_assert_fired.cpp",
+  "matches": [
+    {
+      "line": 22,
+      "column": 5
+    },
+    {
+      "line": 27,
+      "column": 5
+    },
+    {
+      "line": 32,
+      "column": 5
+    }
+  ],
+  "allowed_tool_error": true
+}

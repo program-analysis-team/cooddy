@@ -1,0 +1,15 @@
+{
+  "name": "relative_profile",
+  "annotations": ["./relative_profile_anno.json"],
+  "profiles": ["cwe"],
+  "checkers": {
+    "MemoryAndResourceLeakChecker": {
+      "languages" : ["c", "c++"],
+      "inspections" : [
+       {"id": "MEM.LEAK", "severity": "Error", "enabled": true},
+       {"id": "DESCRIPTOR.LEAK", "severity": "Error", "enabled": true},
+       {"id": "RESOURCE.LEAK", "severity": "Error", "enabled": true}
+      ]
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "description": "Conditional expression is found",
+  "expression": "//ConditionalExpression",
+  "matches": [ {
+    "line": 3,
+    "column": 15
+  }]
+}

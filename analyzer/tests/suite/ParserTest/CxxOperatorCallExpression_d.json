@@ -1,0 +1,7 @@
+{
+  "description": "CxxOperatorCallExpression aren't found due to typo",
+  "expression": "//CxxOperatorCallExpression[@Opeeeeeeeeeerator='PlusEqual']",
+  "file_path": "CxxCallOperator.cpp",
+  "matches": [
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "description": "All nodes with empty names are found(It is only anonymous namespace)",
+  "expression": "//[@Name='']",
+  "matches": [
+    {
+      "line": 8,
+      "column": 1
+    }
+  ]
+}

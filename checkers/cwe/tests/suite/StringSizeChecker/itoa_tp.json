@@ -1,0 +1,7 @@
+{
+  "description": "Possible insufficient buffer size to store output string.",
+  "kind": "STR.SIZE",
+  "line": 9,
+  "pos": 15,
+  "positive": true
+}

@@ -1,0 +1,8 @@
+{
+  "description": "The variable 'buf' is an uninitialized value.",
+  "kind": "UNINIT.VAR",
+  "line": 24,
+  "pos": 22,
+  "positive": true,
+  "testcase_goal": "When using a pointer to char and initialized based on return value of function"
+}

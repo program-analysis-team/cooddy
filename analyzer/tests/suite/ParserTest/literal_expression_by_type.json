@@ -1,0 +1,11 @@
+{
+  "description": "Literal expression is found",
+  "expression": "//LiteralExpression[@LiteralType='Double']",
+  "file_path": "literal_expression.cpp",
+  "matches": [
+    {
+      "line": 7,
+      "column": 26
+    }
+  ]
+}

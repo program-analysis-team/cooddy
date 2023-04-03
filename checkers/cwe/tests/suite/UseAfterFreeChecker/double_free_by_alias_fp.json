@@ -1,0 +1,5 @@
+{
+  "description": "Double free",
+  "kind": "MEM.DOUBLE.FREE",
+  "positive": false
+}

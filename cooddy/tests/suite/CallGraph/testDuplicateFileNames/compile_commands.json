@@ -1,0 +1,12 @@
+[
+  {
+    "directory": "./subDir",
+    "command": "g++ -fno-rtti test_sub.cpp",
+    "file": "test_sub.cpp"
+  },
+  {
+    "directory": "./Build/src",
+    "command": "g++ -fno-rtti test_sub.cpp",
+    "file": "../../subDir/test_sub.cpp"
+  }
+]

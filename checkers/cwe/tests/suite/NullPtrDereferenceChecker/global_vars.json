@@ -1,0 +1,7 @@
+{
+  "description": "Null dereference",
+  "kind": "NULL.DEREF",
+  "positive": false,
+  "testcase_directory": "global_vars"
+
+}

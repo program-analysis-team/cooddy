@@ -1,0 +1,6 @@
+{
+  "description": "Missing release of memory after effective lifetime",
+  "kind": "MEM.LEAK",
+  "testcase_goal": "Allocated field of argument. Field returned as z3::ite from call",
+  "positive": false
+}

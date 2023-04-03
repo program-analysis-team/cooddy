@@ -1,0 +1,8 @@
+{
+  "description": "Attempt to return a memory resource to the system, with call of incompatible release function.",
+  "kind": "MEM.FUNC.MISMATCH",
+  "positive": true,
+  "line": 14,
+  "pos": 10,
+  "sink_function": "free"
+}

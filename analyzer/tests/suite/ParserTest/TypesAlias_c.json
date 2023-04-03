@@ -1,0 +1,11 @@
+{
+  "description": "Template TypeAliasDecl is found",
+  "expression": "//TypeAliasDecl",
+  "file_path": "TypesAliasTemplate.cpp",
+  "matches": [
+    {
+      "line": 5,
+      "column": 5
+    }
+  ]
+}

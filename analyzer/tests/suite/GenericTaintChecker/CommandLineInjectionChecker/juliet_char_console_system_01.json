@@ -1,0 +1,7 @@
+{
+	"description": "Possible CLI injection vulnerability.",
+	"kind": "TAINT.STRING.CLI",
+	"line": 49,
+	"pos": 16,
+	"positive": true
+}

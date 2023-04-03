@@ -1,0 +1,7 @@
+{
+  "description": "Missing release of descriptor after effective lifetime",
+  "kind": "DESCRIPTOR.LEAK",
+  "line": 16,
+  "pos": 17,
+  "positive": true
+}

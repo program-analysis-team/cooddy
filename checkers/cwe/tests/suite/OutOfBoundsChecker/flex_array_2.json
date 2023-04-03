@@ -1,0 +1,17 @@
+{
+  "kind": "MEM.BUF.INDEX.BOUNDS",
+  "positive": true,
+  "taint_options": "none",
+  "problems": [
+    {
+      "description": "Overrunning array \"a->buff\" of 6 elements by accessing it with index \"6U\" equal to 6",
+      "line": 13,
+      "pos": 5
+    },
+    {
+      "description": "Overrunning array \"a->buff\" of 2 elements by accessing it with index \"2\" equal to 2",
+      "line": 27,
+      "pos": 5
+    }
+  ]
+}

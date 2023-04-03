@@ -1,0 +1,7 @@
+{
+  "description": "Default case statement in the switch isn't found due to typo",
+  "expression": "//SwitchCaseStatement[@IsDeeeeeeeeeeeefault='1']",
+  "file_path": "SwitchCase.cpp",
+  "matches": [
+  ]
+}

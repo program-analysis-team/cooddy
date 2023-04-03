@@ -1,0 +1,8 @@
+{
+  "description": "The variable 'ptr' is an uninitialized value.",
+  "kind": "UNINIT.VAR",
+  "line": 13,
+  "pos": 33,
+  "positive": true,
+  "testcase_goal": "int variable initialized with function return value using enumeration"
+}

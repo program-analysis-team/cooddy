@@ -1,0 +1,19 @@
+{
+  "description": "MemberExpressions are found",
+  "expression": "//MemberExpression",
+  "file_path": "ClassMembers.cpp",
+  "matches": [
+    {
+      "line": 22,
+      "column": 5
+    },
+    {
+      "line": 29,
+      "column": 12
+    },
+    {
+      "line": 30,
+      "column": 12
+    }
+  ]
+}

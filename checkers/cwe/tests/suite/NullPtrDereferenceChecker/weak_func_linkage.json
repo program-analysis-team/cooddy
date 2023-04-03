@@ -1,0 +1,9 @@
+{
+  "description": "Null dereference",
+  "kind": "NULL.DEREF",
+  "testcase_directory": "weak_func_linkage",
+  "file_path": "weak_func_linkage/bar.c",
+  "line": 14,
+  "pos": 13,
+  "positive": true
+}

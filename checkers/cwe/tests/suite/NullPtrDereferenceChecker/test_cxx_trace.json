@@ -1,0 +1,39 @@
+{
+  "description": "Null dereference",
+  "kind": "NULL.DEREF",
+  "line": 5,
+  "pos": 10,
+  "trace": [
+    {
+      "file": "test_cxx_trace.cpp",
+      "line": 9,
+      "col": 16,
+      "desc": "Null pointer source"
+    },
+    {
+      "desc": "Assume return here",
+      "file": "test_cxx_trace.cpp",
+      "line": 9,
+      "col": 9
+    },
+    {
+      "file": "test_cxx_trace.cpp",
+      "line": 16,
+      "col": 14,
+      "desc": "Null pointer returned as the result"
+    },
+    {
+      "file": "test_cxx_trace.cpp",
+      "line": 17,
+      "col": 20,
+      "desc": "Null pointer passed as the 2nd argument"
+    },
+    {
+      "file": "test_cxx_trace.cpp",
+      "line": 5,
+      "col": 10,
+      "desc": "Null dereference"
+    }
+  ],
+  "positive": true
+}

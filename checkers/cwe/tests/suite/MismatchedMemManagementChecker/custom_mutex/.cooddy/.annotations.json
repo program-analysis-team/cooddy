@@ -1,0 +1,16 @@
+{
+  "my_mutext_lock1": [[], ["LockResource::6"]],
+  "my_mutext_unlock1": [[], ["UnlockResource::6"]],
+  "my_mutext_lock2": [[], ["LockResource::7"]],
+  "my_mutext_unlock2": [[], ["UnlockResource::7"]],
+  "my_open": [[], ["AllocDescriptor::2"]],
+  "my_close": [[], ["FreeDescriptor::2"]],
+  "int_lock1": [[],["LockResource::8"]],
+  "int_unlock1": [[],["UnlockResource::8"]],
+  "int_lock2": [[],["LockResource::9"]],
+  "int_unlock2": [[],["UnlockResource::9"]],
+  "int_alloc1": [[],["AllocSource::8"]],
+  "int_free1": [[],["FreeSink::8"]],
+  "int_alloc2": [[],["AllocSource::9"]],
+  "int_free2": [[],["FreeSink::9"]]
+}

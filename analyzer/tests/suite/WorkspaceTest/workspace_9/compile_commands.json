@@ -1,0 +1,12 @@
+[
+  {
+    "directory": ".",
+    "command": "g++ foo_copy.cpp",
+    "file": "foo_copy.cpp"
+  },
+  {
+    "directory": ".",
+    "command": "g++ boo.cpp",
+    "file": "boo.cpp"
+  }
+]

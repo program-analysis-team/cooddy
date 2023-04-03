@@ -1,0 +1,12 @@
+{
+  "description": "Underrunning array \"buffer\" of 10 elements by accessing it with index \"ret\" equal to -1",
+  "kind": "MEM.BUF.INDEX.BOUNDS",
+  "problems": [
+    {
+      "line": 18,
+      "pos": 5
+    }
+  ],
+  "positive": true,
+  "taint_options": "none"
+}

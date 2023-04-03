@@ -1,0 +1,7 @@
+{
+  "description": "Allocation size is got from untrusted source.",
+  "kind": "MEM.ALLOC.SIZE",
+  "line": 8,
+  "pos": 23,
+  "positive": true
+}

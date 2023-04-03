@@ -1,0 +1,9 @@
+{
+  "description": "Main declaration",
+  "testcase_purpose": "test for field 'compiler_flags' with a few flags",
+  "kind" : "AstParser",
+  "line": 3,
+  "pos": 1,
+  "positive": true,
+  "compiler_flags": "-DFOO -DBAR"
+}

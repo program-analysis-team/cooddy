@@ -1,0 +1,11 @@
+{
+  "description": "EnumDecl is found by name",
+  "expression": "//EnumDecl[@Name='JustEnumClass']",
+  "file_path": "enums.cpp",
+  "matches": [
+    {
+      "line": 6,
+      "column": 1
+    }
+  ]
+}

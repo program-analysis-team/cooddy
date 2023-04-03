@@ -1,0 +1,11 @@
+{
+  "description": "PlusEqual CxxOperatorCallExpression is found. Built-in operators are ignored",
+  "expression": "//CxxOperatorCallExpression[@Operator='PlusEqual']",
+  "file_path": "CxxCallOperator.cpp",
+  "matches": [
+    {
+      "line": 17,
+      "column": 37
+	}
+  ]
+}

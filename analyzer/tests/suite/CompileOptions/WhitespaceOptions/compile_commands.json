@@ -1,0 +1,12 @@
+[
+  {
+    "directory": ".",
+    "command": "g++  -g -fno-rtti -I./\"an include\" -c main.cpp",
+    "file": "main.cpp"
+  },
+  {
+    "directory": ".",
+    "command": "g++   -g   -fno-rtti -D__MY_STRING__=\"\\\"MY STRING\\\"\" -I./\"an include\" -c ./source/func.cpp",
+    "file": "func.cpp"
+  }
+]

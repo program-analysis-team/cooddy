@@ -1,0 +1,15 @@
+{
+  "description": "Overrunning array \"arr1\" of 10 elements by accessing it with index \"idx\" equal to 10",
+  "kind": "MEM.BUF.INDEX.BOUNDS",
+  "positive": true,
+  "problems": [
+    {
+      "line": 9,
+      "pos": 5
+    },
+    {
+      "line": 19,
+      "pos": 5
+    }
+  ]
+}

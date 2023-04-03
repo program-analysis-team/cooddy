@@ -1,0 +1,15 @@
+{
+  "description": "IntLiteralExpression is found",
+  "expression": "//IntLiteralExpression[@SLimitedValue='42']",
+  "file_path": "intliteral.java",
+  "matches": [
+    {
+      "line": 2,
+      "column": 20
+    },
+    {
+      "line": 4,
+      "column": 17
+    }
+  ]
+}

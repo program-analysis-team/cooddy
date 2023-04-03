@@ -1,0 +1,9 @@
+{
+  "description": "The variable '' is an uninitialized value.",
+  "kind": "UNINIT.VAR",
+  "line": 40,
+  "pos": 9,
+  "positive": true,
+  "skipped": true,
+  "testcase_goal": "When using a pointer to volatile structure in a do while loop and bit manipulations"
+}

@@ -1,0 +1,7 @@
+{
+  "description": "Paren expression found",
+  "line": 3,
+  "pos": 14,
+  "kind": "Uncovered",
+  "positive": true
+}

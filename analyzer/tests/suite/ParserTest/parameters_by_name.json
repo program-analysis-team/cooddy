@@ -1,0 +1,11 @@
+{
+  "description": "All parameters are found by name",
+  "expression": "//ParamVarDecl[@Name='x']",
+  "file_path": "VariablesMembersAndParameters.cpp",
+  "matches": [
+    {
+      "line": 11,
+      "column": 9
+    }
+  ]
+}

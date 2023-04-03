@@ -1,0 +1,28 @@
+{
+  "description": "Static asserts by 'IsFailed' attribute are found",
+  "expression": "//StaticAssertDecl[@IsFailed='0']",
+  "file_path": "static_assert_fired.cpp",
+  "matches": [
+    {
+      "line": 2,
+      "column": 5
+    },
+    {
+      "line": 17,
+      "column": 5
+    },
+    {
+      "line": 22,
+      "column": 5
+    },
+    {
+      "line": 27,
+      "column": 5
+    },
+    {
+      "line": 32,
+      "column": 5
+    }
+  ],
+  "allowed_tool_error": true
+}

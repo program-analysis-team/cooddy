@@ -1,0 +1,9 @@
+{
+  "description": "The variable '' is an uninitialized value.",
+  "kind": "UNINIT.VAR",
+  "line": 23,
+  "pos": 9,
+  "positive": true,
+  "skipped": true,
+  "testcase_goal": "Structure passed as function parameter and initialized partially in another function using mem set"
+}

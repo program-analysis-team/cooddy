@@ -1,0 +1,11 @@
+{
+  "description": "Underrunning array \"arr\" of 256 elements by accessing it with index \"y\" equal to -1",
+  "kind": "MEM.BUF.INDEX.BOUNDS",
+  "positive": true,
+  "problems": [
+    {
+      "line": 8,
+      "pos": 14
+    }
+  ]
+}

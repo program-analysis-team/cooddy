@@ -1,0 +1,8 @@
+[
+  {
+    "sink": "MySink",
+    "source": "UntrustedSource",
+    "filter": "MySinkFilter",
+    "profile": "MyChecker"
+  }
+]

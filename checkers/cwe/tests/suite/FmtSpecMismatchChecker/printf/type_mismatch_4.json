@@ -1,0 +1,7 @@
+{
+	"description": "Expected unsigned integer argument for format specifier \"%u\"",
+	"kind": "FMT.SPEC.MISMATCH",
+	"positive": true,
+	"line": 5,
+	"pos": 18
+}

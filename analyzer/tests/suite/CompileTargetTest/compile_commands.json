@@ -1,0 +1,12 @@
+[
+  {
+    "directory": ".",
+    "command": "g++ -m32 -fno-rtti unreachable_64_code.cpp",
+    "file": "unreachable_64_code.cpp"
+  },
+  {
+    "directory": ".",
+    "command": "g++ -m64 -fno-rtti unreachable_32_code.cpp",
+    "file": "unreachable_32_code.cpp"
+  }
+]

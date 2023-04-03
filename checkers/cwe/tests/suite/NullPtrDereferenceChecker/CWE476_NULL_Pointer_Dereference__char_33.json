@@ -1,0 +1,9 @@
+{
+  "description": "Null dereference",
+  "kind": "NULL.DEREF",
+  "positive": true,
+  "line": 35,
+  "pos": 26,
+  "testcase_goal": "Shadowing variable + access through memory address",
+  "skipped": true
+}

@@ -1,0 +1,7 @@
+{
+  "description": "Null dereference",
+  "kind": "NULL.DEREF",
+  "positive": false,
+  "allowed_parse_error": true,
+  "allowed_tool_error": true
+}

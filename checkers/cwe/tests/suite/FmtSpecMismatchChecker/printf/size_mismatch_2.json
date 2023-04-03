@@ -1,0 +1,7 @@
+{
+	"description": "Expected argument size of exactly 16 bytes for format specifier \"%Lf\"",
+	"kind": "FMT.SPEC.MISMATCH",
+	"positive": true,
+	"line": 5,
+	"pos": 19
+}

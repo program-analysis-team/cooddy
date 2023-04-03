@@ -1,0 +1,5 @@
+{
+  "description": "Size of the buffer 'dest' can be less than size in the parameter",
+  "kind": "MEM.BUF.INDEX.BOUNDS",
+  "positive": false
+}

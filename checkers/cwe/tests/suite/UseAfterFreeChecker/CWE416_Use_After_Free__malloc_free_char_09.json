@@ -1,0 +1,13 @@
+{
+  "description": "Use after free",
+  "file_path": "CWE416_Use_After_Free__malloc_free_char_09.c",
+  "kind": "MEM.USE.FREE",
+  "positive": true,
+  "problems": [
+    {
+      "file_path": "std_testcase_io.h",
+      "line": 28,
+      "pos": 24
+    }
+  ]
+}

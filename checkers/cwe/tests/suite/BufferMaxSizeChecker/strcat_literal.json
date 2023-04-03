@@ -1,0 +1,7 @@
+{
+  "description": "Memory size of \"DestStr\" (equal to 16 bytes) can be less than \"SrcStr\" (equal to 17). This may lead to a buffer overflow",
+  "kind": "MEM.BUF.SIZE.UNTRUSTED",
+  "positive": true,
+  "line": 10,
+  "pos": 21
+}

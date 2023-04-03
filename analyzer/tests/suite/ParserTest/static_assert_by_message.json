@@ -1,0 +1,16 @@
+{
+  "description": "Static asserts by 'Message' attribute are found",
+  "expression": "//StaticAssertDecl[@Message='It is first text']",
+  "file_path": "static_assert_fired.cpp",
+  "matches": [
+    {
+      "line": 2,
+      "column": 5
+    },
+    {
+      "line": 12,
+      "column": 5
+    }
+  ],
+  "allowed_tool_error": true
+}

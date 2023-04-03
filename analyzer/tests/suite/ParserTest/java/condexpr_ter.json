@@ -1,0 +1,11 @@
+{
+  "description": "ConditionalExpression is found",
+  "expression": "//ConditionalExpression",
+  "file_path": "condexpr_ter.java",
+  "matches": [
+    {
+      "line": 4,
+      "column": 13
+    }
+  ]
+}

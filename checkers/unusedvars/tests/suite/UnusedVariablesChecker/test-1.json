@@ -1,0 +1,7 @@
+{
+  "description": "There is no any \"read\" operations with that variable.",
+  "kind": "UnusedVariables",
+  "line": 3,
+  "pos": 5,
+  "positive": true
+}

@@ -1,0 +1,7 @@
+{
+    "description": "The variable 'data' is an uninitialized value.",
+    "kind": "UNINIT.VAR",
+    "positive": false,
+    "skipped": true,
+    "testcase_goal": "Propagate ITE expressions from objects to members. HCAT-1822"
+}

@@ -1,0 +1,445 @@
+{
+  "ALLOC_SOURCE": {
+    "EN": "Allocated memory"
+  },
+  "ANNOTATED_BY_MACRO": {
+    "EN": "Annotated by macro"
+  },
+  "UNDEFINED_FUNCTION": {
+    "EN": "Undefined function"
+  },
+  "PUBLIC_FUNCTION": {
+    "EN": "Public function"
+  },
+  "FIELD_OF_OBJECT": {
+    "EN": "field of object"
+  },
+  "PASSED_AS_THE": {
+    "EN": "%1% passed as the %2%"
+  },
+  "SOURCE": {
+    "EN": "%1% source"
+  },
+  "SOURCE_WITH_DESC": {
+    "EN": "%1% source (%2%)"
+  },
+  "RETURNED_FROM_CALL": {
+    "EN": "%1% returned from this call"
+  },
+  "RETURNED_AS_THE": {
+    "EN": "%1% returned as the %2%"
+  },
+  "ANNOTATED_BY_CONFIG": {
+    "EN": "Annotated by config"
+  },
+  "UNTRUSTED_DATA": {
+    "EN": "Untrusted data"
+  },
+  "RESULT": {
+    "EN": "result"
+  },
+  "UNTRUSTED_DATA_PROPAGATION_FROM_ARG": {
+    "EN": "Untrusted data propagated from the %1% to the %2%"
+  },
+  "BOUNDARY_CONDITION_DESC": {
+    "EN": "Condition implies that the operand can be up to %1%"
+  },
+  "STRING_LENGTH_DESC": {
+    "EN": "String size equal to %1%"
+  },
+  "ACCESS_SOURCE_DESC": {
+    "EN": "equal to %1%"
+  },
+  "ASSUME_FUNCTION_IS_EXECUTED": {
+    "EN": "Function %1% is executed"
+  },
+  "ASSUME_RETURN_HERE": {
+    "EN": "Assume return here"
+  },
+  "ASSUME_CONDITION": {
+    "EN": "%1% is %2%"
+  },
+  "FUNCTION_ANNOTATED_BY_MACRO": {
+    "EN": "Function is annotated by macro"
+  },
+  "EXPRESSION_EMPTY_OR_CONTAINS_ONLY_WHITE_SPACES": {
+    "EN": "Expression is empty or contain only white spaces"
+  },
+  "NODE_DESCRIPTION_MUST_START_FROM": {
+    "EN": "Node description must start from '/'"
+  },
+  "THIS": {
+    "EN": "this"
+  },
+  "STATIC_ANALYZER_OF_CPP_SOURCE_CODE": {
+    "EN": "Static analyzer of C++ source code"
+  },
+  "PARAMETER_SCOPE_SHOULD_BE_PROVIDED": {
+    "EN": "Parameter '--scope' should be provided"
+  },
+  "USE_HELP_TO_GET_MORE_INFORMATION": {
+    "EN": "Use --help to get more information."
+  },
+  "SCOPE_DOES_NOT_EXIST": {
+    "EN": "Path provided by --scope does not exist"
+  },
+  "PROFILE_FILE": {
+    "EN": "Profile file "
+  },
+  "CAN_NOT_BE_LOADED": {
+    "EN": " cannot be loaded."
+  },
+  "IS_NOT_PRESENTED": {
+    "EN": " is not presented in profile file."
+  },
+  "UNEXPECTED_POSITIONAL_ARGUMENT_IGNORED": {
+    "EN": "Unexpected positional argument ignored"
+  },
+  "SUGGESTION": {
+    "EN": "Suggestion"
+  },
+  "LONG_DASH_SUGGESTION": {
+    "EN": "this argument appears to start with a long dash. If you meant to type a keyword argument beginning with '--', try manually re-typing the command."
+  },
+  "MEMORY_BUFFER": {
+    "EN": "Memory buffer"
+  },
+  "MEMORY_SIZE": {
+    "EN": "Memory size"
+  },
+  "BUFFER_SIZE": {
+    "EN": "Buffer size"
+  },
+  "MEM.BUF.SIZE.UNTRUSTED": {
+    "EN": "Memory size of %1% (equal to %2% bytes) can be less than %3% (equal to %4%). This may lead to a buffer overflow"
+  },
+  "CHAR.BUF.SIZE.OVERFLOW_ENDING": {
+    "EN": " or the null terminator not being written"
+  },
+  "BUFFER": {
+    "EN": "buffer"
+  },
+  "MEM.BUF.SIZE.OVERFLOW_ENDING": {
+    "EN": " parameter, this may lead to undefined behavior"
+  },
+  "BOO.TYPESIZE.MISMATCH": {
+    "EN": "Found access by wrong offset"
+  },
+  "POSSIBLE_ZERO": {
+    "EN": "Possible zero"
+  },
+  "LOCAL_ADDRESS_RETURN": {
+    "EN": "Do not return address of local variable"
+  },
+  "FmtSpecMismatchChecker_INVALID_SPECIFIER": {
+    "EN": "Invalid format specifier \"%1%\""
+  },
+  "FmtSpecMismatchChecker_EXPECTED_POINTER_TYPE": {
+    "EN": "Expected pointer argument for format specifier \"%1%\""
+  },
+  "FmtSpecMismatchChecker_EXPECTED_NON_POINTER_TYPE": {
+    "EN": "Expected non-pointer argument for format specifier \"%1%\""
+  },
+  "FmtSpecMismatchChecker_EXPECTED_FLOAT": {
+    "EN": "Expected floating point argument for format specifier \"%1%\""
+  },
+  "FmtSpecMismatchChecker_EXPECTED_SIZE_EXACTLY": {
+    "EN": "Expected argument size of exactly %2% bytes for format specifier \"%1%\""
+  },
+  "FmtSpecMismatchChecker_EXPECTED_SIGNED": {
+    "EN": "Expected %4%signed integer %3%argument for format specifier \"%1%\""
+  },
+  "FmtSpecMismatchChecker_EXPECTED_UNSIGNED": {
+    "EN": "Expected %4%unsigned integer %3%argument for format specifier \"%1%\""
+  },
+  "FmtSpecMismatchChecker_EXPECTED_MUTABLE_POINTER": {
+    "EN": "Expected mutable pointer argument for format specifier \"%1%\""
+  },
+  "FmtSpecMismatchChecker_EXPECTED_SIZE_AT_MOST": {
+    "EN": "Expected %3%argument size of at most %2% bytes for format specifier \"%1%\""
+  },
+  "FmtSpecMismatchChecker_EXPECTED_VOID_PP": {
+    "EN": "Expected void** for format specifier \"%1%\""
+  },
+  "FmtSpecMismatchChecker_TOO_FEW_ARGUMENTS": {
+    "EN": "Not enough arguments for format string"
+  },
+  "FmtSpecMismatchChecker_TOO_MANY_ARGUMENTS": {
+    "EN": "Too many arguments for format string"
+  },
+  "UNTRUSTED_ALLOCATED_SIZE": {
+    "EN": "Untrusted allocated size source"
+  },
+  "RESOURCE_SOURCE": {
+    "EN": "Locking resource source"
+  },
+  "DESCRIPTOR_SOURCE": {
+    "EN": "Descriptor source"
+  },
+  "DESCRIPTOR_LEAK": {
+    "EN": "Missing release of descriptor after effective lifetime"
+  },
+  "RESOURCE_LEAK": {
+    "EN": "Missing resource unlock"
+  },
+  "MEM_LEAK": {
+    "EN": "Missing release of memory after effective lifetime"
+  },
+  "STACK_VARIABLE": {
+    "EN": "Stack variable allocation"
+  },
+  "WRONG_ALLOC_DEALLOC": {
+    "EN": "Attempt to return a memory resource to the system, with call of incompatible release function."
+  },
+  "WRONG_DESCRIPTOR_ALLOC_FREE": {
+    "EN": "Attempt to free descriptor, with call of incompatible release function."
+  },
+  "WRONG_LOCK_UNLOCK": {
+    "EN": "Attempt to unlock resource, with call of incompatible release function."
+  },
+  "STACK_VARIABLE_ATTEMPT_TO_DELETE": {
+    "EN": "Attempt to deallocate memory allocated on stack"
+  },
+  "NULL_POINTER": {
+    "EN": "Null pointer"
+  },
+  "FORWARD_NULL_DESC": {
+    "EN": "Null-checking \"%1%\" implies that it may be null"
+  },
+  "REVERSE_NULL_DESC": {
+    "EN": "Null-checking \"%1%\" suggests that it may be null, but it has already been dereferenced"
+  },
+  "MEMORY_ADDRESS": {
+    "EN": "Memory address"
+  },
+  "MEMORY_OFFSET": {
+    "EN": "Memory offset"
+  },
+  "INDEX_BOUNDS": {
+    "EN": "%1% array \"%2%\" of %3% elements by accessing it with index \"%4%\" equal to %5%"
+  },
+  "UNINITIALIZED_MEMORY": {
+    "EN": "Uninitialized memory"
+  },
+  "UNINITIALIZED_VARIABLE_DECLARATION": {
+    "EN": "Uninitialized variable declaration"
+  },
+  "GOTO_STATEMENT_BEFORE_VARIABLE_DECLARATION": {
+    "EN": "Goto statement before variable declaration"
+  },
+  "UNINITIALIZED_VARIABLE_USAGE": {
+    "EN": "Uninitialized variable usage"
+  },
+  "USE_AFTER_FREE": {
+    "EN": "Use after free"
+  },
+  "DOUBLE_FREE": {
+    "EN": "Double free"
+  },
+  "FREE": {
+    "EN": "Free"
+  },
+  "FIRST_INC": {
+    "EN": "First unchecked increment of pointer to char array"
+  },
+  "STRING.OVERFLOW_DESCRIPTION": {
+    "EN": "Possible overflow of char array"
+  },
+  "NullPtrDereferenceChecker": {
+    "EN": "Null dereference"
+  },
+  "UninitializedMemoryUsageChecker": {
+    "EN": "The variable '%1%' is an uninitialized value."
+  },
+  "MemoryAndResourceLeakChecker": {
+    "EN": "%1%"
+  },
+  "OutOfBoundsChecker": {
+    "EN": "Out of memory bounds access"
+  },
+  "SimpleChecker": {
+    "EN": "%1%"
+  },
+  "DivisionByZeroChecker": {
+    "EN": "Division by zero"
+  },
+  "BufferMaxSizeChecker": {
+    "EN": "Size of the %1% can be less than %2%"
+  },
+  "WrongStringIncrementChecker": {
+    "EN": "Possible overflow of char array"
+  },
+  "ERROR_SIGNAL": {
+    "EN": "Error: signal %1% (%2%)"
+  },
+  "TEST_STRING": {
+    "EN": "English text",
+    "CN": "中文文本"
+  },
+  "MismatchedMemManagementChecker": {
+    "EN": "%1%"
+  },
+  "GenericTaintChecker": {
+    "EN": "Generic taint checker"
+  },
+  "HastBasedChecker": {
+    "EN": "HAST-based checker."
+  },
+  "DoNotReturnAddrOfLocalVarChecker": {
+    "EN": "Do not return the address of a local variable to outside of its scope."
+  },
+  "FmtSpecMismatchChecker": {
+    "EN": "%1%"
+  },
+  "IncompatiblePointerTypeChecker": {
+    "EN": "Incompatible cast of pointer %1% may cause out-of-bounds memory access"
+  },
+  "IntegerOverflowChecker": {
+    "EN": "Possible integer overflow or wraparound."
+  },
+  "LoopLimitTaintChecker": {
+    "EN": "Unrestricted unstructed data can go to loop limit condition."
+  },
+  "MemoryAllocationSizeChecker": {
+    "EN": "Allocation size is got from untrusted source."
+  },
+  "StringSizeChecker": {
+    "EN": "Possible insufficient buffer size to store output string."
+  },
+  "UseAfterFreeChecker": {
+    "EN": "%1%"
+  },
+  "UnusedMemberExpressionChecker": {
+    "EN": "Unused data structure member."
+  },
+  "UnusedParamChecker": {
+    "EN": "Parameter '%1%' is not used in function"
+  },
+  "UnusedVariablesChecker": {
+    "EN": "There is no any \"read\" operations with that variable."
+  },
+  "UnusedMemberExpressionChecker_DESCRIPTION": {
+    "EN": "Remove class/struct members that are not used in expressions.",
+    "CN": "内存问题通常都比较严重。 使用之前被释放过的内存可能会导致意想不到的错误。"
+  },
+  "UnusedParamChecker_DESCRIPTION": {
+    "EN": "Remove parameters that are declared in function but don't used in expressions.",
+    "CN": "把定义但是从没有被使用过的参数全文搜索出来。"
+  },
+  "UnusedVariablesChecker_DESCRIPTION": {
+    "EN": "Remove variables that are declared in function scope but don't used in expressions.",
+    "CN": "把定义但是从没有被使用过的变量全文搜索出来。"
+  },
+  "UnusedField_DESCRIPTION": {
+    "EN": "Checker detects class/struct members that are not used in expressions.\n"
+  },
+  "UnusedVariables_DESCRIPTION": {
+    "EN": "Checker detects variables that are declared in function scope but don't used in expressions.\n"
+  },
+  "UncoveredEmptyChecker": {
+    "EN": "Paren expression found"
+  },
+  "MyChecker": {
+    "EN": "This parameter is externally controllable."
+  },
+  "LOOP.LIMIT.TAINT_DESCRIPTION": {
+    "EN": "Unrestricted unstructed data can go to loop limit condition."
+  },
+  "DESTINATION": {
+    "EN": "destination"
+  },
+  "OF": {
+    "EN": "%1% of %2%"
+  },
+  "SV.STR.FMT.TAINT": {
+    "EN": "Format parameter is externally controllable."
+  },
+  "SV.STR.FMT.TAINT_DESCRIPTION": {
+    "EN": "Format parameter is externally controllable."
+  },
+  "MEM.BUF.SIZE.OVERFLOW_DESCRIPTION": {
+    "EN": "If the program copies an input buffer to an output buffer without verifying that the size of the input buffer is less than the size of the output buffer, it will leading to undefined behavior.",
+    "CN": "函数里，尝试把一个缓冲区的数据拷贝到另一个缓冲区之前，要对缓冲区的大小做一个验证。确保数据写入区的数据大小比数据读取缓冲区要大，这样可以避免未定义行为。"
+  },
+  "CHAR.BUF.SIZE.OVERFLOW_DESCRIPTION": {
+    "EN": "If the program copies an input char buffer to an output buffer without verifying that the size of the input buffer is less than the size of the output buffer, it will leading to a buffer overflow or rewriting the null-terminator"
+  },
+  "DBZ_DESCRIPTION": {
+    "EN": "Integer division by zero usually result in the failure of the process or an exception. It can also result in success of the operation, but gives an erroneous answer or lead to undefined behavior.",
+    "CN": "整数除法里被除数为零会触发很多错误。所以要确定被除数不会为零。 "
+  },
+  "MEM.STACK.RET_DESCRIPTION": {
+    "EN": "Because local variables are allocated on the stack, when a program returns a pointer to a local variable, it is returning a stack address. A subsequent function call is likely to re-use this same stack address, thereby overwriting the value of the pointer, which no longer corresponds to the same variable since a function's stack frame is invalidated when it returns. Therefore the value of the pointer will change unexpectedly, and it can cause the program to crash the next time the pointer is dereferenced.",
+    "CN": "局部变量是在栈上分配，当一个函数返回一个指向局部变量的指针的时候。实际该函数返回的是一个栈上的地址。当函数退出，栈也被收回，栈上的地址会被复用。当下一次调用的时候，该运行栈会被重用，同样的栈地址会被用于覆盖指针的结果。这样会导致数据不一致的错误。 "
+  },
+  "MemoryAndResourceLeakChecker_DESCRIPTION": {
+    "EN": "The software does not sufficiently track and release allocated memory after it has been used, which slowly consumes remaining memory.",
+    "CN": "程序的内存申请与释放不匹配，会导致内存的泄漏。 "
+  },
+  "MEM.FUNC.MISMATCH_DESCRIPTION": {
+    "EN": "When the memory management functions are mismatched, the consequences may be as severe as code execution, memory corruption, or program crash. Consequences and ease of exploit will vary depending on the implementation of the routines and the object being managed.",
+    "CN": "内存的管理函数的申请函数与释放函数的操作应该一一对应。如果用了错误的释放函数去释放申请来的内存，可能会导致程序崩溃。 "
+  },
+  "LOCK.FUNC.MISMATCH_DESCRIPTION": {
+    "EN": "When the resource locking functions are mismatched, the consequences may be as severe as code execution, dead lock, or program crash."
+  },
+  "ALLOC.DESCRIPTOR.MISMATCH_DESCRIPTION": {
+    "EN": "When the alloc and free descriptor functions are mismatched, the consequences may be as severe as code execution, dead lock, or program crash."
+  },
+  "NULL.DEREF_DESCRIPTION": {
+    "EN": "Null-pointer dereferences usually result in the failure of the process. These issues typically occur due to inappropriate pointer creating, usage in multiple threads, addressing fields of a structure pointer which points to null and so on.",
+    "CN": "空指针通常会导致程序失败。导致空指针的原因包括不争取的指针创建以及使用，线程间共享等原因也会导致空指针的产生。"
+  },
+  "NULL.UNTRUSTED.DEREF_DESCRIPTION": {
+    "EN": "Null-pointer dereferences usually result in the failure of the process. These issues typically occur due to inappropriate pointer creating, usage in multiple threads, addressing fields of a structure pointer which points to null and so on.",
+    "CN": "空指针通常会导致程序失败。导致空指针的原因包括不争取的指针创建以及使用，线程间共享等原因也会导致空指针的产生。"
+  },
+  "BufferMaxSizeChecker_DESCRIPTION": {
+    "EN": "The software performs operations on a memory buffer, but it can read from or write to a memory location that is outside of the intended boundary of the buffer. Languages like C and C++ allow direct addressing of memory locations and do not automatically ensure that these locations are valid for the memory buffer that is being referenced. As a result, an attacker may be able to execute arbitrary code, alter the intended control flow, read sensitive information, or cause the system to crash.",
+    "CN": "程序的读写操作必须被限制在合理的buffer里。当读写的范围超过了buffer的限制将会导致安全问题。 C语言由于独特的地址操作，允许读取buffer以外的内容，这个特性会被攻击者利用，读取内存其它位置的内容。 "
+  },
+  "UninitializedMemoryUsageChecker_DESCRIPTION": {
+    "EN": "When reusing a resource such as memory or a program variable, the original contents of that resource may not be cleared before it is sent to an untrusted party. The uninitialized resource may contain values that cause program flow to change in ways that the programmer did not intend.",
+    "CN": "在使用一个变量或者一段之前，需要将这一段内存进行初始化。 没有初始化过的内存可能包含随机的信息，从而发生错误。 "
+  },
+  "UseAfterFreeChecker_DESCRIPTION": {
+    "EN": "Memory reference issues can prove to be critical problems. Using previously freed memory can result in corruption of valid data or execution of arbitrary code, depending on the specific situation. When memory is freed, its contents can remain intact and accessible if it isn't reallocated or recycled. The data at the freed location may seem to be valid, but it can change unexpectedly, and cause unintended code behavior.",
+    "CN": "内存问题通常都比较严重。 使用之前被释放过的内存可能会导致意想不到的错误。"
+  },
+  "MEM.ALLOC.SIZE_DESCRIPTION": {
+    "EN": "Allocation size is got from untrusted source."
+  },
+  "STR.SIZE_DESCRIPTION": {
+    "EN": "Possible insufficient buffer size to store output string."
+  },
+  "TAINT.STRING.CLI": {
+    "EN": "Possible CLI injection vulnerability."
+  },
+  "TAINT.STRING.CLI_DESCRIPTION": {
+    "EN": "Do not use external controllable data as parameters for process startup functions."
+  },
+  "BOO.TYPESIZE.MISMATCH_DESCRIPTION": {
+    "EN": "Found access by wrong offset"
+  },
+  "FMT.SPEC.MISMATCH_DESCRIPTION": {
+    "EN": "Provide a matching list of arguments for printf-style format strings"
+  },
+  "FMT.SPEC.TMA_DESCRIPTION": {
+    "EN": "Too many arguments provided for printf-style format string"
+  },
+  "FMT.SPEC.TFA_DESCRIPTION": {
+    "EN": "Not enough arguments provided for printf-style format string"
+  },
+  "FMT.SPEC.PTR_DESCRIPTION": {
+    "EN": "Pointer-related mismatch between printf-style format specifier and argument"
+  },
+  "FMT.SPEC.SIGN_DESCRIPTION": {
+    "EN": "Integer sign-related mismatch between printf-style format specifier and argument"
+  },
+  "INT.OVERFLOW_DESCRIPTION": {
+    "EN": "Integer overflow or wraparound can lead to security issue when the result is used to control looping, make a security decision, or determine the offset or size in behaviors such as memory allocation, copying, concatenation, etc"
+  },
+  "INCOMPATIBLE.PTR_DESCRIPTION": {
+    "EN": "Incompatible cast of pointer may cause out-of-bounds memory access"
+  }
+}

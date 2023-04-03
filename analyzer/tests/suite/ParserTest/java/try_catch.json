@@ -1,0 +1,11 @@
+{
+  "description": "CatchExpression are found",
+  "expression": "//CatchExpression",
+  "file_path": "try_catch.java",
+  "matches": [
+    {
+      "line": 6,
+      "column": 11
+    }
+  ]
+}

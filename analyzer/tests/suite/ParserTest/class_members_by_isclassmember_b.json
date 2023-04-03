@@ -1,0 +1,15 @@
+{
+  "description": "Class members are found",
+  "expression": "//FieldDecl[@IsClassMember='1']",
+  "file_path": "VariablesMembersAndParameters.cpp",
+  "matches": [
+    {
+      "line": 30,
+      "column": 5
+    },
+    {
+      "line": 31,
+      "column": 5
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+{"paramCall1": {"Foo::Foo": {}, "Foo::paramCall": {"Foo::call1": {}}}, "paramCall2": {"Foo::Foo": {}, "Foo::paramCall": {"Foo::call2": {}}}, "paramCall3": {"Foo::Foo": {}, "Foo::paramCall": {"Foo::call3": {}}}, "paramCall4": {"Foo::Foo": {}, "Foo::paramCall": {"Foo::call4": {}}}}

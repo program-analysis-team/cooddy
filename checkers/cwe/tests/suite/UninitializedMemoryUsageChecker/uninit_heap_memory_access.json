@@ -1,0 +1,9 @@
+{
+  "description": "The variable '' is an uninitialized value.",
+  "kind": "UNINIT.VAR",
+  "line": 6,
+  "pos": 5,
+  "positive": true,
+  "skipped": true,
+  "testcase_goal": "Error when using unsigned long variable - heap access"
+}

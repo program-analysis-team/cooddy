@@ -1,0 +1,7 @@
+{
+  "description": "Literal expression isn't found due to typo",
+  "expression": "//LiteralExpression[@LiteralTyyyyyyyyyype='Double']",
+  "file_path": "literal_expression.cpp",
+  "matches": [
+  ]
+}

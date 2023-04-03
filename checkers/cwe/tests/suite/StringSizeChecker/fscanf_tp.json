@@ -1,0 +1,21 @@
+{
+  "description": "Possible insufficient buffer size to store output string.",
+  "kind": "STR.SIZE",
+  "line": 7,
+  "pos": 25,
+  "positive": true,
+  "trace": [
+    {
+      "file": "fscanf_tp.cpp",
+      "line": 6,
+      "col": 5,
+      "desc": "Memory buffer source"
+    },
+    {
+      "file": "fscanf_tp.cpp",
+      "line": 7,
+      "col": 25,
+      "desc": "Possible insufficient buffer size to store output string."
+    }
+  ]
+}

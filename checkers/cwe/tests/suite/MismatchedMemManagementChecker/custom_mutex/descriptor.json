@@ -1,0 +1,7 @@
+{
+  "description": "Attempt to free descriptor, with call of incompatible release function.",
+  "kind": "ALLOC.DESCRIPTOR.MISMATCH",
+  "line": 18,
+  "pos": 12,
+  "positive": true
+}

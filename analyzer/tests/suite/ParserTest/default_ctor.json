@@ -1,0 +1,11 @@
+{
+  "description": "Default ctor is found",
+  "expression": "//CxxCtorDecl[@IsDefault='1']",
+  "file_path": "ClassesAndFunctions.cpp",
+  "matches": [
+    {
+      "line": 14,
+      "column": 5
+    }
+  ]
+}

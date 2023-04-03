@@ -1,0 +1,8 @@
+{
+  "description": "Static asserts aren't found by 'Message' attribute due to typo",
+  "expression": "//StaticAssertDecl[@Messsssssssssage='It is first text']",
+  "file_path": "static_assert_fired.cpp",
+  "matches": [
+  ],
+  "allowed_tool_error": true
+}

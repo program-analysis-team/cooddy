@@ -1,0 +1,9 @@
+{
+  "description": "The variable '' is an uninitialized value.",
+  "kind": "UNINIT.VAR",
+  "line": 12,
+  "pos": 5,
+  "positive": true,
+  "skipped": true,
+  "testcase_goal": "When using a pointer to array of Int, memory allocated and initialized using memcpy by return value of function"
+}

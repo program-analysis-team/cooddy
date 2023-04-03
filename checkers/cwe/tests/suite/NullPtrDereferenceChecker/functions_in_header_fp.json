@@ -1,0 +1,6 @@
+{
+  "description": "Null dereference",
+  "kind": "NULL.DEREF",
+  "positive": false,
+  "testcase_directory": "functions_in_header_fp"
+}

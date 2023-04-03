@@ -1,0 +1,8 @@
+{
+  "description": "Memory size of \"tempDst\" (equal to 11 bytes) can be less than \"message\" (equal to 12). This may lead to a buffer overflow",
+  "kind": "MEM.BUF.SIZE.UNTRUSTED",
+  "positive": true,
+  "line": 11,
+  "pos": 21,
+  "taint_options": "sup"
+}

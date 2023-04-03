@@ -1,0 +1,8 @@
+{
+  "description": "Division by zero",
+  "kind": "DBZ",
+  "positive": true,
+  "line": 6,
+  "pos": 23,
+  "testcase_goal": "Division by zero with variable declaration."
+}

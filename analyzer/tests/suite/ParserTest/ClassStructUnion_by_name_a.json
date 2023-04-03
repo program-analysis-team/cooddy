@@ -1,0 +1,19 @@
+{
+  "description": "Both classes and structs are found by name",
+  "expression": "//Namespace/CxxRecordDecl[@Name='MyName1']",
+  "file_path": "ClassStructUnion.cpp",
+  "matches": [
+    {
+      "line": 3,
+      "column": 1
+    },
+    {
+      "line": 5,
+      "column": 1
+    },
+    {
+      "line": 23,
+      "column": 1
+    }
+  ]
+}

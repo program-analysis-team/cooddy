@@ -1,0 +1,13 @@
+{
+  "description": "Use after free",
+  "file_path": "CWE416_Use_After_Free__new_delete_struct_13.cpp",
+  "kind": "MEM.USE.FREE",
+  "positive": true,
+  "problems": [
+    {
+      "file_path": "std_testcase_io.h",
+      "line": 102,
+      "pos": 26
+    }
+  ]
+}

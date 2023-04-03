@@ -1,0 +1,8 @@
+{
+  "description": "Use after free",
+  "file_path": "free_and_return.cpp",
+  "kind": "MEM.USE.FREE",
+  "line": 35,
+  "pos": 13,
+  "positive": true
+}

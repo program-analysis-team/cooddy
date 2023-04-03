@@ -1,0 +1,8 @@
+{
+  "description": "Unrestricted unstructed data can go to loop limit condition.",
+  "kind": "LOOP.LIMIT.TAINT",
+  "positive": true,
+  "line": 14,
+  "pos": 29,
+  "skipped": true
+}

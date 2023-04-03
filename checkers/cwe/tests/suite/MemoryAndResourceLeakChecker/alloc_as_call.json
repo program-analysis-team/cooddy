@@ -1,0 +1,6 @@
+{
+  "description": "Missing Release of Memory after Effective Lifetime.",
+  "kind": "MEM.LEAK",
+  "positive": false,
+  "compiler_flags": "-std=gnu++17"
+}

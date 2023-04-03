@@ -1,0 +1,9 @@
+{
+  "description": "Use after free",
+  "file_path": "call_memcpy_after_free.cpp",
+  "kind": "MEM.USE.FREE",
+  "line": 11,
+  "pos": 12,
+  "positive": true,
+  "sink_function": "memcpy"
+}

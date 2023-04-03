@@ -1,0 +1,19 @@
+{
+  "name": "Test",
+  "annotations": [],
+  "profiles": ["cwe", "unusedvars"],
+  "checkers": {
+    "SimpleChecker": {
+      "id": "AstParser",
+      "languages": ["c", "c++"],
+      "severity": "Notify",
+      "enabled": true
+    },
+    "UncoveredEmptyChecker": {
+      "id": "Uncovered",
+      "languages": ["c", "c++"],
+      "severity": "Notify",
+      "enabled": true
+    }
+  }
+}

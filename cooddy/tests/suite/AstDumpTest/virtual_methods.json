@@ -1,0 +1,9 @@
+{
+  "description": "Null dereference",
+  "kind": "NULL.DEREF",
+  "file_path": "virtual_methods/derived.cpp",
+  "line": 5,
+  "pos": 6,
+  "positive": true,
+  "testcase_directory": "virtual_methods"
+}

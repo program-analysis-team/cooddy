@@ -1,0 +1,7 @@
+{
+  "description": "Null dereference",
+  "kind": "NULL.DEREF",
+  "line": 15,
+  "pos": 13,
+  "positive": false
+}

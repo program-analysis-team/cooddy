@@ -1,0 +1,7 @@
+{
+	"description": "Expected floating point argument for format specifier \"%f\"",
+	"kind": "FMT.SPEC.MISMATCH",
+	"positive": true,
+	"line": 5,
+	"pos": 18
+}

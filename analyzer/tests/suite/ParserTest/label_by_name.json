@@ -1,0 +1,11 @@
+{
+  "description": "LabelStatement is found by 'Name' attribute",
+  "expression": "//LabelStatement[@Name='labelOdds']",
+  "file_path": "goto.cpp",
+  "matches": [
+    {
+      "line": 11,
+      "column": 1
+    }
+  ]
+}

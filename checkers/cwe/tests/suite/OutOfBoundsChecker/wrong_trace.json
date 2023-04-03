@@ -1,0 +1,39 @@
+{
+  "description": "Overrunning array \"nodeArr\" of 16 elements by accessing it with index \"nodeIndx\" equal to 16",
+  "kind": "MEM.BUF.INDEX.BOUNDS",
+  "line": 16,
+  "pos": 16,
+  "trace": [
+    {
+      "file": "wrong_trace.c",
+      "line": 28,
+      "col": 48,
+      "desc": "Untrusted data source (undefined function: SomeFunc)"
+    },
+    {
+      "file": "wrong_trace.c",
+      "line": 29,
+      "col": 9,
+      "desc": "ret != 0 is false"
+    },
+    {
+      "file": "wrong_trace.c",
+      "line": 33,
+      "col": 15,
+      "desc": "Untrusted data passed as the 1st argument"
+    },
+    {
+      "file": "wrong_trace.c",
+      "line": 15,
+      "col": 28,
+      "desc": "Condition implies that the operand can be up to 17"
+    },
+    {
+      "file": "wrong_trace.c",
+      "line": 16,
+      "col": 16,
+      "desc": "Overrunning array \"nodeArr\" of 16 elements by accessing it with index \"nodeIndx\" equal to 16"
+    }
+  ],
+  "positive": true
+}

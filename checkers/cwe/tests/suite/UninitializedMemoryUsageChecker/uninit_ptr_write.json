@@ -1,0 +1,8 @@
+{
+  "description": "The variable 'p' is an uninitialized value.",
+  "kind": "UNINIT.VAR",
+  "line": 5,
+  "pos": 6,
+  "positive": true,
+  "testcase_goal": "1 single pointer int Variable Write"
+}

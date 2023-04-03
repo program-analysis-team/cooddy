@@ -1,0 +1,7 @@
+{
+  "description": "Division by zero",
+  "positive": true,
+  "kind" : "AstParser",
+  "line": 1,
+  "pos": 9
+}

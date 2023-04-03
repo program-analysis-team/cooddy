@@ -1,0 +1,23 @@
+{
+  "description": "Double free",
+  "file_path": "CWE415_double_free.c",
+  "kind": "MEM.DOUBLE.FREE",
+  "line": 8,
+  "pos": 10,
+  "trace": [
+    {
+      "file": "CWE415_double_free.c",
+      "line": 7,
+      "col": 10,
+      "desc": "Free"
+    },
+    {
+      "file": "CWE415_double_free.c",
+      "line": 8,
+      "col": 10,
+      "desc": "Double free"
+    }
+  ],
+  "positive": true,
+  "sink_function": "free"
+}

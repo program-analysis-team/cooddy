@@ -1,0 +1,15 @@
+{
+  "description": "Unused data structure member.",
+  "kind": "UnusedField",
+  "problems": [
+    {
+      "line": 8,
+      "pos": 15
+    },
+    {
+      "line": 9,
+      "pos": 14
+    }
+  ],
+  "positive": true
+}

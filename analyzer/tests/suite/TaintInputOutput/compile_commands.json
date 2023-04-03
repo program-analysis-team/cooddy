@@ -1,0 +1,7 @@
+[
+  {
+    "directory": ".",
+    "command": "g++ foo.cpp",
+    "file": "foo.cpp"
+  }
+]

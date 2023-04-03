@@ -1,0 +1,19 @@
+{
+  "description": "FieldDecl is found",
+  "expression": "//FieldDecl",
+  "file_path": "fielddecl.java",
+  "matches": [
+    {
+      "line": 3,
+      "column": 17
+    },
+    {
+      "line": 8,
+      "column": 13
+    },
+    {
+      "line": 9,
+      "column": 12
+    }
+  ]
+}

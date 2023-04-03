@@ -1,0 +1,8 @@
+{
+  "description": "Floating literal found",
+  "testcase_purpose": "Floating literal",
+  "line": 3,
+  "pos": 1,
+  "kind": "Uncovered",
+  "positive": false
+}

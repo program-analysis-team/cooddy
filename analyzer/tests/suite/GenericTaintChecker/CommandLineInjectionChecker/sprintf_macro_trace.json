@@ -1,0 +1,27 @@
+{
+  "description": "Possible CLI injection vulnerability.",
+  "kind": "TAINT.STRING.CLI",
+  "positive": true,
+  "line": 21,
+  "pos": 12,
+  "trace": [
+    {
+      "file": "sprintf_macro_trace.c",
+      "line": 19,
+      "col": 14,
+      "desc": "Untrusted data source (annotated by macro: bar)"
+    },
+    {
+      "file": "sprintf_macro_trace.c",
+      "line": 20,
+      "col": 5,
+      "desc": "Untrusted data propagated from the \"localStruct.num\" to the 1st argument"
+    },
+    {
+      "file": "sprintf_macro_trace.c",
+      "line": 21,
+      "col": 12,
+      "desc": "Possible CLI injection vulnerability."
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "description": "Attempt to deallocate memory allocated on stack",
+  "kind": "MEM.FUNC.MISMATCH",
+  "line": 3,
+  "pos": 12,
+  "positive": true
+}

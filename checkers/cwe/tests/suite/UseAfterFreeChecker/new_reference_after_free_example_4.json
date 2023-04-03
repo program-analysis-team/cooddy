@@ -1,0 +1,8 @@
+{
+  "description": "Use after free",
+  "file_path": "new_reference_after_free_example_4.cpp",
+  "kind": "MEM.USE.FREE",
+  "line": 10,
+  "pos": 14,
+  "positive": true
+}

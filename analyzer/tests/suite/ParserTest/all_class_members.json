@@ -1,0 +1,15 @@
+{
+  "description": "Class members are found. Static class members aren't found due to HCAT-191",
+  "expression": "//FieldDecl",
+  "file_path": "VariablesMembersAndParameters.cpp",
+  "matches": [
+    {
+      "line": 30,
+      "column": 5
+    },
+    {
+      "line": 31,
+      "column": 5
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+[
+  {
+    "directory": ".",
+    "command": "gcc -m32",
+    "file": "bar.c"
+  },
+  {
+    "directory": ".",
+    "command": "gcc -m64",
+    "file": "boo.c"
+  }
+]

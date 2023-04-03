@@ -1,0 +1,8 @@
+{
+  "description": "Out of memory bounds access",
+  "kind": "MEM.OFFSET.BOUNDS",
+  "positive": true,
+  "taint_options": "sup",
+  "line": 9,
+  "pos": 22
+}

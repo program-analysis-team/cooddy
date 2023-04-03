@@ -1,0 +1,27 @@
+{
+  "description": "Null dereference",
+  "kind": "NULL.DEREF",
+  "problems": [
+    {
+      "line": 13,
+      "pos": 5
+    },
+    {
+      "line": 10,
+      "pos": 6
+    },
+    {
+      "line": 16,
+      "pos": 5
+    },
+    {
+      "line": 19,
+      "pos": 5
+    },
+    {
+      "line": 23,
+      "pos": 5
+    }
+  ],
+  "positive": true
+}

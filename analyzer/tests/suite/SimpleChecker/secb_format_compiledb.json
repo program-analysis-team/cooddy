@@ -1,0 +1,18 @@
+{
+  "description": "Main declaration",
+  "testcase_directory": "secb_format_compiledb",
+  "kind": "AstParser",
+  "problems": [
+    {
+      "file_path": "secb_format_compiledb/bar.cpp",
+      "line": 3,
+      "pos": 1
+    },
+    {
+      "file_path": "secb_format_compiledb/foo.cpp",
+      "line": 3,
+      "pos": 1
+    }
+  ],
+  "positive": true
+}

@@ -1,0 +1,8 @@
+{
+	"description": "Expected pointer to unsigned integer argument for format specifier \"%ls\"",
+	"kind": "FMT.SPEC.PTR",
+	"positive": true,
+	"line": 6,
+	"pos": 19,
+	"os": ["Windows"]
+}

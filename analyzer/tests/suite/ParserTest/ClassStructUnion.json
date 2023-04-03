@@ -1,0 +1,31 @@
+{
+  "description": "All unions, structs and classes are found. Implicit CxxRecordDecl added by clang aren't found",
+  "expression": "//CxxRecordDecl",
+  "file_path": "ClassStructUnion.cpp",
+  "matches": [
+    {
+      "line": 3,
+      "column": 1
+    },
+    {
+      "line": 5,
+      "column": 1
+    },
+    {
+      "line": 18,
+      "column": 1
+    },
+    {
+      "line": 23,
+      "column": 1
+    },
+    {
+      "line": 25,
+      "column": 1
+    },
+    {
+      "line": 30,
+      "column": 1
+    }
+  ]
+}

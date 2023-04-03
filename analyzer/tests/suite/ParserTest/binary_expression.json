@@ -1,0 +1,10 @@
+{
+  "description": "Binary expression is found",
+  "expression": "//BinaryExpression[@Operation='Add']",
+  "matches": [
+    {
+      "line": 2,
+      "column": 15
+    }
+  ]
+}

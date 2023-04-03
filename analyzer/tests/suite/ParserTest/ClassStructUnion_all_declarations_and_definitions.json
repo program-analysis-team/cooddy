@@ -1,0 +1,31 @@
+{
+  "description": "All classes, structs and unions are found. Both declarations(forward declarations) and definitions are found",
+  "expression": "//Namespace/CxxRecordDecl",
+  "file_path": "ClassStructUnion.cpp",
+  "matches": [
+    {
+      "line": 3,
+      "column": 1
+    },
+    {
+      "line": 5,
+      "column": 1
+    },
+    {
+      "line": 18,
+      "column": 1
+    },
+    {
+      "line": 23,
+      "column": 1
+    },
+    {
+      "line": 25,
+      "column": 1
+    },
+    {
+      "line": 30,
+      "column": 1
+    }
+  ]
+}

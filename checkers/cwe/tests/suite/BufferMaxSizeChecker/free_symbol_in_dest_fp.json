@@ -1,0 +1,5 @@
+{
+  "description": "Size of the destination buffer 'size' can be less than '100' parameter, this may lead to undefined behavior",
+  "kind": "MEM.BUF.SIZE.OVERFLOW",
+  "positive": false
+}

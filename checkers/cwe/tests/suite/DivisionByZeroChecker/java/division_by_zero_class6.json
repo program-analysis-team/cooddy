@@ -1,0 +1,33 @@
+{
+  "description": "Division by zero",
+  "kind": "DBZ",
+  "positive": true,
+  "line": 8,
+  "pos": 15,
+  "trace": [
+    {
+      "desc": "Possible zero source",
+      "file": "division_by_zero_class6.java",
+      "line": 18,
+      "col": 27
+    },
+    {
+      "desc": "Assume return here",
+      "file": "division_by_zero_class6.java",
+      "line": 18,
+      "col": 20
+    },
+    {
+      "desc": "Possible zero returned as the result",
+      "file": "division_by_zero_class6.java",
+      "line": 7,
+      "col": 16
+    },
+    {
+      "desc": "Division by zero",
+      "file": "division_by_zero_class6.java",
+      "line": 8,
+      "col": 15
+    }
+  ]
+}

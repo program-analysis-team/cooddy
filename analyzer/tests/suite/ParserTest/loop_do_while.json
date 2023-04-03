@@ -1,0 +1,11 @@
+{
+  "description": "Loop 'do while' is found",
+  "expression": "//LoopStatement[@Kind='DoWhile']",
+  "file_path": "LoopsAndRanges.cpp",
+  "matches": [
+    {
+      "line": 23,
+      "column": 9
+    }
+  ]
+}

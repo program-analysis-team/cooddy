@@ -1,0 +1,11 @@
+{
+  "description": "Member with public access",
+  "expression": "//FieldDecl[@AccessKind='Public']",
+  "file_path": "ClassAccessModifiers.cpp",
+  "matches": [
+    {
+      "line": 6,
+      "column": 5
+    }
+  ]
+}

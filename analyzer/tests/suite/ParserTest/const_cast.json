@@ -1,0 +1,8 @@
+{
+  "description": "Const cast is found",
+  "expression": "//CastExpression[@CastTypeKind='ConstCast']",
+  "matches": [ {
+    "line": 4,
+    "column": 18
+  }]
+}

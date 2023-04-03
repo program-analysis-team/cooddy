@@ -1,0 +1,7 @@
+[
+  {
+    "directory": ".",
+    "command": "g++ -m64 -std=c++11 using_cwchar.cpp",
+    "file": "using_cwchar.cpp"
+  }
+]

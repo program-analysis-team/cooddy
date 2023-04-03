@@ -1,0 +1,7 @@
+{
+	"description": "Expected void** for format specifier \"%p\"",
+	"kind": "FMT.SPEC.PTR",
+	"positive": true,
+	"line": 8,
+	"pos": 17
+}

@@ -1,0 +1,5 @@
+{
+	"description": "Expected signed integer argument for format specifier \"%d\"",
+	"kind": "FMT.SPEC.MISMATCH",
+	"positive": false
+}

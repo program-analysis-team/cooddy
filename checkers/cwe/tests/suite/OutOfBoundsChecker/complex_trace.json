@@ -1,0 +1,45 @@
+{
+  "description": "Overrunning array \"arr->field\" of 10 elements by accessing it with index \"idx\" equal to 10",
+  "kind": "MEM.BUF.INDEX.BOUNDS",
+  "line": 11,
+  "pos": 5,
+  "trace": [
+    {
+      "file": "complex_trace.cpp",
+      "line": 32,
+      "col": 9,
+      "desc": "Memory address passed as the 1st argument"
+    },
+    {
+      "file": "complex_trace.cpp",
+      "line": 17,
+      "col": 15,
+      "desc": "Untrusted data source (undefined function: some_func)"
+    },
+    {
+      "file": "complex_trace.cpp",
+      "line": 18,
+      "col": 5,
+      "desc": "Assume return here"
+    },
+    {
+      "file": "complex_trace.cpp",
+      "line": 23,
+      "col": 20,
+      "desc": "Untrusted data returned as the result"
+    },
+    {
+      "file": "complex_trace.cpp",
+      "line": 24,
+      "col": 11,
+      "desc": "Memory address passed as the 1st argument"
+    },
+    {
+      "file": "complex_trace.cpp",
+      "line": 11,
+      "col": 5,
+      "desc": "Overrunning array \"arr->field\" of 10 elements by accessing it with index \"idx\" equal to 10"
+    }
+  ],
+  "positive": true
+}

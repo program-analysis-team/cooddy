@@ -1,0 +1,7 @@
+{
+  "description": "Overrunning array \"g_randArrays\" of 10 elements by accessing it with index \"randNum % (MAX_RAND_NUM + 1)\" equal to 10",
+  "kind": "MEM.BUF.INDEX.BOUNDS",
+  "positive": true,
+  "line": 12,
+  "pos": 12
+}

@@ -1,0 +1,8 @@
+{
+  "description": "Static assert found",
+  "expression": "//StaticAssertDecl",
+  "matches": [ {
+    "line": 3,
+    "column": 5
+  }]
+}

@@ -1,0 +1,11 @@
+{
+  "description": "All non first declarations of classes, structs and unions are found",
+  "expression": "//Namespace/CxxRecordDecl[@IsFirstDeclaration='0']",
+  "file_path": "ClassStructUnion.cpp",
+  "matches": [
+    {
+      "line": 5,
+      "column": 1
+    }
+  ]
+}

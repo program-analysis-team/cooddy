@@ -1,0 +1,7 @@
+[
+  {
+    "directory": ".",
+    "command": "gcc --target=aarch64_be-linux-gnu -m32",
+    "file": "bar.c"
+  }
+]

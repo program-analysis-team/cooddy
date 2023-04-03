@@ -1,0 +1,8 @@
+{
+  "description": "Division by zero",
+  "kind": "DBZ",
+  "positive": true,
+  "line": 8,
+  "pos": 19,
+  "testcase_goal": "Function returns zero, which is used as a divisor."
+}

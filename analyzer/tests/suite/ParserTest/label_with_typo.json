@@ -1,0 +1,7 @@
+{
+  "description": "LabelStatement isn't found due to typo",
+  "expression": "//LabelStatement[@Naaaaaaaaaaaaaaaame='labelOdds']",
+  "file_path": "goto.cpp",
+  "matches": [
+  ]
+}

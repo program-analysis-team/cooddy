@@ -1,0 +1,14 @@
+{
+  "description": "Null dereference",
+  "kind": "NULL.DEREF",
+  "problems": [
+    {
+      "file_path": "resolver_test/Bar.java",
+      "line": 5,
+      "pos": 9
+    }
+  ],
+  "compiler_flags": "-x=java",
+  "positive": true,
+  "testcase_directory": "resolver_test"
+}

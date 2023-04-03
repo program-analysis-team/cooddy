@@ -1,0 +1,15 @@
+{
+  "description": "MemberExpressions are found by name",
+  "expression": "//MemberExpression[@Name='myMemberC']",
+  "file_path": "ClassMembers.cpp",
+  "matches": [
+    {
+      "line": 22,
+      "column": 5
+    },
+    {
+      "line": 30,
+      "column": 12
+    }
+  ]
+}

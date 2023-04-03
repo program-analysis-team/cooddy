@@ -1,0 +1,4 @@
+{
+  "rhs-servers": ["http://some_url"],
+  "annotations": [".some_annotations_1.json", ".some_annotations_2.json"]
+}

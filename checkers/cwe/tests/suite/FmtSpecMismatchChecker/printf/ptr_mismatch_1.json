@@ -1,0 +1,7 @@
+{
+	"description": "Expected pointer argument for format specifier \"%s\"",
+	"kind": "FMT.SPEC.PTR",
+	"positive": true,
+	"line": 5,
+	"pos": 18
+}

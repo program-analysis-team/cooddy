@@ -1,0 +1,8 @@
+{
+  "description": "Null dereference",
+  "kind": "NULL.DEREF",
+  "line": 6,
+  "pos": 12,
+  "positive": true,
+  "sink_function": "memset"
+}

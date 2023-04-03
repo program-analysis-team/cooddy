@@ -1,0 +1,7 @@
+{
+  "description": "Memory size of \"structCharVoid.charFirst\" (equal to 16 bytes) can be less than \"sizeof(structCharVoid)\" (equal to 32). This may lead to a buffer overflow",
+  "kind": "MEM.BUF.SIZE.UNTRUSTED",
+  "line": 14,
+  "pos": 40,
+  "positive": true
+}

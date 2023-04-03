@@ -1,0 +1,8 @@
+{
+  "description": "Memory size of \"&g_overflow_st[1]\" (equal to 36 bytes) can be less than \"buflen\" (equal to 37). This may lead to a buffer overflow",
+  "kind": "MEM.BUF.SIZE.UNTRUSTED",
+  "positive": true,
+  "line": 18,
+  "pos": 39,
+  "sink_function": "memcpy"
+}

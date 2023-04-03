@@ -1,0 +1,22 @@
+{
+  "description": "Double free",
+  "kind": "MEM.DOUBLE.FREE",
+  "line": 14,
+  "pos": 10,
+  "trace": [
+    {
+      "file": "double_free_by_alias.c",
+      "line": 13,
+      "col": 10,
+      "desc": "Free"
+    },
+    {
+      "file": "double_free_by_alias.c",
+      "line": 14,
+      "col": 10,
+      "desc": "Double free"
+    }
+  ],
+  "positive": true,
+  "sink_function": "free"
+}

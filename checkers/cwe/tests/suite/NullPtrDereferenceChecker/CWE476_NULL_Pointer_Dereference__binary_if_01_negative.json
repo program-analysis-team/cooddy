@@ -1,0 +1,7 @@
+{
+  "description": "Null dereference",
+  "kind": "NULL.DEREF",
+  "positive": false,
+  "file_path": "CWE476_NULL_Pointer_Dereference__binary_if_01_negative.cpp",
+  "testcase_goal": "Use && in the if statement so that if the left side of the expression fails then the right side will not be evaluated"
+}

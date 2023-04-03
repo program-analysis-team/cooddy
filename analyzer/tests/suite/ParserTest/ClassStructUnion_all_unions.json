@@ -1,0 +1,11 @@
+{
+  "description": "All unions are found",
+  "expression": "//Namespace/CxxRecordDecl[@IsUnion='1']",
+  "file_path": "ClassStructUnion.cpp",
+  "matches": [
+    {
+      "line": 25,
+      "column": 1
+    }
+  ]
+}

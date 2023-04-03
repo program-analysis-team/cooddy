@@ -1,0 +1,10 @@
+{
+  "description": "Unary expression is found",
+  "expression": "//UnaryExpression[@Operation='Lnot']",
+  "matches": [
+    {
+      "line": 2,
+      "column": 16
+    }
+  ]
+}

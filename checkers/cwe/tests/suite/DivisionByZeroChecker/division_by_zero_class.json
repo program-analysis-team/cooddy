@@ -1,0 +1,9 @@
+{
+  "description": "Division by zero",
+  "kind": "DBZ",
+  "positive": true,
+  "line": 19,
+  "pos": 26,
+  "skipped": false,
+  "testcase_goal": "Zero divider is assigned via the class field."
+}

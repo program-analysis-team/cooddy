@@ -1,0 +1,8 @@
+{
+  "description": "This parameter is externally controllable.",
+  "kind": "MyChecker",
+  "profile": "all",
+  "line": 27,
+  "pos": 14,
+  "positive": true
+}

@@ -1,0 +1,7 @@
+{
+  "description": "Memory size of \"selfPath\" (equal to 100 bytes) can be less than \"oldLdpath\" (equal to 101). This may lead to a buffer overflow",
+  "kind": "MEM.BUF.SIZE.UNTRUSTED",
+  "positive": true,
+  "line": 16,
+  "pos": 22
+}

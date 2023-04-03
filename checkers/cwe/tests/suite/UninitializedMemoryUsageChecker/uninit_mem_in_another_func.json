@@ -1,0 +1,8 @@
+{
+  "description": "The variable 'str2' is an uninitialized value.",
+  "kind": "UNINIT.VAR",
+  "line": 23,
+  "pos": 45,
+  "positive": true,
+  "testcase_goal": "When using a pointer to char , and initialized in another function"
+}

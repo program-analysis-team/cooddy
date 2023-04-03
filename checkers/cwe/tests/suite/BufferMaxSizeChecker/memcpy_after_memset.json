@@ -1,0 +1,8 @@
+{
+  "description": "Memory size of \"foo.buff\" (equal to 255 bytes) can be less than \"255 + 1\" (equal to 256). This may lead to a buffer overflow",
+  "kind": "MEM.BUF.SIZE.UNTRUSTED",
+  "positive": true,
+  "line": 16,
+  "pos": 24,
+  "sink_function": "memset_s"
+}

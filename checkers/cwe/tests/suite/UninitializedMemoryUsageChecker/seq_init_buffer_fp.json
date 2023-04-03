@@ -1,0 +1,6 @@
+{
+  "description": "The variable '' is an uninitialized value.",
+  "file_path": "retvalue_after_loop_fp.c",
+  "kind": "UNINIT.VAR",
+  "positive": false
+}

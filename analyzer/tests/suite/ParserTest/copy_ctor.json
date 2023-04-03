@@ -1,0 +1,11 @@
+{
+  "description": "Copy ctor is found",
+  "expression": "//CxxCtorDecl[@IsCopy='1']",
+  "file_path": "ClassesAndFunctions.cpp",
+  "matches": [
+    {
+      "line": 18,
+      "column": 5
+    }
+  ]
+}

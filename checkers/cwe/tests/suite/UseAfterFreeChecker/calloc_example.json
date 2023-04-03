@@ -1,0 +1,8 @@
+{
+  "description": "Use after free",
+  "file_path": "calloc_example.cpp",
+  "kind": "MEM.USE.FREE",
+  "line": 9,
+  "pos": 14,
+  "positive": true
+}

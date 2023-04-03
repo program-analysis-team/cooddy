@@ -1,0 +1,7 @@
+{
+  "description": "Unary expression isn't found due to typo",
+  "expression": "//UnaryExpression[@Operaaaaaaation='Lnot']",
+  "file_path": "unary_expression.cpp",
+  "matches": [
+  ]
+}

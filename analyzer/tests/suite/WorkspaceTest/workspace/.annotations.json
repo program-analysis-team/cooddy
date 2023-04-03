@@ -1,0 +1,24 @@
+{
+  "test_gen_annotations(_Test_annotations)": [
+    [],
+    [
+      "Alias::0"
+    ],
+    [
+      "Write:[1]&[123]*"
+    ],
+    [
+      "Write:o"
+    ],
+    [
+      "Write:&",
+      "Alias::0"
+    ],
+    [
+      "Write", "InitNull:*:!=1"
+    ],
+    [
+      "Write:&", "Result::>=0", "AllocSource::1"
+    ]
+  ]
+}

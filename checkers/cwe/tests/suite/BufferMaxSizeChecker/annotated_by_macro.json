@@ -1,0 +1,22 @@
+{
+  "description": "Memory size of the 1st argument (equal to 7 bytes) can be less than \"strlen(buffer)\" (equal to 8). This may lead to a buffer overflow",
+  "kind": "MEM.BUF.SIZE.UNTRUSTED",
+  "reason": "Annotated by macro",
+  "positive": true,
+  "line": 10,
+  "pos": 27,
+  "trace": [
+    {
+      "file": "annotated_by_macro.cpp",
+      "line": 7,
+      "col": 21,
+      "desc": "Untrusted data source (annotated by macro: f)"
+    },
+    {
+      "file": "annotated_by_macro.cpp",
+      "line": 10,
+      "col": 27,
+      "desc": "Memory size of the 1st argument (equal to 7 bytes) can be less than \"strlen(buffer)\" (equal to 8). This may lead to a buffer overflow"
+    }
+  ]
+}

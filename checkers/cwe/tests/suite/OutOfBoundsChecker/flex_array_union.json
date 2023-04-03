@@ -1,0 +1,21 @@
+{
+  "kind": "MEM.BUF.INDEX.BOUNDS",
+  "positive": true,
+  "problems": [
+    {
+      "description": "Overrunning array \"a.b\" of 4 elements by accessing it with index \"4\" equal to 4",
+      "line": 14,
+      "pos": 5
+    },
+    {
+      "description": "Overrunning array \"a.b\" of 4 elements by accessing it with index \"4\" equal to 4",
+      "line": 27,
+      "pos": 5
+    },
+    {
+      "description": "Overrunning array \"a->b\" of 9 elements by accessing it with index \"9U\" equal to 9",
+      "line": 34,
+      "pos": 5
+    }
+  ]
+}

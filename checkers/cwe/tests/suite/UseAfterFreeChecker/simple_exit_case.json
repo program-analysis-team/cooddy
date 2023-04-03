@@ -1,0 +1,8 @@
+{
+  "description": "Use after free",
+  "file_path": "simple_exit_case.cpp",
+  "kind": "MEM.USE.FREE",
+  "line": 16,
+  "pos": 13,
+  "positive": true
+}

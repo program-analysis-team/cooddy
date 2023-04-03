@@ -1,0 +1,15 @@
+{
+  "description": "IfStatement is found",
+  "expression": "//IfStatement",
+  "file_path": "ifstatement.java",
+  "matches": [
+    {
+      "line": 4,
+      "column": 9
+    },
+    {
+      "line": 6,
+      "column": 16
+    }
+  ]
+}

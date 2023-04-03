@@ -1,0 +1,9 @@
+{
+  "description": "Main declaration",
+  "testcase_directory": "duplicated_units",
+  "kind": "AstParser",
+  "file_path": "test.cpp",
+  "positive": true,
+  "line": 10,
+  "pos": 1
+}

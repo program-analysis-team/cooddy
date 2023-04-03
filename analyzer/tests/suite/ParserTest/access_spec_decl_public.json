@@ -1,0 +1,11 @@
+{
+    "description": "Public access specifier declaration",
+    "expression": "//AccessSpecDecl[@AccessKind='Public']",
+    "file_path": "ClassAccessModifiers.cpp",
+    "matches": [
+        {
+            "line": 5,
+            "column": 1
+        }
+    ]
+}

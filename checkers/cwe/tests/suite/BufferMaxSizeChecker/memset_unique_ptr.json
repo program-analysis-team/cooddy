@@ -1,0 +1,5 @@
+{
+  "description": "Size of the  buffer 'dst' can be less than size in the parameter",
+  "kind": "MEM.BUF.SIZE.UNTRUSTED",
+  "positive": false
+}

@@ -1,0 +1,7 @@
+{
+	"description": "Expected pointer to signed integer argument for format specifier \"%s\"",
+	"kind": "FMT.SPEC.PTR",
+	"positive": true,
+	"line": 6,
+	"pos": 18
+}

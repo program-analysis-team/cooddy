@@ -1,0 +1,17 @@
+[
+  {
+    "directory": ".",
+    "command": "g++ -std=gnu++17 -I./include -include include_file_2.h boo.cpp",
+    "file": "boo.cpp"
+  },
+  {
+    "directory": ".",
+    "command": "g++ -std=gnu++17 -include ./include/include_file.h foo.cpp",
+    "file": "foo.cpp"
+  },
+  {
+    "directory": ".",
+    "command": "g++ -std=gnu++17 -I ./include goo.cpp",
+    "file": "goo.cpp"
+  }
+]

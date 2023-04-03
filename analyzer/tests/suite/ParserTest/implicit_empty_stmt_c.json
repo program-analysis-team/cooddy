@@ -1,0 +1,6 @@
+{
+  "description": "Empty statement isn't found because 'else statement' is never converted to 'empty statement'",
+  "expression": "//EmptyStmt",
+  "matches": [
+  ]
+}

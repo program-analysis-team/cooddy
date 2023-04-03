@@ -1,0 +1,9 @@
+{
+  "description": "The variable '' is an uninitialized value.",
+  "kind": "UNINIT.VAR",
+  "line": 48,
+  "pos": 5,
+  "positive": true,
+  "skipped": true,
+  "testcase_goal": "When using array of double pointer to long -  Memory is  allocated based on return value of function ,initialized and accessed"
+}

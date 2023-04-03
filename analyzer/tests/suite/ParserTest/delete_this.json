@@ -1,0 +1,10 @@
+{
+  "description": "Expression 'delete this' should be found.",
+  "expression": "//DeleteExpression/ThisExpression",
+  "matches": [
+    {
+      "line": 8,
+      "column": 16
+    }
+  ]
+}

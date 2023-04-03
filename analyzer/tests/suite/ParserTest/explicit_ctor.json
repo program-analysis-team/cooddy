@@ -1,0 +1,11 @@
+{
+  "description": "Explicit ctor is found",
+  "expression": "//CxxCtorDecl[@IsExplicit='1']",
+  "file_path": "ClassesAndFunctions.cpp",
+  "matches": [
+    {
+      "line": 16,
+      "column": 5
+    }
+  ]
+}

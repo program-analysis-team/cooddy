@@ -1,0 +1,6 @@
+{
+  "se_lock_chip": [[], ["LockResource::7"]],
+  "se_unlock_chip": [[], ["UnlockResource::7"]],
+  "se_lock_chip1": [[], ["AllocSource::5"], []],
+  "se_unlock_chip1": [[], ["FreeSink::5"], []]
+}

@@ -1,0 +1,9 @@
+{
+  "description": "Overrunning array \"g_arr\" of 10 elements by accessing it with index \"11\" equal to 11",
+  "kind": "MEM.BUF.INDEX.BOUNDS",
+  "testcase_directory": "arm_triple_check",
+  "file_path": "arm_triple_check/bar.c",
+  "line": 8,
+  "pos": 5,
+  "positive": true
+}

@@ -1,0 +1,7 @@
+{
+  "description": "Overrunning array \"periodSchList->usrList\" of 32 elements by accessing it with index \"usrIndex\" equal to 33",
+  "kind": "MEM.BUF.INDEX.BOUNDS",
+  "line": 23,
+  "pos": 19,
+  "positive": true
+}

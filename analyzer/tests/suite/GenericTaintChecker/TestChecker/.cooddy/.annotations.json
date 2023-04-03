@@ -1,0 +1,4 @@
+{
+  "UseInput": [[], ["MySink"]],
+  "FilterInput": [[], ["MySinkFilter"]]
+}

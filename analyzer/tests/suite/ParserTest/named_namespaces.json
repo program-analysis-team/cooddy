@@ -1,0 +1,15 @@
+{
+  "description": "Namespaces with requested names are found, anonymous namespaces aren't",
+  "expression": "//Namespace[@Name='MyNameSpace1']",
+  "file_path": "namespaces.cpp",
+  "matches": [
+    {
+      "line": 9,
+      "column": 1
+    },
+    {
+      "line": 23,
+      "column": 1
+    }
+  ]
+}

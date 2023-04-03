@@ -1,0 +1,62 @@
+{
+	"version": 4,
+	"configurePresets": [
+		{
+			"name": "default",
+			"binaryDir": "build",
+			"generator": "Ninja",
+			"cacheVariables": {
+				"CMAKE_C_COMPILER": "gcc",
+				"CMAKE_CXX_COMPILER": "g++"
+			}
+		},
+		{
+			"name": "+gcc-8",
+			"cacheVariables": {
+				"CMAKE_C_COMPILER": "gcc-8",
+				"CMAKE_CXX_COMPILER": "g++-8"
+			}
+		},
+		{
+			"name": "+gcc-10",
+			"cacheVariables": {
+				"CMAKE_C_COMPILER": "gcc-10",
+				"CMAKE_CXX_COMPILER": "g++-10"
+			}
+		},
+		{
+			"name": "+gcc-12",
+			"cacheVariables": {
+				"CMAKE_C_COMPILER": "gcc-12",
+				"CMAKE_CXX_COMPILER": "g++-12"
+			}
+		},
+		{
+			"name": "+production",
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Release",
+				"PRODUCTION_BUILD": true
+			}
+		},
+		{
+			"name": "ci-linux",
+			"inherits": ["default"]
+		},
+		{
+			"name": "ci-linux-debug",
+			"inherits": ["ci-linux"],
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Debug",
+				"USE_SANITIZER": true
+			}
+		},
+		{
+			"name": "ci-linux-release",
+			"inherits": ["ci-linux"],
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Release",
+				"PRODUCTION_BUILD": true
+			}
+		}
+	]
+}

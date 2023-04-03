@@ -1,0 +1,12 @@
+[
+  {
+    "sink": "FormatString",
+    "source": "UntrustedSource",
+    "profile": "SV.STR.FMT.TAINT"
+  },
+  {
+    "sink": "Execute",
+    "source": "UntrustedSource",
+    "profile": "TAINT.STRING.CLI"
+  }
+]

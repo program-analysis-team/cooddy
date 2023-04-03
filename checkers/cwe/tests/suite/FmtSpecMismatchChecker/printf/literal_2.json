@@ -1,0 +1,7 @@
+{
+	"description": "Expected unsigned integer argument for format specifier \"%hhu\"",
+	"kind": "FMT.SPEC.SIGN",
+	"positive": true,
+	"line": 6,
+	"pos": 20
+}

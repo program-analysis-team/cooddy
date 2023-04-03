@@ -1,0 +1,33 @@
+{
+  "description": "Overrunning array \"arr\" of 20 elements by accessing it with index \"i\" equal to 20",
+  "kind": "MEM.BUF.INDEX.BOUNDS",
+  "line": 6,
+  "pos": 9,
+  "trace": [
+    {
+      "file": "condition_as_source2.cpp",
+      "line": 13,
+      "col": 9,
+      "desc": "Condition implies that the operand can be up to 100"
+    },
+    {
+      "file": "condition_as_source2.cpp",
+      "line": 16,
+      "col": 14,
+      "desc": "Memory offset passed as the 2nd argument"
+    },
+    {
+      "file": "condition_as_source2.cpp",
+      "line": 5,
+      "col": 21,
+      "desc": "i < 21 is true"
+    },
+    {
+      "file": "condition_as_source2.cpp",
+      "line": 6,
+      "col": 9,
+      "desc": "Overrunning array \"arr\" of 20 elements by accessing it with index \"i\" equal to 20"
+    }
+  ],
+  "positive": true
+}

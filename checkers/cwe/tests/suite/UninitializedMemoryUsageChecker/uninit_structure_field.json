@@ -1,0 +1,8 @@
+{
+  "description": "The variable 'ret' is an uninitialized value.",
+  "kind": "UNINIT.VAR",
+  "line": 10,
+  "pos": 15,
+  "positive": true,
+  "testcase_goal": "When using structure padding and memcpy"
+}

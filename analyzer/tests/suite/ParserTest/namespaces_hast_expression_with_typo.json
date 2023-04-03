@@ -1,0 +1,7 @@
+{
+  "description": "We found nothing due to typo in the attribute name, it is required for code coverage",
+  "expression": "//Namespace[@Nammmmmmmmmmmmmmme='MyNameSpace1']",
+  "file_path": "namespaces.cpp",
+  "matches": [
+  ]
+}

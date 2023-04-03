@@ -1,0 +1,17 @@
+[
+  {
+    "directory": ".",
+    "command": "g++ --std=c++1z boo17.c",
+    "file": "boo17.c"
+  },
+  {
+    "directory": ".",
+    "command": "g++ boo14.c",
+    "file": "boo14.c"
+  },
+  {
+    "directory": ".",
+    "command": "g++ -x c++ boo.c",
+    "file": "boo.c"
+  }
+]

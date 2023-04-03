@@ -1,0 +1,8 @@
+{
+  "description": "The variable 'str' is an uninitialized value.",
+  "kind": "UNINIT.VAR",
+  "line": 15,
+  "pos": 39,
+  "positive": true,
+  "testcase_goal": "When using a pointer to constant  char and snprintf"
+}

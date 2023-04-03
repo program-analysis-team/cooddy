@@ -1,0 +1,15 @@
+{
+  "description": "All local variables are found",
+  "expression": "//VarDecl[@IsLocal='1']",
+  "file_path": "VariablesMembersAndParameters.cpp",
+  "matches": [
+    {
+      "line": 14,
+      "column": 5
+    },
+    {
+      "line": 15,
+      "column": 5
+    }
+  ]
+}

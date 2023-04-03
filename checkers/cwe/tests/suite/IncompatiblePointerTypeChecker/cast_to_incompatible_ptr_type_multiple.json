@@ -1,0 +1,15 @@
+{
+  "description": "Incompatible cast of pointer &y may cause out-of-bounds memory access",
+  "kind": "INCOMPATIBLE.PTR",
+  "problems": [
+    {
+      "line": 16,
+      "pos": 15
+    },
+    {
+      "line": 23,
+      "pos": 9
+    }
+  ],
+  "positive": true
+}

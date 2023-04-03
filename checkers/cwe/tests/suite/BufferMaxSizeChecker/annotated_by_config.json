@@ -1,0 +1,22 @@
+{
+  "description": "Memory size of \"&b[1]\" (equal to 7 bytes) can be less than \"a\" (equal to 8). This may lead to a buffer overflow",
+  "kind": "MEM.BUF.SIZE.UNTRUSTED",
+  "reason": "Annotated by config",
+  "positive": true,
+  "line": 8,
+  "pos": 26,
+  "trace": [
+    {
+      "file": "annotated_by_config.cpp",
+      "line": 7,
+      "col": 13,
+      "desc": "Untrusted data source (annotated by config: fread)"
+    },
+    {
+      "file": "annotated_by_config.cpp",
+      "line": 8,
+      "col": 26,
+      "desc": "Memory size of \"&b[1]\" (equal to 7 bytes) can be less than \"a\" (equal to 8). This may lead to a buffer overflow"
+    }
+  ]
+}

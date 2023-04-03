@@ -1,0 +1,6 @@
+{
+  "description": "Size of the destination buffer 'sizeof(dstBuff->sfpPrefix)' can be less than 'MAX_SIZE * sizeof(STASH_B*)' parameter, this may lead to undefined behavior",
+  "kind": "MEM.BUF.SIZE.OVERFLOW",
+  "compiler_flags": "-m32",
+  "positive": false
+}

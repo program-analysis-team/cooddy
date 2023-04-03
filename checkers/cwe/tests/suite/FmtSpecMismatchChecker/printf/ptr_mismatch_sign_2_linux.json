@@ -1,0 +1,8 @@
+{
+	"description": "Expected argument size of exactly 4 bytes for format specifier \"%ls\"",
+	"kind": "FMT.SPEC.PTR",
+	"positive": true,
+	"line": 6,
+	"pos": 19,
+	"os": ["Linux"]
+}

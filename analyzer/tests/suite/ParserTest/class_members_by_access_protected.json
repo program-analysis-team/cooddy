@@ -1,0 +1,11 @@
+{
+  "description": "Member with protected access",
+  "expression": "//FieldDecl[@AccessKind='Protected']",
+  "file_path": "ClassAccessModifiers.cpp",
+  "matches": [
+    {
+      "line": 9,
+      "column": 5
+    }
+  ]
+}

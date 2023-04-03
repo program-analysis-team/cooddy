@@ -1,0 +1,5 @@
+{
+  "description": "Overrunning array \"a4->buff\" of 2 elements by accessing it with index \"5\" equal to 5",
+  "kind": "MEM.BUF.INDEX.BOUNDS",
+  "positive": false
+}

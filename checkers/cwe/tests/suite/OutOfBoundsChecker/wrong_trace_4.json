@@ -1,0 +1,33 @@
+{
+  "description": "Overrunning array \"info\" of 10 elements by accessing it with index \"i\" equal to 10",
+  "kind": "MEM.BUF.INDEX.BOUNDS",
+  "line": 8,
+  "pos": 15,
+  "trace": [
+    {
+      "file": "wrong_trace_4.cpp",
+      "line": 16,
+      "col": 25,
+      "desc": "Untrusted data source (undefined function: MSC_GetAllClusterId)"
+    },
+    {
+      "file": "wrong_trace_4.cpp",
+      "line": 18,
+      "col": 39,
+      "desc": "Untrusted data passed as the 2nd argument"
+    },
+    {
+      "file": "wrong_trace_4.cpp",
+      "line": 7,
+      "col": 26,
+      "desc": "Condition implies that the operand can be up to 11"
+    },
+    {
+      "file": "wrong_trace_4.cpp",
+      "line": 8,
+      "col": 15,
+      "desc": "Overrunning array \"info\" of 10 elements by accessing it with index \"i\" equal to 10"
+    }
+  ],
+  "positive": true
+}

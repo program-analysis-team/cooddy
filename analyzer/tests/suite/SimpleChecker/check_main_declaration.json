@@ -1,0 +1,8 @@
+{
+  "description": "Main declaration",
+  "testcase_purpose": "example",
+  "kind" : "AstParser",
+  "line": 2,
+  "pos": 1,
+  "positive": true
+}

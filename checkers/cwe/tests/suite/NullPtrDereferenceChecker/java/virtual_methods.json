@@ -1,0 +1,14 @@
+{
+  "description": "Null dereference",
+  "kind": "NULL.DEREF",
+  "problems": [
+    {
+      "file_path": "virtual_methods/Derived2.java",
+      "line": 4,
+      "pos": 9
+    }
+  ],
+  "compiler_flags": "-x=java",
+  "positive": true,
+  "testcase_directory": "virtual_methods"
+}

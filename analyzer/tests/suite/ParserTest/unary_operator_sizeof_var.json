@@ -1,0 +1,8 @@
+{
+  "description": "Unary expression(sizeof for variable) is found",
+  "expression": "//UnaryExpression",
+  "matches": [ {
+    "line": 3,
+    "column": 13
+  }]
+} 

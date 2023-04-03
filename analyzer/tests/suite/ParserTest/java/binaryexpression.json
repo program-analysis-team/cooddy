@@ -1,0 +1,123 @@
+{
+  "description": "BinaryExpression are found",
+  "expression": "//BinaryExpression",
+  "file_path": "binaryexpression.java",
+  "matches": [
+    {
+      "line": 4,
+      "column": 9
+    },
+    {
+      "line": 5,
+      "column": 22
+    },
+    {
+      "line": 6,
+      "column": 22
+    },
+    {
+      "line": 7,
+      "column": 22
+    },
+    {
+      "line": 8,
+      "column": 22
+    },
+    {
+      "line": 9,
+      "column": 22
+    },
+    {
+      "line": 10,
+      "column": 22
+    },
+    {
+      "line": 11,
+      "column": 22
+    },
+    {
+      "line": 13,
+      "column": 9
+    },
+    {
+      "line": 14,
+      "column": 22
+    },
+    {
+      "line": 15,
+      "column": 23
+    },
+    {
+      "line": 17,
+      "column": 9
+    },
+    {
+      "line": 18,
+      "column": 23
+    },
+    {
+      "line": 20,
+      "column": 9
+    },
+    {
+      "line": 21,
+      "column": 23
+    },
+    {
+      "line": 22,
+      "column": 18
+    },
+    {
+      "line": 23,
+      "column": 9
+    },
+    {
+      "line": 24,
+      "column": 18
+    },
+    {
+      "line": 25,
+      "column": 9
+    },
+    {
+      "line": 26,
+      "column": 18
+    },
+    {
+      "line": 27,
+      "column": 9
+    },
+    {
+      "line": 28,
+      "column": 18
+    },
+    {
+      "line": 29,
+      "column": 9
+    },
+    {
+      "line": 30,
+      "column": 18
+    },
+    {
+      "line": 31,
+      "column": 9
+    },
+    {
+      "line": 32,
+      "column": 9
+    },
+    {
+      "line": 33,
+      "column": 9
+    },
+    {
+      "line": 34,
+      "column": 18
+    },
+    {
+      "line": 35,
+      "column": 18
+    }
+  ]
+}

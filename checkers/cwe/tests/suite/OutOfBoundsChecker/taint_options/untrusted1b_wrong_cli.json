@@ -1,0 +1,7 @@
+{
+    "file_path": "untrusted1b.cpp",
+    "description": "Out of memory bounds access",
+    "kind": "MEM.BUF.INDEX.BOUNDS",
+    "positive": false,
+    "taint_options": "p"
+}

@@ -1,0 +1,17 @@
+{
+  "description": "Out of memory bounds access",
+  "kind": "MEM.BUF.INDEX.BOUNDS",
+  "problems": [
+    {
+      "line": 18,
+      "pos": 5
+    },
+    {
+      "line": 19,
+      "pos": 5
+    }
+  ],
+  "positive": true,
+  "skipped": true,
+  "taint_options": "none"
+}

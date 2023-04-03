@@ -1,0 +1,107 @@
+{
+  "compiler_info": [
+    {
+      "compiler_name": "g++",
+      "environment": [
+        "SHELL=/bin/bash"
+      ],
+      "uuid": "be2ec78fd84daf7408dd071297b89241",
+      "version": "9",
+      "machine": "x86_64-linux-gnu",
+      "bits": "-m64",
+      "system_include": [
+        "/usr/include/c++/9",
+        "/usr/include/x86_64-linux-gnu/c++/9",
+        "/usr/include/c++/9/backward",
+        "/usr/lib/gcc/x86_64-linux-gnu/9/include",
+        "/usr/local/include",
+        "/usr/include/x86_64-linux-gnu",
+        "/usr/include"
+      ],
+      "pre_define_macros": [
+        "-D__SSP_STRONG__=3",
+        "-D__DBL_MIN_EXP__=(-1021)",
+        "-D__FLT32X_MAX_EXP__=1024"
+      ]
+    }
+  ],
+  "compilation_unit": [
+    {
+      "arguments": [
+        "clang++",
+        "-xc++",
+        "-c",
+        "bar.cpp",
+        "-w",
+        "-Wno-everything",
+        "-D__STDC_NO_ATOMICS__",
+        "--compatible-with-void-pointers",
+        "-D__clang_patchlevel__=1",
+        "-Xclang",
+        "-disable-O0-optnone",
+        "--target=x86_64-linux-gnu",
+        "-m64",
+        "-U__OPTIMIZE__",
+        "-include",
+        "user_defines.h"
+      ],
+      "compiler": "g++",
+      "directory": ".",
+      "file": [
+        "bar.cpp"
+      ],
+      "id": "0d826adc609311edafcbf5be0bfa56ff",
+      "language": "CPLUSPLUS_LANG",
+      "object": [
+        "/usr1/zmj/bt_uaf/case/shadow/useAfterFree02.o"
+      ],
+      "timestamp": 1668042021972334,
+      "original_command_id": "0d7242c4609311edafcbf5be0bfa56ff",
+      "uuid": "be2ec78fd84daf7408dd071297b89241",
+      "head_include": [],
+      "preprocess_file": [
+        "/usr1/zmj/bt_uaf/case/shadow/useAfterFree02.cpp.14e91b90ef2d67b3426abe426b9aaaad.i"
+      ]
+    },
+    {
+      "arguments": [
+        "clang++",
+        "-xc++",
+        "-c",
+        "foo.cpp",
+        "-w",
+        "-Wno-everything",
+        "-D__STDC_NO_ATOMICS__",
+        "--compatible-with-void-pointers",
+        "-DARG_DEF",
+        "-Xclang",
+        "-disable-O0-optnone",
+        "--target=x86_64-linux-gnu",
+        "-m64",
+        "-U__OPTIMIZE__",
+        "-include",
+        "user_defines.h"
+      ],
+      "compiler": "g++",
+      "directory": ".",
+      "file": [
+        "foo.cpp"
+      ],
+      "id": "0d82a4e8609311edafcbf5be0bfa56ff",
+      "language": "CPLUSPLUS_LANG",
+      "object": [
+        "/usr1/zmj/bt_uaf/case/shadow/useAfterFree01.o"
+      ],
+      "timestamp": 1668042021934588,
+      "original_command_id": "0d7242c5609311edafcbf5be0bfa56ff",
+      "uuid": "cac31b59315f6baa67b6c4cc73bbb12f",
+      "head_include": [],
+      "preprocess_file": [
+        "/usr1/zmj/bt_uaf/case/shadow/useAfterFree01.cpp.bbdb559537b5cc528e885276a5dacbb9.i"
+      ]
+    }
+  ],
+  "compilation_link": [],
+  "analyze_mode": "src",
+  "nostdin": "ON"
+}

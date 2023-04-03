@@ -1,0 +1,5 @@
+{
+  "description": "The variable 'str2' is an uninitialized value.",
+  "kind": "UNINIT.MEM",
+  "positive": false
+}

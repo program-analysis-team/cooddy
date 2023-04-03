@@ -1,0 +1,60 @@
+                          
+                 
+                 
+                
+                
+       void SomeStr
+                  
+    int SomeMethod(int a, int b)          {
+        return a     + 10 + b      
+    }
+  
+                               
+                          
+int foo(int c, void* d, int e)            
+{
+    int* p   = ""        
+    void* h       
+    S_53842 j= Som
+    h.SomeMethod( c, 0) 
+    int o             = 5 
+    void f    [10]     
+    void n  [2]    = {{1  2  3}  {4  5  6}} 
+    void m    = {1  2  3} 
+    int l = 10 
+    int g        
+
+    do {
+    } while (0) 
+    while (false) {
+    }
+    for (int k    {1  2  3}) {
+    }
+    for (int i = 0; i < 10; i++) {
+        c++ 
+        c-- 
+        ++c 
+        &c 
+        c = c 
+        c |= c 
+        c = c + (h->w         + j .w        ) + bar(c, 10) + h.SomeMethod( c, i) 
+        break;
+    }
+    if (e        == 1          ) {
+        return 5 
+    }
+    if (c == 3) {
+        return 5 
+    }  elseif (c == 4) {
+        return 10 
+    }  else{
+        return c 
+     
+    c = 1 
+    c = 1 + 2 
+    c = 1 + 2 + 3 
+    c = 1 * 2 / 3 + 4 - 5 
+    g       = (1 | 2) & (3 ^ 4 & 5) || true 
+    f     [20][10] 
+    return 0 
+}

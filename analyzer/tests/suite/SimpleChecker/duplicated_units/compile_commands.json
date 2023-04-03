@@ -1,0 +1,12 @@
+[
+  {
+    "directory": ".",
+    "command": "g++ -DBAR",
+    "file": "test.cpp"
+  },
+  {
+    "directory": ".",
+    "command": "g++ -DFOO",
+    "file": "test.cpp"
+  }
+]

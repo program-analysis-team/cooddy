@@ -1,0 +1,21 @@
+{
+  "description": "Null dereference",
+  "kind": "NULL.DEREF",
+  "line": 4,
+  "pos": 14,
+  "positive": true,
+  "trace": [
+    {
+      "file": "deref_nullptr.cpp",
+      "line": 3,
+      "col": 14,
+      "desc": "Null pointer source"
+    },
+    {
+      "file": "deref_nullptr.cpp",
+      "line": 4,
+      "col": 14,
+      "desc": "Null dereference"
+    }
+  ]
+}

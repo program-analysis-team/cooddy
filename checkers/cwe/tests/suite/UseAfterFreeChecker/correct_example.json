@@ -1,0 +1,7 @@
+{
+  "description": "Store a new value in pointers immediately after free().",
+  "kind": "MEM.USE.FREE",
+  "line": 4,
+  "pos": 10,
+  "positive": false
+}

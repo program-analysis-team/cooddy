@@ -1,0 +1,7 @@
+{
+  "description": "The variable 'v' is an uninitialized value.",
+  "kind": "UNINIT.VAR",
+  "line": 16,
+  "pos": 12,
+  "positive": true
+}

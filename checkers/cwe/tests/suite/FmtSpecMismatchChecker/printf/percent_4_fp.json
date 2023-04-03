@@ -1,0 +1,5 @@
+{
+  "description": "Not enough arguments for format string",
+  "kind": "FMT.SPEC.MISMATCH",
+  "positive": false
+}

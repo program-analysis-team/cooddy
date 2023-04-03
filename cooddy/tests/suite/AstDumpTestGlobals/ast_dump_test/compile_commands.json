@@ -1,0 +1,22 @@
+[
+  {
+    "directory": "./lib1",
+    "command": "gcc",
+    "file": "bar.c"
+  },
+  {
+    "directory": "./lib1",
+    "command": "gcc",
+    "file": "boo.c"
+  },
+  {
+    "directory": "./lib2",
+    "command": "gcc",
+    "file": "bar.c"
+  },
+  {
+    "directory": "./lib2",
+    "command": "gcc",
+    "file": "boo.c"
+  }
+]

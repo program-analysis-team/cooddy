@@ -1,0 +1,9 @@
+{
+  "description": "Format parameter is externally controllable.",
+  "kind": "SV.STR.FMT.TAINT",
+  "line": 11,
+  "pos": 12,
+  "source": "std::operator>>",
+  "taint_options": "none",
+  "positive": true
+}

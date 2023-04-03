@@ -1,0 +1,16 @@
+{
+  "kind": "MEM.BUF.INDEX.BOUNDS",
+  "positive": true,
+  "problems": [
+    {
+      "description": "Overrunning array \"b.b\" of 1 elements by accessing it with index \"1\" equal to 1",
+      "line": 13,
+      "pos": 5
+    },
+    {
+      "description": "Overrunning array \"b.b\" of 2 elements by accessing it with index \"2\" equal to 2",
+      "line": 26,
+      "pos": 5
+    }
+  ]
+}

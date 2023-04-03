@@ -1,0 +1,8 @@
+{
+  "description": "Possible insufficient buffer size to store output string.",
+  "kind": "STR.SIZE",
+  "taint_options": "sup",
+  "line": 8,
+  "pos": 19,
+  "positive": true
+}

@@ -1,0 +1,11 @@
+{
+  "description": "Default case statement in the switch is found",
+  "expression": "//SwitchCaseStatement[@IsDefault='1']",
+  "file_path": "SwitchCase.cpp",
+  "matches": [
+    {
+      "line": 9,
+      "column": 9
+    }
+  ]
+}

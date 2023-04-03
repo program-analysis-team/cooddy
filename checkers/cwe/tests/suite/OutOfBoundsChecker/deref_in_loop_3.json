@@ -1,0 +1,7 @@
+{
+  "description": "Overrunning array \"arr\" of 187 elements by accessing it with index \"i++\" equal to 187",
+  "kind": "MEM.BUF.INDEX.BOUNDS",
+  "line": 7,
+  "pos": 17,
+  "positive": true
+}

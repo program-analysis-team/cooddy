@@ -1,0 +1,7 @@
+{
+  "description": "The variable 'a->b' is an uninitialized value.",
+  "kind": "UNINIT.MEM",
+  "positive": true,
+  "line": 18,
+  "pos": 16
+}

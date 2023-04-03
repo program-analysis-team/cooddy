@@ -1,0 +1,14 @@
+{
+  "description": "Null dereference",
+  "kind": "NULL.DEREF",
+  "problems": [
+    {
+      "file_path": "import_test/p1/p3/Bar.java",
+      "line": 6,
+      "pos": 9
+    }
+  ],
+  "compiler_flags": "-x=java",
+  "positive": true,
+  "testcase_directory": "import_test"
+}

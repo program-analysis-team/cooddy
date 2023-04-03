@@ -1,0 +1,7 @@
+{
+  "description": "Underrunning array \"g_randArrays\" of 10 elements by accessing it with index \"randNum % MAX_RAND_NUM_ACCESS_ARR\" equal to -1",
+  "kind": "MEM.BUF.INDEX.BOUNDS",
+  "positive": true,
+  "line": 14,
+  "pos": 12
+}

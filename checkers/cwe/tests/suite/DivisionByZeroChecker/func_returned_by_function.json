@@ -1,0 +1,8 @@
+{
+  "description": "Division by zero",
+  "kind": "DBZ",
+  "positive": true,
+  "line": 17,
+  "pos": 20,
+  "testcase_goal": "Divisor is passed by function that returns function value and there are no checks that it's not equal to zero."
+}

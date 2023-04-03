@@ -1,0 +1,6 @@
+{
+  "description": "Double free",
+  "file_path": "CWE415_double_free_struct_fields.c",
+  "kind": "MEM.DOUBLE.FREE",
+  "positive": false
+}

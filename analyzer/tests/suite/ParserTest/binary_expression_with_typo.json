@@ -1,0 +1,7 @@
+{
+  "description": "Binary expression is found due to typo in the expression",
+  "expression": "//BinaryExpression[@Opeeeeeeeration='Add']",
+  "file_path": "binary_expression.cpp",
+  "matches": [
+  ]
+}

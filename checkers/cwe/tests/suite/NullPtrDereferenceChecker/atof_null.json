@@ -1,0 +1,8 @@
+{
+  "description": "Null dereference",
+  "kind": "NULL.DEREF",
+  "positive": true,
+  "line": 6,
+  "pos": 21,
+  "sink_function": "atof"
+}

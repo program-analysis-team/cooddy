@@ -1,0 +1,7 @@
+{
+  "description": "Parameter 'a' is not used in function",
+  "kind": "UnusedParam",
+  "line": 1,
+  "pos": 10,
+  "positive": true
+}

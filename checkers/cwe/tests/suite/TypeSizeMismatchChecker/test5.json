@@ -1,0 +1,8 @@
+{
+  "description": "Found access by wrong offset",
+  "kind": "BOO.TYPESIZE.MISMATCH",
+  "positive": true,
+  "skipped": true,
+  "line": 13,
+  "pos": 5
+}

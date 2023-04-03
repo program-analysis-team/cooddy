@@ -1,0 +1,8 @@
+{
+  "description": "The variable 'a->x' is an uninitialized value.",
+  "kind": "UNINIT.FIELD",
+  "line": 7,
+  "pos": 5,
+  "positive": true,
+  "file_path": "uninit_field_inner_2.c"
+}

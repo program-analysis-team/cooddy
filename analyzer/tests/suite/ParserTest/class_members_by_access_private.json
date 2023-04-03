@@ -1,0 +1,11 @@
+{
+  "description": "Member with private access",
+  "expression": "//FieldDecl[@AccessKind='Private']",
+  "file_path": "ClassAccessModifiers.cpp",
+  "matches": [
+    {
+      "line": 3,
+      "column": 5
+    }
+  ]
+}

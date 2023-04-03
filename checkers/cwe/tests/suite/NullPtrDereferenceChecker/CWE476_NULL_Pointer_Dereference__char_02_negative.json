@@ -1,0 +1,6 @@
+{
+  "description": "Null dereference",
+  "kind": "NULL.DEREF",
+  "positive": false,
+  "testcase_goal": "pass NULL to function that uses it without any checks (Checks add beforehand, or call is in the dead code)"
+}

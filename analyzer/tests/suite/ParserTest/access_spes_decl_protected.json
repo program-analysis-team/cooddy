@@ -1,0 +1,11 @@
+{
+    "description": "Protected access specifier declaration",
+    "expression": "//AccessSpecDecl[@AccessKind='Protected']",
+    "file_path": "ClassAccessModifiers.cpp",
+    "matches": [
+        {
+            "line": 8,
+            "column": 1
+        }
+    ]
+}

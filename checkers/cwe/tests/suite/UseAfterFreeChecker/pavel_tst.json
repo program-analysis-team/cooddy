@@ -1,0 +1,8 @@
+{
+  "description": "Use after free",
+  "file_path": "pavel_tst.cpp",
+  "kind": "MEM.USE.FREE",
+  "line": 5,
+  "pos": 6,
+  "positive": true
+}

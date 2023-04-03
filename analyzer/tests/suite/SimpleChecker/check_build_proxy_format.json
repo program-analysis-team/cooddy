@@ -1,0 +1,26 @@
+{
+  "description": "Main declaration",
+  "testcase_purpose": "example",
+  "testcase_directory": "check_build_proxy_format",
+  "kind": "AstParser",
+  "allowed_parse_error": true,
+  "positive": true,
+  "problems": [
+    {
+      "file_path": "check_build_proxy_format/foo.cpp",
+      "line": 4,
+      "pos": 1
+    },
+    {
+      "file_path": "check_build_proxy_format/test.cxx",
+      "line": 4,
+      "pos": 1
+    },
+    {
+      "file_path": "check_build_proxy_format/test.cc",
+      "line": 4,
+      "pos": 1
+    }
+  ],
+  "allowed_tool_error": true
+}

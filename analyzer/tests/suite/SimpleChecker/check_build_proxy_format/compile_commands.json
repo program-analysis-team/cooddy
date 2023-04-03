@@ -1,0 +1,78 @@
+[
+  {
+    "directory": ".",
+    "command": "g++ -O3 -DDEF_FOO=\"\\\"some val\\\"\"  @include.rsp -isystem .",
+    "file": "foo.cpp"
+  },
+  {
+    "directory": ".",
+    "command": "g++ -DBAR -DSTR=\\\"Str\\\" @include.txt -o bar.o -c bar.cpp",
+    "file": "bar.cpp"
+  },
+  {
+    "directory": ".",
+    "command": "/usr/bin/g++ -march=armv8.2-a+crc -MT Grantham.lo -MD -MP -MF .deps/Grantham.Tpo @include.txt -c -o bar.o bar.cc",
+    "file": "bar.cc"
+  },
+  {
+    "directory": ".",
+    "command": "gcc @include.txt -fPIC -c -o cfile.o cfile.c",
+    "file": "cfile.c"
+  },
+  {
+    "directory": ".",
+    "command": "",
+    "file": "unknown.c"
+  },
+  {
+    "directory": ".",
+    "arguments": [
+      "g++",
+      "-DDEF_FOO",
+      "test.cxx",
+      "-I",
+      "include",
+      "-MF",
+      "sadsa/dsa",
+      "-c"
+    ],
+    "file": "test.cxx"
+  },
+  {
+    "directory": ".",
+    "arguments": [
+      "g++",
+      "-c",
+      "--target",
+      "x86_64",
+      "-DDEF_FOO=1",
+      "-I",
+      "./include",
+      "test.cc",
+      "-MF",
+      "sadsa/dsa"
+    ],
+    "file": ""
+  },
+  {
+    "directory": ".",
+    "arguments": [
+      "clang",
+      "--target=aarch64-none-linux-android29",
+      "--gcc-toolchain=.",
+      "--sysroot=.",
+      "-fdata-sections",
+      "-ffunction-sections",
+      "-funwind-tables",
+      "-fstack-protector-strong",
+      "-no-canonical-prefixes",
+      "-fno-addrsig",
+      "-pipe",
+      "-DNDEBUG",
+      "-fno-common",
+      "-c",
+      "gcc_toolchain.cpp"
+    ],
+    "file": "gcc_toolchain.cpp"
+  }
+]

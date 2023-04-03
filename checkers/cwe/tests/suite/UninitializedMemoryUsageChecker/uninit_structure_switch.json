@@ -1,0 +1,9 @@
+{
+  "description": "The variable '' is an uninitialized value.",
+  "kind": "UNINIT.VAR",
+  "line": 46,
+  "pos": 5,
+  "positive": true,
+  "skipped": true,
+  "testcase_goal": "When using a pointer to union in an switch case and random function"
+}

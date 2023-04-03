@@ -1,0 +1,8 @@
+{
+  "description": "Null dereference",
+  "kind": "NULL.DEREF",
+  "positive": true,
+  "line": 8,
+  "pos": 24,
+  "sink_function": "swprintf"
+}

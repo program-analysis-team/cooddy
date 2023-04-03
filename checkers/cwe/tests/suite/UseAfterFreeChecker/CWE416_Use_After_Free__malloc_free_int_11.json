@@ -1,0 +1,8 @@
+{
+  "description": "Use after free",
+  "file_path": "CWE416_Use_After_Free__malloc_free_int_11.c",
+  "kind": "MEM.USE.FREE",
+  "line": 45,
+  "pos": 22,
+  "positive": true
+}

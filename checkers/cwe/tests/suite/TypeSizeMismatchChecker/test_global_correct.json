@@ -1,0 +1,5 @@
+{
+  "description": "Found access by wrong offset",
+  "kind": "BOO.TYPESIZE.MISMATCH",
+  "positive": false
+}

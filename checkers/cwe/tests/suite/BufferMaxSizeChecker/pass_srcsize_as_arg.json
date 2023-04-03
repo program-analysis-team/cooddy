@@ -1,0 +1,8 @@
+{
+  "description": "Size of the destination buffer 'size' can be less than 'count' parameter, this may lead to undefined behavior",
+  "kind": "MEM.BUF.SIZE.OVERFLOW",
+  "line": 6,
+  "pos": 29,
+  "positive": true,
+  "sink_function": "memset_s"
+}

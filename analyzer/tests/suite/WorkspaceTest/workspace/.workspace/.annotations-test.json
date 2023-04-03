@@ -1,0 +1,27 @@
+{
+  "test_gen_annotations(_Test_annotations)": [
+    [],
+    [
+      "Alias::0"
+    ],
+    [
+      "Write:[1]&[125]*"
+    ],
+    [
+      "Write"
+    ],
+    [
+      "Write",
+      "Alias::0"
+    ],
+    [
+      "Write:["
+    ],
+    [
+      "Write:&"
+    ],
+    [
+      "Write:[2]&[123]*"
+    ]
+  ]
+}

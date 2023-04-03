@@ -1,0 +1,21 @@
+{
+  "description": "Underrunning array \"arr\" of 10 elements by accessing it with index \"data.idx + arg->idx\" equal to -1",
+  "kind": "MEM.BUF.INDEX.BOUNDS",
+  "line": 22,
+  "pos": 12,
+  "trace": [
+    {
+      "file": "untrusted_source_from_undef_arg.c",
+      "line": 17,
+      "col": 22,
+      "desc": "Untrusted data source (undefined function: some_func)"
+    },
+    {
+      "file": "untrusted_source_from_undef_arg.c",
+      "line": 22,
+      "col": 12,
+      "desc": "Underrunning array \"arr\" of 10 elements by accessing it with index \"data.idx + arg->idx\" equal to -1"
+    }
+  ],
+  "positive": true
+}

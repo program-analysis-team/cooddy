@@ -1,0 +1,20 @@
+{
+  "description": "{*}",
+  "kind": "MEM.BUF.INDEX.BOUNDS",
+  "problems": [
+    {
+      "line": 15,
+      "pos": 5
+    },
+    {
+      "line": 13,
+      "pos": 5
+    },
+    {
+      "line": 11,
+      "pos": 5
+    }
+  ],
+  "positive": true,
+  "taint_options": "none"
+}

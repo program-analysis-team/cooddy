@@ -1,0 +1,11 @@
+{
+  "description": "CxxCtorDecl uses attribute implemented in the base class(FunctionDecl)",
+  "expression": "//CxxCtorDecl[@IsDeleted='1']",
+  "file_path": "ClassesAndFunctions.cpp",
+  "matches": [
+    {
+      "line": 19,
+      "column": 5
+    }
+  ]
+}

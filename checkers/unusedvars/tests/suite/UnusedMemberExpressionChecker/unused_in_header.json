@@ -1,0 +1,12 @@
+{
+  "description": "Unused data structure member.",
+  "kind": "UnusedField",
+  "problems": [
+    {
+      "file_path": "header.h",
+      "line": 4,
+      "pos": 9
+    }
+  ],
+  "positive": true
+}

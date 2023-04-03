@@ -1,0 +1,8 @@
+{
+  "description": "Division by zero",
+  "kind": "DBZ",
+  "positive": true,
+  "line": 15,
+  "pos": 20,
+  "testcase_goal": "User input variable is returned from function and used as divisor without checking that it's not equal to zero."
+}

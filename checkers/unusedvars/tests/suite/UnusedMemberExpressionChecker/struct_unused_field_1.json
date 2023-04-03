@@ -1,0 +1,8 @@
+{
+  "description": "Unused data structure member.",
+  "file_path": "struct_unused_field_1.c",
+  "kind": "UnusedField",
+  "line": 8,
+  "pos": 15,
+  "positive": true
+}

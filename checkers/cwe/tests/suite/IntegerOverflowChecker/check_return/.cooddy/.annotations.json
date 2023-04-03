@@ -1,0 +1,10 @@
+{
+  "check_return1": [["CheckOverflow"], []],
+  "check_return2": [["CheckOverflow"], []],
+  "check_return3": [["CheckOverflow"], []],
+  "check_return4": [["CheckOverflow"], []],
+  "check_return5": [["CheckOverflow"], []],
+  "check_return6": [["CheckOverflow"], []],
+  "check_return7": [["CheckOverflow"], []],
+  "check_return8": [["CheckOverflow"], []]
+}

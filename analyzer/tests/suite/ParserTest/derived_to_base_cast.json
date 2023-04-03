@@ -1,0 +1,9 @@
+{
+  "description": "Cast from derived to base is found",
+  "expression": "//[@CastKind='DerivedToBase']",
+  "matches": [ {
+    "line": 9,
+    "column": 12
+  }]
+}
+

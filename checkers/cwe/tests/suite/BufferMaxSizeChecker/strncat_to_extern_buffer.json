@@ -1,0 +1,8 @@
+{
+  "description": "Memory size of the 1st argument (equal to 765406 bytes) can be less than \"strlen(message)\" (equal to 765406). This may lead to a buffer overflow or the null terminator not being written",
+  "kind": "CHAR.BUF.SIZE.OVERFLOW",
+  "positive": true,
+  "line": 8,
+  "pos": 31,
+  "taint_options": "sup"
+}

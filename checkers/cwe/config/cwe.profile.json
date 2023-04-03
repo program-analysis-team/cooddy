@@ -1,0 +1,145 @@
+{
+  "name": "CWE",
+  "module" : "libcwe",
+  "checkers": {
+    "GenericTaintChecker": {
+      "languages" : ["c", "c++", "java"],
+      "inspections" : [
+        {"id": "SV.STR.FMT.TAINT", "severity": "Error", "enabled": true},
+        {"id": "TAINT.STRING.CLI", "severity": "Error", "enabled": true}
+      ],
+      "settings": { "config": "TaintConfig" }
+    },
+    "BufferMaxSizeChecker": {
+      "languages" : ["c", "c++"],
+      "inspections" : [
+        {"id": "MEM.BUF.SIZE.UNTRUSTED", "severity": "Error", "enabled": true},
+        {"id": "MEM.BUF.SIZE.OVERFLOW", "severity": "Warning", "enabled": true},
+        {"id": "CHAR.BUF.SIZE.OVERFLOW", "severity": "Error", "enabled": true}
+      ]
+    },
+    "DoNotReturnAddrOfLocalVarChecker": {
+      "id": "MEM.STACK.RET",
+      "languages" : ["c", "c++"],
+      "severity": "Error",
+      "enabled": true
+    },
+    "OutOfBoundsChecker": {
+      "languages" : ["c", "c++"],
+      "inspections" : [
+        {"id": "MEM.BUF.INDEX.BOUNDS", "severity": "Error", "enabled": true},
+        {"id": "MEM.OFFSET.BOUNDS", "severity": "Error", "enabled": true},
+        {"id": "MEM.FIELD.ACCESS", "severity": "Error", "enabled": true}
+      ]
+    },
+    "LoopLimitTaintChecker": {
+      "id": "LOOP.LIMIT.TAINT",
+      "languages" : ["c", "c++", "java"],
+      "severity": "Error",
+      "enabled": true
+    },
+    "NullPtrDereferenceChecker": {
+      "languages" : ["c", "c++", "java"],
+      "inspections" : [
+        {"id": "NULL.DEREF", "severity": "Error", "enabled": true},
+        {"id": "NULL.UNTRUSTED.DEREF", "severity": "Warning", "enabled": true}
+      ]
+    },
+    "MismatchedMemManagementChecker": {
+      "languages" : ["c", "c++"],
+      "inspections" : [
+        {"id": "MEM.FUNC.MISMATCH", "severity": "Error", "enabled": true},
+        {"id": "LOCK.FUNC.MISMATCH", "severity": "Error", "enabled": true},
+        {"id": "ALLOC.DESCRIPTOR.MISMATCH", "severity": "Error", "enabled": true}
+      ]
+    },
+    "UninitializedMemoryUsageChecker": {
+      "languages" : ["c", "c++"],
+      "inspections" : [
+        {"id": "UNINIT.VAR", "severity": "Error", "enabled": true},
+        {"id": "UNINIT.FIELD", "severity": "Error", "enabled": true},
+        {"id": "UNINIT.GOTO", "severity": "Error", "enabled": true},
+        {"id": "UNINIT.MEM", "severity": "Error", "enabled": true}
+      ]
+    },
+    "UseAfterFreeChecker": {
+      "languages" : ["c", "c++"],
+      "inspections" : [
+        {"id": "MEM.USE.FREE", "severity": "Error", "enabled": true},
+        {"id": "MEM.DOUBLE.FREE", "severity": "Error", "enabled": true}
+      ]
+    },
+    "DivisionByZeroChecker": {
+      "id": "DBZ",
+      "languages" : ["c", "c++", "java"],
+      "severity": "Error",
+      "enabled": true
+    },
+    "MemoryAndResourceLeakChecker": {
+      "languages" : ["c", "c++"],
+      "inspections" : [
+       {"id": "MEM.LEAK", "severity": "Error", "enabled": true},
+       {"id": "DESCRIPTOR.LEAK", "severity": "Error", "enabled": true},
+       {"id": "RESOURCE.LEAK", "severity": "Error", "enabled": true}
+      ]
+    },
+    "MemoryAllocationSizeChecker": {
+      "id": "MEM.ALLOC.SIZE",
+      "languages" : ["c", "c++", "java"],
+      "severity": "Error",
+      "enabled": true
+    },
+    "StringSizeChecker": {
+      "id": "STR.SIZE",
+      "languages" : ["c", "c++"],
+      "severity": "Error",
+      "enabled": true
+    },
+    "TypeSizeMismatchChecker": {
+      "id": "BOO.TYPESIZE.MISMATCH",
+      "languages" : ["c", "c++"],
+      "severity": "Error",
+      "enabled": true
+    },
+    "IntegerOverflowChecker": {
+      "id": "INT.OVERFLOW",
+      "languages" : ["c", "c++"],
+      "severity": "Error",
+      "enabled": true
+    },
+    "WrongStringIncrementChecker": {
+      "id": "STRING.OVERFLOW",
+      "languages" : ["c", "c++"],
+      "severity": "Error",
+      "enabled": true
+    },
+    "FmtSpecMismatchChecker": {
+      "languages" : ["c", "c++"],
+      "inspections" : [
+        {"id": "FMT.SPEC.MISMATCH", "severity": "Error", "enabled": true},
+        {"id": "FMT.SPEC.TMA", "severity": "Warning", "enabled": true},
+        {"id": "FMT.SPEC.TFA", "severity": "Error", "enabled": true},
+        {"id": "FMT.SPEC.PTR", "severity": "Error", "enabled": true},
+        {"id": "FMT.SPEC.SIGN", "severity": "Warning", "enabled": true}
+      ],
+      "settings": {
+        "whitelist": [
+          "printf",
+          "fprintf",
+          "sprintf",
+          "snprintf",
+          "printf_s",
+          "fprintf_s",
+          "sprintf_s",
+          "snprintf_s"
+        ]
+      }
+    },
+    "IncompatiblePointerTypeChecker": {
+      "id": "INCOMPATIBLE.PTR",
+      "languages" : ["c", "c++"],
+      "severity": "Error",
+      "enabled": true
+    }
+  }
+}

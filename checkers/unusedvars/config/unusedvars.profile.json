@@ -1,0 +1,27 @@
+{
+  "name": "UnusedVariables",
+  "language": "Any",
+  "standard": "Any",
+  "version": "Last",
+  "module" : "libunusedvars",
+  "checkers": {
+    "UnusedMemberExpressionChecker": {
+      "id": "UnusedField",
+      "languages" : ["c", "c++"],
+      "severity": "Warning",
+      "enabled": true
+    },
+    "UnusedVariablesChecker": {
+      "id": "UnusedVariables",
+      "languages" : ["c", "c++"],
+      "severity": "Error",
+      "enabled": true
+    },
+    "UnusedParamChecker": {
+      "id": "UnusedParam",
+      "languages" : ["c", "c++"],
+      "severity": "Warning",
+      "enabled": true
+    }
+  }
+}

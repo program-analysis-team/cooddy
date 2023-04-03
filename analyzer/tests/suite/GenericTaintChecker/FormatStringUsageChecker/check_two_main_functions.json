@@ -1,0 +1,18 @@
+{
+  "description": "Format parameter is externally controllable.",
+  "kind": "SV.STR.FMT.TAINT",
+  "testcase_directory": "check_two_main_functions",
+  "positive": true,
+  "problems": [
+    {
+      "file_path": "check_two_main_functions/main1.cpp",
+      "line": 18,
+      "pos": 12
+    },
+    {
+      "file_path": "check_two_main_functions/main2.cpp",
+      "line": 19,
+      "pos": 12
+    }
+  ]
+}

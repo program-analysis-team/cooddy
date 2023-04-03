@@ -1,0 +1,11 @@
+{
+  "description": "Loop 'for' is found",
+  "expression": "//LoopStatement[@Kind='For']",
+  "file_path": "LoopsAndRanges.cpp",
+  "matches": [
+    {
+      "line": 9,
+      "column": 5
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "description": "Main declaration",
+  "kind": "AstParser",
+  "line": 2,
+  "pos": 1,
+  "positive": true
+}

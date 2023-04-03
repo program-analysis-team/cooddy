@@ -1,0 +1,44 @@
+[
+  {
+    "directory": ".",
+    "arguments": [
+      "g++",
+      "--sysroot=/opt/RTOS/207.7.0/arm64le_4.4_ek_preempt_pro/sdk",
+      "-std=gnu++17",
+      "--param param_option=42",
+      "-o",
+      "objectfile.o",
+      "-fPIC",
+      "-s",
+      "-msse2",
+      "-c",
+      "foo.cpp"
+    ],
+    "file": "foo.cpp"
+  },
+  {
+    "directory": ".",
+    "arguments": [
+      "gcc",
+      "--sysroot",
+      "/opt/RTOS/207.7.0/arm64le_4.4_ek_preempt_pro/sdk",
+      "-o",
+      "objectfile.o",
+      "-fPIC",
+      "-c",
+      "foo.cpp"
+    ],
+    "file": "foo.cpp"
+  },
+  {
+    "directory": ".",
+    "arguments": [
+      "g++",
+      "-o",
+      "oobjectfile.o",
+      "",
+      "-DTEST"
+    ],
+    "file": "foo.cpp"
+  }
+]

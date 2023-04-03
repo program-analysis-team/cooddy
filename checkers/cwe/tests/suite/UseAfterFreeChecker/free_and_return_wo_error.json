@@ -1,0 +1,8 @@
+{
+  "description": "Double free",
+  "kind": "MEM.DOUBLE.FREE",
+  "line": 35,
+  "pos": 10,
+  "skipped": true,
+  "positive": true
+}

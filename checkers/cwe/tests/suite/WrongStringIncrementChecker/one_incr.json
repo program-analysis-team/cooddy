@@ -1,0 +1,5 @@
+{
+  "description": "Possible overflow of char array",
+  "kind": "STRING.OVERFLOW",
+  "positive": false
+}

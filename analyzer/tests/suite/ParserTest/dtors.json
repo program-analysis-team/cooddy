@@ -1,0 +1,11 @@
+{
+  "description": "Dtor is found. Please, make sure it works when dtor is implemented as separate node(HCAT-187)",
+  "expression": "//FunctionDecl[@FuncKind='Destructor']",
+  "file_path": "ClassesAndFunctions.cpp",
+  "matches": [
+    {
+      "line": 24,
+      "column": 5
+    }
+  ]
+}

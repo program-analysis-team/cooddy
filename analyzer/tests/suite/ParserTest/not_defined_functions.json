@@ -1,0 +1,11 @@
+{
+  "description": "Function with declaration but without definition are found",
+  "expression": "//FunctionDecl[@IsDefined='0']",
+  "file_path": "ClassesAndFunctions.cpp",
+  "matches": [
+    {
+      "line": 30,
+      "column": 1
+    }
+  ]
+}

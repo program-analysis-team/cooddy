@@ -1,0 +1,5 @@
+{
+  "description": "Null dereference",
+  "kind": "NULL.UNTRUSTED.DEREF",
+  "positive": false
+}

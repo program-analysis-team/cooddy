@@ -1,0 +1,19 @@
+{
+  "description": "ReturnStatement are found",
+  "expression": "//ReturnStatement",
+  "file_path": "returnstatement.java",
+  "matches": [
+    {
+      "line": 4,
+      "column": 13
+    },
+    {
+      "line": 6,
+      "column": 9
+    },
+    {
+      "line": 9,
+      "column": 9
+    }
+  ]
+}

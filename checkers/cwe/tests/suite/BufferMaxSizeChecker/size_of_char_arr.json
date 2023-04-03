@@ -1,0 +1,7 @@
+{
+  "description": "Memory size of \"testName\" (equal to 256 bytes) can be less than \"256\" (equal to 256). This may lead to a buffer overflow or the null terminator not being written",
+  "kind": "CHAR.BUF.SIZE.OVERFLOW",
+  "line": 8,
+  "pos": 32,
+  "positive": true
+}

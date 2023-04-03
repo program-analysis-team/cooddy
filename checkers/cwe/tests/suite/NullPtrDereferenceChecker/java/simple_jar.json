@@ -1,0 +1,19 @@
+{
+  "description": "Null dereference",
+  "kind": "NULL.DEREF",
+  "problems": [
+    {
+      "file_path": "simple_jar/simple_jar.jar/simple.java",
+      "line": 4,
+      "pos": 9
+    },
+    {
+      "file_path": "simple_jar/test.java",
+      "line": 4,
+      "pos": 9
+    }
+  ],
+  "compiler_flags": "-x=java",
+  "positive": true,
+  "testcase_directory": "simple_jar"
+}

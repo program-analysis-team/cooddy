@@ -1,0 +1,31 @@
+{
+  "description": "FieldDecl is found",
+  "expression": "//FieldDecl",
+  "file_path": "primitive_types.java",
+  "matches": [
+    {
+      "line": 2,
+      "column": 12
+    },
+    {
+      "line": 3,
+      "column": 12
+    },
+    {
+      "line": 4,
+      "column": 12
+    },
+    {
+      "line": 5,
+      "column": 12
+    },
+    {
+      "line": 6,
+      "column": 12
+    },
+    {
+      "line": 7,
+      "column": 12
+    }
+  ]
+}

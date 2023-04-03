@@ -1,0 +1,5 @@
+{
+  "description": "Unused data structure member.",
+  "kind": "UnusedField",
+  "positive": false
+}

@@ -1,0 +1,9 @@
+{
+  "description": "Double free",
+  "file_path": "CWE415_delete_free.cpp",
+  "kind": "MEM.DOUBLE.FREE",
+  "line": 8,
+  "pos": 10,
+  "positive": true,
+  "sink_function": "free"
+}

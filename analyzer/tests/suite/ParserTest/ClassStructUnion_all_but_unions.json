@@ -1,0 +1,28 @@
+{
+  "description": "All classes and structs are found",
+  "expression": "//Namespace/CxxRecordDecl[@IsUnion='0']",
+  "file_path": "ClassStructUnion.cpp",
+  "matches": [
+    {
+      "line": 3,
+      "column": 1
+    },
+    {
+      "line": 5,
+      "column": 1
+    },
+    {
+      "line": 18,
+      "column": 1
+    },
+    {
+      "line": 23,
+      "column": 1
+    },
+    {
+      "line": 30,
+      "column": 1
+    }
+
+  ]
+}

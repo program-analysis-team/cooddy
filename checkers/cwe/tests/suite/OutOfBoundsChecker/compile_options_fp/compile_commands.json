@@ -1,0 +1,32 @@
+[
+  {
+    "directory": ".",
+    "command": "gcc -m32 --target=aarch64_be-linux-gnu",
+    "file": "foo.c"
+  },
+  {
+    "directory": ".",
+    "command": "gcc -m64 --target=arm-eabi",
+    "file": "foo.c"
+  },
+  {
+    "directory": ".",
+    "command": "gcc",
+    "file": "foo.c"
+  },
+  {
+    "directory": ".",
+    "command": "gcc",
+    "file": "bar.c"
+  },
+  {
+    "directory": ".",
+    "command": "gcc -m32 --target=aarch64_be-linux-gnu",
+    "file": "bar.c"
+  },
+  {
+    "directory": ".",
+    "command": "gcc -m64 --target=arm-eabi",
+    "file": "bar.c"
+  }
+]

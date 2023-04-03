@@ -1,0 +1,11 @@
+{
+    "description": "Private access specifier declaration",
+    "expression": "//AccessSpecDecl[@AccessKind='Private']",
+    "file_path": "ClassAccessModifiers.cpp",
+    "matches": [
+        {
+            "line": 2,
+            "column": 1
+        }
+    ]
+}

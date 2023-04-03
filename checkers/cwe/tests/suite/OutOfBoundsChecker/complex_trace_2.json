@@ -1,0 +1,27 @@
+{
+  "description": "Overrunning array \"bucket->prefix\" of 10 elements by accessing it with index \"pos\" equal to 10",
+  "kind": "MEM.BUF.INDEX.BOUNDS",
+  "line": 9,
+  "pos": 5,
+  "trace": [
+    {
+      "file": "complex_trace_2.cpp",
+      "line": 18,
+      "col": 25,
+      "desc": "Untrusted data source (undefined function: __builtin_ffs)"
+    },
+    {
+      "file": "complex_trace_2.cpp",
+      "line": 20,
+      "col": 24,
+      "desc": "Untrusted data passed as the 1st argument"
+    },
+    {
+      "file": "complex_trace_2.cpp",
+      "line": 9,
+      "col": 5,
+      "desc": "Overrunning array \"bucket->prefix\" of 10 elements by accessing it with index \"pos\" equal to 10"
+    }
+  ],
+  "positive": true
+}

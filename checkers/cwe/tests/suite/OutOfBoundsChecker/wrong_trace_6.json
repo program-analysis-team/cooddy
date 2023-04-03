@@ -1,0 +1,34 @@
+{
+  "description": "Overrunning array \"data->entrys\" of 100 elements by accessing it with index \"entryIndex\" equal to 100",
+  "kind": "MEM.BUF.INDEX.BOUNDS",
+  "line": 16,
+  "pos": 45,
+  "trace": [
+    {
+      "file": "wrong_trace_6.cpp",
+      "line": 22,
+      "col": 36,
+      "desc": "Untrusted data source (public function: CompCheckGetStrongHashData)"
+    },
+    {
+      "file": "wrong_trace_6.cpp",
+      "line": 25,
+      "col": 82,
+      "desc": "Untrusted data passed as the 5th argument"
+    },
+    {
+      "file": "wrong_trace_6.cpp",
+      "line": 15,
+      "col": 9,
+      "desc": "offset + size <= BYTE_PER_SECTOR_NOPI is true"
+    },
+    {
+      "file": "wrong_trace_6.cpp",
+      "line": 16,
+      "col": 45,
+      "desc": "Overrunning array \"data->entrys\" of 100 elements by accessing it with index \"entryIndex\" equal to 100"
+    }
+  ],
+  "taint_options": "sup",
+  "positive": true
+}

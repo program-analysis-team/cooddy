@@ -1,0 +1,7 @@
+{
+  "description": "Attempt to return a memory resource to the system, with call of incompatible release function.",
+  "kind": "MEM.FUNC.MISMATCH",
+  "line": 11,
+  "pos": 14,
+  "positive": true
+}

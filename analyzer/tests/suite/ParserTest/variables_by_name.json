@@ -1,0 +1,23 @@
+{
+  "description": "All variables are found by name",
+  "expression": "//VarDecl[@Name='x']",
+  "file_path": "VariablesMembersAndParameters.cpp",
+  "matches": [
+    {
+      "line": 4,
+      "column": 1
+    },
+    {
+      "line": 14,
+      "column": 5
+    },
+    {
+      "line": 30,
+      "column": 5
+    },
+    {
+      "line": 45,
+      "column": 5
+    }
+  ]
+}

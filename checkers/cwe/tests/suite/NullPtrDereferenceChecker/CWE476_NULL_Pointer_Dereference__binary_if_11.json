@@ -1,0 +1,8 @@
+{
+  "description": "Null dereference",
+  "kind": "NULL.DEREF",
+  "positive": true,
+  "line": 11,
+  "pos": 51,
+  "testcase_goal": "Using a single & in the if statement will cause both sides of the expression to be evaluated thus causing a NPD"
+}

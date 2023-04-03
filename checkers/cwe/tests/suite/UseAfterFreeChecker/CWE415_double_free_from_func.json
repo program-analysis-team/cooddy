@@ -1,0 +1,9 @@
+{
+  "description": "Double free",
+  "file_path": "CWE415_double_free_from_func.c",
+  "kind": "MEM.DOUBLE.FREE",
+  "line": 6,
+  "pos": 10,
+  "positive": true,
+  "sink_function": "free"
+}

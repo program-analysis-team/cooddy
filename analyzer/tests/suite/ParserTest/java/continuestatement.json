@@ -1,0 +1,11 @@
+{
+  "description": "ContinueStatement are found",
+  "expression": "//ContinueStatement",
+  "file_path": "continuestatement.java",
+  "matches": [
+    {
+      "line": 4,
+      "column": 13
+    }
+  ]
+}

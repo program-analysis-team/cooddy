@@ -1,0 +1,7 @@
+[
+  {
+    "directory": ".",
+    "command": "g++ -std=gnu++17 --param param_option=42 -o objectfile.o -fPIC -c foo.cpp",
+    "file": "foo.cpp"
+  }
+]

@@ -1,0 +1,24 @@
+{
+  "description": "{*}",
+  "kind": "MEM.BUF.SIZE.UNTRUSTED",
+  "positive": true,
+  "problems": [
+    {
+      "line": 11,
+      "pos": 23
+    },
+    {
+      "line": 21,
+      "pos": 23
+    },
+    {
+      "line": 21,
+      "pos": 38
+    },
+    {
+      "line": 11,
+      "pos": 42
+    }
+  ],
+  "sink_function": "memcpy_s"
+}

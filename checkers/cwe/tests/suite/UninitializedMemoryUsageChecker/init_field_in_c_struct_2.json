@@ -1,0 +1,6 @@
+{
+  "description": "The variable 'struct A a' is an uninitialized value.",
+  "kind": "UNINIT.VAR",
+  "positive": false,
+  "file_path": "init_field_in_c_struct_2.c"
+}

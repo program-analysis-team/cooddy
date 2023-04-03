@@ -1,0 +1,6 @@
+{
+  "description": "The variable '' is an uninitialized value.",
+  "file_path": "condition_for_pointer.c",
+  "kind": "UNINIT.VAR",
+  "positive": false
+}

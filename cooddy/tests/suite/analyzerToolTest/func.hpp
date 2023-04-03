@@ -1,0 +1,3 @@
+int * Boo() {
+    return nullptr;
+}

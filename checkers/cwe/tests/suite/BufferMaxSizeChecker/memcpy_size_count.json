@@ -1,0 +1,7 @@
+{
+  "description": "Size of the destination buffer '4' can be less than 'SIZE_BUF' parameter, this may lead to undefined behavior",
+  "kind": "MEM.BUF.SIZE.OVERFLOW",
+  "line": 6,
+  "pos": 27,
+  "positive": true
+}

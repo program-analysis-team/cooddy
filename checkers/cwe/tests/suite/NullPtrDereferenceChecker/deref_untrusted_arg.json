@@ -1,0 +1,8 @@
+{
+  "description": "Null dereference",
+  "kind": "NULL.UNTRUSTED.DEREF",
+  "severity": "Warning",
+  "line": 11,
+  "pos": 13,
+  "positive": true
+}

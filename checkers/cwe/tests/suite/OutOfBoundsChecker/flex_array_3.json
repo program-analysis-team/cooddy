@@ -1,0 +1,8 @@
+{
+  "description": "Out of memory bounds access",
+  "kind": "MEM.BUF.INDEX.BOUNDS",
+  "line": 11,
+  "pos": 5,
+  "positive": true,
+  "skipped": true
+}

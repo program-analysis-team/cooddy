@@ -1,0 +1,7 @@
+{
+  "java.util.Scanner.nextLine": [["UntrustedSource"]],
+  "java.util.Scanner.nextInt": [["UntrustedSource"]],
+  "java.io.Console.readLine": [["UntrustedSource"]],
+  "java.lang.Integer.parseInt": [["UntrustedSource"]],
+  "java.lang.String.format": [[], [], ["FormatString"]]
+}

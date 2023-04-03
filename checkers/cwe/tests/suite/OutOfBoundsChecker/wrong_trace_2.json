@@ -1,0 +1,39 @@
+{
+  "description": "Overrunning array \"mem\" of 10 elements by accessing it with index \"idx\" equal to 10",
+  "kind": "MEM.BUF.INDEX.BOUNDS",
+  "line": 12,
+  "pos": 5,
+  "trace": [
+    {
+      "file": "wrong_trace_2.cpp",
+      "line": 18,
+      "col": 15,
+      "desc": "Memory address passed as the 1st argument"
+    },
+    {
+      "file": "wrong_trace_2.cpp",
+      "line": 6,
+      "col": 12,
+      "desc": "Untrusted data source (undefined function: someFunc)"
+    },
+    {
+      "file": "wrong_trace_2.cpp",
+      "line": 6,
+      "col": 5,
+      "desc": "Assume return here"
+    },
+    {
+      "file": "wrong_trace_2.cpp",
+      "line": 11,
+      "col": 15,
+      "desc": "Untrusted data returned as the result"
+    },
+    {
+      "file": "wrong_trace_2.cpp",
+      "line": 12,
+      "col": 5,
+      "desc": "Overrunning array \"mem\" of 10 elements by accessing it with index \"idx\" equal to 10"
+    }
+  ],
+  "positive": true
+}

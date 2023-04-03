@@ -1,0 +1,5 @@
+{
+  "description": "Do not return the address of a local variable to outside of its scope.",
+  "kind": "MEM.STACK.RET",
+  "positive": false
+}

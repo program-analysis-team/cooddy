@@ -1,0 +1,6 @@
+{
+  "description": "Missing release of descriptor after effective lifetime",
+  "kind": "DESCRIPTOR.LEAK",
+  "positive": false,
+  "os": ["Windows"]
+}

@@ -1,0 +1,27 @@
+{
+  "description": "Overrunning array \"g_Arr\" of 16 elements by accessing it with index \"id\" equal to 16",
+  "kind": "MEM.BUF.INDEX.BOUNDS",
+  "line": 9,
+  "pos": 13,
+  "trace": [
+    {
+      "file": "untrusted_source_global_array_index.c",
+      "line": 14,
+      "col": 29,
+      "desc": "Untrusted data source (undefined function: SomeFunc)"
+    },
+    {
+      "file": "untrusted_source_global_array_index.c",
+      "line": 15,
+      "col": 28,
+      "desc": "Untrusted data passed as the 1st argument"
+    },
+    {
+      "file": "untrusted_source_global_array_index.c",
+      "line": 9,
+      "col": 13,
+      "desc": "Overrunning array \"g_Arr\" of 16 elements by accessing it with index \"id\" equal to 16"
+    }
+  ],
+  "positive": true
+}

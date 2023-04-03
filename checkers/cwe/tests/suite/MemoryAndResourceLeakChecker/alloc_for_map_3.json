@@ -1,0 +1,5 @@
+{
+  "description": "Missing Release of Memory after Effective Lifetime.",
+  "kind": "MEM.LEAK",
+  "positive": false
+}

@@ -1,0 +1,6 @@
+{
+  "description": "Out of memory bounds access",
+  "kind": "MEM.BUF.INDEX.BOUNDS",
+  "testcase_directory": "compile_options_fp",
+  "positive": false
+}

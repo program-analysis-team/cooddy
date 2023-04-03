@@ -1,0 +1,21 @@
+{
+  "description": "Possible overflow of char array",
+  "kind": "STRING.OVERFLOW",
+  "line": 7,
+  "pos": 18,
+  "positive": true,
+  "trace": [
+    {
+      "file": "two_inc_for.cpp",
+      "line": 8,
+      "col": 9,
+      "desc": "First unchecked increment of pointer to char array"
+    },
+    {
+      "file": "two_inc_for.cpp",
+      "line": 7,
+      "col": 18,
+      "desc": "Possible overflow of char array"
+    }
+  ]
+}

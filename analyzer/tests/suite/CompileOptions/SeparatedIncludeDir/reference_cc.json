@@ -1,0 +1,17 @@
+[
+  {
+    "directory": ".",
+    "command": "g++ -std=gnu++17 -I./include1 src1.cpp",
+    "file": "src1.cpp"
+  },
+  {
+    "directory": ".",
+    "command": "g++ -std=gnu++17 -I./include1 -I./include2 src2.cpp",
+    "file": "src2.cpp"
+  },
+  {
+    "directory": ".",
+    "command": "g++ -std=gnu++17 -I./include1 -I./include2 -I./include3 src3.cpp",
+    "file": "src3.cpp"
+  }
+]

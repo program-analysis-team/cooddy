@@ -1,0 +1,9 @@
+{
+  "description": "Division by zero",
+  "kind": "DBZ",
+  "positive": false,
+  "line": 0,
+  "pos": 0,
+  "skipped": false,
+  "testcase_goal": "Division by zero with check that divider is not equal to zero."
+}

@@ -1,0 +1,15 @@
+{
+  "description": "CxxRecordDecl is found",
+  "expression": "//CxxRecordDecl[@IsClass='1']",
+  "file_path": "recorddecl.java",
+  "matches": [
+    {
+      "line": 1,
+      "column": 8
+    },
+    {
+      "line": 8,
+      "column": 1
+    }
+  ]
+}

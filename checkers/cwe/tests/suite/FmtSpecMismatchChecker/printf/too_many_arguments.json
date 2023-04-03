@@ -1,0 +1,7 @@
+{
+	"description": "Too many arguments for format string",
+	"kind": "FMT.SPEC.TMA",
+	"positive": true,
+	"line": 5,
+	"pos": 12
+}

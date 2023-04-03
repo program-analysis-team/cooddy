@@ -1,0 +1,7 @@
+{
+  "description": "Local class members are something strange. Nothing is found",
+  "expression": "//FieldDecl[@IsLocal='1']",
+  "file_path": "VariablesMembersAndParameters.cpp",
+  "matches": [
+  ]
+}

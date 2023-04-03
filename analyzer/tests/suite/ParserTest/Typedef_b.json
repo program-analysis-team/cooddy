@@ -1,0 +1,11 @@
+{
+  "description": "TypedefDecl is found by name",
+  "expression": "//TypedefDecl[@Name='MyTypedef']",
+  "file_path": "TypesAlias.cpp",
+  "matches": [
+    {
+      "line": 5,
+      "column": 1
+    }
+  ]
+}

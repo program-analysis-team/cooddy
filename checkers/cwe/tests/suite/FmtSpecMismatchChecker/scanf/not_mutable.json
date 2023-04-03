@@ -1,0 +1,7 @@
+{
+	"description": "Expected mutable pointer argument for format specifier \"%d\"",
+	"kind": "FMT.SPEC.PTR",
+	"positive": true,
+	"line": 6,
+	"pos": 17
+}

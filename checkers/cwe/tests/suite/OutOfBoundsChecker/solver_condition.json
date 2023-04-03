@@ -1,0 +1,64 @@
+{
+  "description": "{*}",
+  "kind": "MEM.BUF.INDEX.BOUNDS",
+  "testcase_directory": "solver_condition",
+  "positive": true,
+  "allowed_tool_error": true,
+  "problems": [
+    {
+      "file_path": "solver_condition/solver_condition.cpp",
+      "line": 40,
+      "pos": 5
+    },
+    {
+      "file_path": "solver_condition/solver_condition.cpp",
+      "line": 34,
+      "pos": 5
+    },
+    {
+      "file_path": "solver_condition/solver_condition.cpp",
+      "line": 56,
+      "pos": 5
+    },
+    {
+      "file_path": "solver_condition/solver_condition.cpp",
+      "line": 80,
+      "pos": 5
+    },
+    {
+      "file_path": "solver_condition/solver_condition.cpp",
+      "line": 72,
+      "pos": 5
+    },
+    {
+      "file_path": "solver_condition/solver_condition.cpp",
+      "line": 64,
+      "pos": 5
+    },
+    {
+      "file_path": "solver_condition/solver_condition.cpp",
+      "line": 48,
+      "pos": 5
+    },
+    {
+      "file_path": "solver_condition/solver_condition.cpp",
+      "line": 93,
+      "pos": 5
+    },
+    {
+      "file_path": "solver_condition/solver_condition.cpp",
+      "line": 103,
+      "pos": 5
+    },
+    {
+      "file_path": "solver_condition/solver_condition.cpp",
+      "line": 95,
+      "pos": 5
+    },
+    {
+      "file_path": "solver_condition/solver_condition.cpp",
+      "line": 139,
+      "pos": 5
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "description": "Division by zero",
+  "kind": "DBZ",
+  "positive": true,
+  "problems": [
+    {
+      "line": 4,
+      "pos": 20
+    },
+    {
+      "line": 8,
+      "pos": 20
+    },
+    {
+      "line": 12,
+      "pos": 20
+    },
+    {
+      "line": 16,
+      "pos": 20
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "description": "Memory size of \"arr\" (equal to 50 bytes) can be less than \"s\" (equal to 100). This may lead to a buffer overflow",
+  "kind": "MEM.BUF.SIZE.UNTRUSTED",
+  "positive": true,
+  "line": 9,
+  "pos": 37,
+  "taint_options": "s"
+}

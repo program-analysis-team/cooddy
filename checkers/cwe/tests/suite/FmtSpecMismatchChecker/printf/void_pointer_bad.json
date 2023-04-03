@@ -1,0 +1,7 @@
+{
+	"description": "Expected pointer argument for format specifier \"%p\"",
+	"kind": "FMT.SPEC.MISMATCH",
+	"positive": true,
+	"line": 8,
+	"pos": 18
+}

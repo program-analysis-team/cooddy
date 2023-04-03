@@ -1,0 +1,15 @@
+{
+  "description": "Deleted operators and ctors are found",
+  "expression": "//FunctionDecl[@IsDeleted='1']",
+  "file_path": "ClassesAndFunctions.cpp",
+  "matches": [
+    {
+      "line": 19,
+      "column": 5
+    },
+    {
+      "line": 22,
+      "column": 5
+    }
+  ]
+}

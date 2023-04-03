@@ -1,0 +1,10 @@
+{
+  "description": "Implicit empty statement is found",
+  "expression": "//EmptyStmt",
+  "matches": [
+    {
+      "line": 6,
+      "column": 27
+    }
+  ]
+}

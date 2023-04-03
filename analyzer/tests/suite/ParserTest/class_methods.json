@@ -1,0 +1,27 @@
+{
+  "description": "Only class methods(and operators) are found. Free functions are ignored",
+  "expression": "//FunctionDecl[@FuncKind='Method']",
+  "file_path": "ClassesAndFunctions.cpp",
+  "matches": [
+    {
+      "line": 7,
+      "column": 5
+    },
+    {
+      "line": 9,
+      "column": 5
+    },
+    {
+      "line": 11,
+      "column": 5
+    },
+    {
+      "line": 21,
+      "column": 5
+    },
+    {
+      "line": 22,
+      "column": 5
+    }
+  ]
+}

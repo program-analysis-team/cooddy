@@ -1,0 +1,7 @@
+{
+  "description": "Use after free",
+  "kind": "MEM.USE.FREE",
+  "line": 13,
+  "pos": 6,
+  "positive": true
+}

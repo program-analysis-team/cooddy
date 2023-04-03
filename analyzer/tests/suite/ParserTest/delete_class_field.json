@@ -1,0 +1,5 @@
+{
+  "description": "Expression 'delete this->array' should not be found (not 'delete this').",
+  "expression": "//DeleteExpression/ThisExpression",
+  "matches": []
+}

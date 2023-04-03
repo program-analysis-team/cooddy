@@ -1,0 +1,19 @@
+{
+  "description": "Double free",
+  "file_path": "CWE415_tripple_free.c",
+  "kind": "MEM.DOUBLE.FREE",
+  "positive": true,
+  "problems": [
+    {
+      "file_path": "CWE415_tripple_free.c",
+      "line": 9,
+      "pos": 10
+    },
+    {
+      "file_path": "CWE415_tripple_free.c",
+      "line": 8,
+      "pos": 10
+    }
+  ],
+  "sink_function": "free"
+}

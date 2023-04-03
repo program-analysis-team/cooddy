@@ -1,0 +1,11 @@
+{
+  "description": "Move ctor is found",
+  "expression": "//CxxCtorDecl[@IsMove='1']",
+  "file_path": "ClassesAndFunctions.cpp",
+  "matches": [
+    {
+      "line": 19,
+      "column": 5
+    }
+  ]
+}

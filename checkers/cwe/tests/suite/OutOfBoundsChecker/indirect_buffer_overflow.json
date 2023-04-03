@@ -1,0 +1,7 @@
+{
+  "description": "Out of memory bounds access",
+  "kind": "MEM.OFFSET.BOUNDS",
+  "positive": true,
+  "line": 8,
+  "pos": 10
+}

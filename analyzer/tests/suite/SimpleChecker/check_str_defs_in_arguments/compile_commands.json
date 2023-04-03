@@ -1,0 +1,10 @@
+[
+  {
+    "directory": ".",
+    "arguments": [
+      "gcc",
+      "-DSTR_DEF=\"some \\n string\""
+    ],
+    "file": "bar.cpp"
+  }
+]

@@ -1,0 +1,9 @@
+{
+  "description": "Division by zero",
+  "kind": "DBZ",
+  "positive": false,
+  "line": 0,
+  "pos": 0,
+  "skipped": false,
+  "testcase_goal": "User input variable is used as divisor and passed by function but we check it's not equal to zero before division."
+}

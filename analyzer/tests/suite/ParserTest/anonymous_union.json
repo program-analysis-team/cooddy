@@ -1,0 +1,10 @@
+{
+  "description": "All nodes with empty names are found(It is only anonymous union)",
+  "expression": "//[@IsAnonymous='1']",
+  "matches": [
+    {
+      "line": 3,
+      "column": 1
+    }
+  ]
+}

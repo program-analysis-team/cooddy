@@ -1,0 +1,8 @@
+{
+  "description": "Unary expression(operator not) is found",
+  "expression": "//UnaryExpression",
+  "matches": [ {
+    "line": 3,
+    "column": 12
+  }]
+}

@@ -1,0 +1,9 @@
+{
+  "description": "Format parameter is externally controllable.",
+  "kind": "SV.STR.FMT.TAINT",
+  "line": 19,
+  "pos": 36,
+  "taint_options": "none",
+  "positive": true,
+  "skipped": true
+}

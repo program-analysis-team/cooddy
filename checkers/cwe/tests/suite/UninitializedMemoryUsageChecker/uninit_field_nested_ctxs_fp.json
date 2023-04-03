@@ -1,0 +1,6 @@
+{
+  "description": "The variable 'a.a' is an uninitialized value.",
+  "kind": "UNINIT.VAR",
+  "positive": false,
+  "file_path": "uninit_field_nested_ctxs_fp.c"
+}

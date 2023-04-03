@@ -1,0 +1,8 @@
+{
+  "description": "PARAM_VAR_DECL expression is found",
+  "expression": "//ParamVarDecl",
+  "matches": [ {
+    "line": 2,
+    "column": 14
+  }]
+}

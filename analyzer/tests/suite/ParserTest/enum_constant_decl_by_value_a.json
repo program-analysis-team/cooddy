@@ -1,0 +1,22 @@
+{
+  "description": "EnumConstantDecl is found by value",
+  "expression": "//EnumConstantDecl[@Value='2']",
+  "matches": [
+    {
+      "line": 2,
+      "column": 29
+    },
+    {
+      "line": 6,
+      "column": 40
+    },
+    {
+      "line": 10,
+      "column": 31
+    },
+    {
+      "line": 14,
+      "column": 27
+    }
+  ]
+}

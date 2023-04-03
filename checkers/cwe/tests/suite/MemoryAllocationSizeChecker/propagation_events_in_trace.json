@@ -1,0 +1,39 @@
+{
+  "description": "Allocation size is got from untrusted source.",
+  "kind": "MEM.ALLOC.SIZE",
+  "line": 8,
+  "pos": 12,
+  "trace": [
+    {
+      "file": "propagation_events_in_trace.cpp",
+      "line": 11,
+      "col": 23,
+      "desc": "Untrusted data source (annotated by macro: foo)"
+    },
+    {
+      "file": "propagation_events_in_trace.cpp",
+      "line": 14,
+      "col": 13,
+      "desc": "Untrusted data propagated from the \"p\" to the \"str\""
+    },
+    {
+      "file": "propagation_events_in_trace.cpp",
+      "line": 15,
+      "col": 10,
+      "desc": "Untrusted data passed as the 1st argument"
+    },
+    {
+      "file": "propagation_events_in_trace.cpp",
+      "line": 7,
+      "col": 16,
+      "desc": "Untrusted data propagated from the \"str\" to the result of \"atoi\""
+    },
+    {
+      "file": "propagation_events_in_trace.cpp",
+      "line": 8,
+      "col": 12,
+      "desc": "Allocation size is got from untrusted source."
+    }
+  ],
+  "positive": true
+}

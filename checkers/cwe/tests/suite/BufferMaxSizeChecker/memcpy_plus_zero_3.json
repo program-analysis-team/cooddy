@@ -1,0 +1,8 @@
+{
+  "description": "Memory size of \"dstBuff\" (equal to 20000 bytes) can be less than \"size * sizeof(float)\" (equal to 20004). This may lead to a buffer overflow",
+  "kind": "MEM.BUF.SIZE.UNTRUSTED",
+  "positive": true,
+  "line": 11,
+  "pos": 27,
+  "sink_function": "memcpy_s"
+}

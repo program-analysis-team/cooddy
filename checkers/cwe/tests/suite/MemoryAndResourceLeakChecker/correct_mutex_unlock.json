@@ -1,0 +1,5 @@
+{
+  "description": "Missing mutex unlock",
+  "kind": "RESOURCE.LEAK",
+  "positive": false
+}

@@ -1,0 +1,8 @@
+{
+  "taint_return": [["TaintOutput"]],
+  "taint_return_2": [["TaintOutput"]],
+  "taint_out_param": [[], ["TaintOutput"]],
+  "taint_args": [[], ["TaintInput"], [], ["TaintInput"]],
+  "taint_return_legacy": [["UntrustedSource"]],
+  "taint_out_param_legacy": [[], ["UntrustedSource"]]
+}

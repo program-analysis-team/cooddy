@@ -1,0 +1,15 @@
+{
+  "description": "CxxCtorDecl is found",
+  "expression": "//CxxCtorDecl",
+  "file_path": "constructor.java",
+  "matches": [
+    {
+      "line": 4,
+      "column": 16
+    },
+    {
+      "line": 9,
+      "column": 5
+    }
+  ]
+}

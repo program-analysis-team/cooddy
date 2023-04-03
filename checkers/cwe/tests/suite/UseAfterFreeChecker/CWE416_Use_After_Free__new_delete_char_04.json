@@ -1,0 +1,8 @@
+{
+  "description": "Use after free",
+  "file_path": "CWE416_Use_After_Free__new_delete_char_04.cpp",
+  "kind": "MEM.USE.FREE",
+  "line": 45,
+  "pos": 27,
+  "positive": true
+}

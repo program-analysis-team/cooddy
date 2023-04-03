@@ -1,0 +1,24 @@
+{
+  "testcase_directory": "annotated_by_config2",
+  "file_path": "annotated_by_config2/annotated_by_config2.cpp",
+  "description": "Memory size of \"&b[1]\" (equal to 7 bytes) can be less than \"v\" (equal to 8). This may lead to a buffer overflow",
+  "kind": "MEM.BUF.SIZE.UNTRUSTED",
+  "reason": "Annotated by config",
+  "positive": true,
+  "line": 8,
+  "pos": 26,
+  "trace": [
+    {
+      "file": "annotated_by_config2.cpp",
+      "line": 5,
+      "col": 33,
+      "desc": "Untrusted data source (annotated by config: annotatedFunction)"
+    },
+    {
+      "file": "annotated_by_config2.cpp",
+      "line": 8,
+      "col": 26,
+      "desc": "Memory size of \"&b[1]\" (equal to 7 bytes) can be less than \"v\" (equal to 8). This may lead to a buffer overflow"
+    }
+  ]
+}
