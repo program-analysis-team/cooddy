@@ -125,10 +125,10 @@ public:
 
     bool OnReportProblem(ProblemInfo& problemInfo) override
     {
-        auto problemRange = problemInfo.trace.back().range;
-        auto tu = problemInfo.trace.back().tu;
-        auto sinkVarName = tu->GetSourceInRange(problemRange);
-        problemInfo.replacements.push_back(sinkVarName);
+        if (auto funcCtx = problemInfo.trace.back().funcCtx; funcCtx != nullptr) {
+            problemInfo.replacements.push_back(
+                funcCtx->GetVarName(problemInfo.trace.back().annotation.GetInstruction()));
+        }
         return true;
     }
 

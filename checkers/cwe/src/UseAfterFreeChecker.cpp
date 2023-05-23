@@ -87,6 +87,11 @@ public:
         auto checkerKind = problem.trace.back().annotation.GetUserData<CheckerKind>();
 
         if (checkerKind == DOUBLE_FREE_KIND) {
+            if (problem.trace.size() == 1) {
+                // this case is the result of wrong behavior of Annotation::PROPAGATED_BY_ALIAS flag
+                // the real fix should be implemented via HCAT-2533
+                return false;  // LCOV_EXCL_LINE
+            }
             description = StrLocales::GetStringLocale("DOUBLE_FREE");
             problem.kind = "MEM.DOUBLE.FREE";
             problem.trace.front().description = StrLocales::GetStringLocale("FREE");

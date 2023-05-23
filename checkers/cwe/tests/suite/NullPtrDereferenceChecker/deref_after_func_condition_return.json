@@ -1,6 +1,6 @@
 {
-  "description": "Null dereference",
   "kind": "NULL.DEREF",
+  "description": "Dereferencing of \"ppChar\" which can be null",
   "line": 12,
   "pos": 5,
   "positive": true

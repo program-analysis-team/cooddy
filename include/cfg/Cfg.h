@@ -53,6 +53,11 @@ public:
         return myEntryBlock;
     }
 
+    uint32_t GetMemorySize() const
+    {
+        return myMemorySize;
+    }
+
     void Init();
     void DumpCFGToDot(std::ofstream& resultFile) const;
 
@@ -64,6 +69,8 @@ private:
     void AddCtorInitializers(std::vector<HCXX::CfgElement>& elements);
 
     void AddCatchEdges();
+
+    void AddNodeMemorySize(const Node& node);
 
     using GlobalsMap = std::map<uint32_t, const Node*>;
     std::vector<HCXX::CfgElement> ProcessElementsOfBlock(CfgBlock& block, uint32_t blockPos, bool isEntryBlock,
@@ -77,6 +84,7 @@ private:
     std::map<std::pair<const Node*, uint32_t>, uint32_t> myModifiedNodes;
     uint32_t myEntryBlock = 0;
     uint32_t myExitBlock = 0;
+    uint32_t myMemorySize = 0;
 };
 
 };  // namespace HCXX

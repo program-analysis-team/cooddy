@@ -1,6 +1,6 @@
 {
-  "description": "Null dereference",
   "kind": "NULL.UNTRUSTED.DEREF",
+  "description": "Dereferencing of \"bar->ptr\" which can be null",
   "line": 12,
   "pos": 17,
   "positive": true

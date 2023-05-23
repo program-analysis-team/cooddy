@@ -218,18 +218,21 @@ public:
         }
     }
 
-    void GetComparingWithNullDesc(const char* locName, TraceNode& traceNode)
+    static std::string GetVarName(const TraceNode& traceNode)
     {
-        std::string varName;
-        if (traceNode.funcCtx != nullptr) {
-            auto varRange = traceNode.funcCtx->GetBehavior()->GetSourceRange(traceNode.annotation.GetInstruction());
-            varName = traceNode.funcCtx->GetTranslationUnit().GetSourceInRange(varRange);
-        }
-        traceNode.description = StrLocales::GetStringLocale(locName, {std::move(varName)});
+        auto funcCtx = traceNode.funcCtx;
+        return funcCtx ? funcCtx->GetVarName(traceNode.annotation.GetInstruction()) : "";
+    }
+
+    static void GetComparingWithNullDesc(const char* locName, TraceNode& traceNode)
+    {
+        traceNode.description = StrLocales::GetStringLocale(locName, {GetVarName(traceNode)});
     }
 
     bool OnReportProblem(ProblemInfo& problemInfo) override
     {
+        problemInfo.replacements.push_back(GetVarName(problemInfo.trace.back()));
+
         auto kind = problemInfo.trace.front().annotation.GetKind();
         if (kind == myUntrustedSourceKind) {
             problemInfo.kind = "NULL.UNTRUSTED.DEREF";

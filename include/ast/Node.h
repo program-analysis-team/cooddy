@@ -11,6 +11,7 @@
 
 #include <ast/Type.h>
 #include <utils/EnumMapping.h>
+#include <utils/Memory.h>
 
 #include <algorithm>
 #include <atomic>
@@ -330,6 +331,11 @@ public:
     void SafePrint(std::string& source, int entryOffset, const std::string& text, SourceRange range,
                    int offset = 0) const;
 
+    virtual void GetMemorySize(MemCounter& counter) const
+    {
+        counter << *this;
+    }
+
 protected:
     explicit Node() : myIndexPos(0), myInMacro(0) {}
     Node(const Node& other) : myIndexPos(other.myIndexPos), myInMacro(other.myInMacro) {}
@@ -388,6 +394,11 @@ extern void RegisterNodeCreator(Node::Kind kind, std::function<Node*()> creator)
     {                                                                       \
         stream << body;                                                     \
         return Base::Serialize(stream);                                     \
+    }                                                                       \
+    virtual void GetMemorySize(MemCounter& counter) const                   \
+    {                                                                       \
+        counter << body;                                                    \
+        Base::GetMemorySize(counter);                                       \
     }
 
 template <class TNode>

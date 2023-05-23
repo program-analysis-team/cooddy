@@ -103,6 +103,7 @@ public:
     }
 
     Type ConvertType(const clang::QualType& qualType);
+    Type ConvertType(const clang::QualType& qualType, const clang::AttrVec& attrs);
 
     std::pair<Type, uint32_t> GetVarDeclInfo(const clang::VarDecl& varDecl);
 

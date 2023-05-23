@@ -1,6 +1,6 @@
 {
-  "description": "Null dereference",
   "kind": "NULL.DEREF",
+  "description": "Dereferencing of \"intPointer\" which can be null",
   "positive": true,
   "line": 24,
   "pos": 27,

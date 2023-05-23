@@ -17,6 +17,7 @@
 #include <vector>
 
 namespace HCXX {
+extern uint32_t GetMaxThreadsCount();
 
 class ThreadPool {
 public:
@@ -74,9 +75,7 @@ public:
         return myRunTime;
     }
 
-    explicit ThreadPool(uint32_t maxThreads = 0)
-        : myMaxThreads(maxThreads != 0 ? maxThreads : std::thread::hardware_concurrency())
-    {}
+    explicit ThreadPool(uint32_t maxThreads = 0) : myMaxThreads(maxThreads != 0 ? maxThreads : GetMaxThreadsCount()) {}
     ~ThreadPool()
     {
         StopAll();

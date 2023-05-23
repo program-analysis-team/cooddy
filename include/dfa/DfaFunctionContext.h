@@ -117,6 +117,8 @@ public:
 
     virtual std::string GetArgName(Instruction argInstr, uint32_t argPos) const = 0;
 
+    virtual std::string GetVarName(Instruction instr) const = 0;
+
     virtual std::vector<Annotation> CollectAnnotations(const Annotation& source) const = 0;
 
     virtual UnitLanguage GetLanguage() const = 0;

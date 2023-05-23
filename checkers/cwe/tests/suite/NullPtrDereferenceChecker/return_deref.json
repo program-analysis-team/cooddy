@@ -1,5 +1,5 @@
 {
-  "description": "Null dereference",
+  "description": "Dereferencing of \"GetA()\" which can be null",
   "kind": "NULL.DEREF",
   "problems": [
     {
@@ -19,6 +19,7 @@
       "pos": 5
     },
     {
+      "description": "Dereferencing of \"a->foo()\" which can be null",
       "line": 23,
       "pos": 5
     }

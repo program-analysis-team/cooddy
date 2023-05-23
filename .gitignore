@@ -1,0 +1,34 @@
+# IDE
+
+## CLion / IDEA
+.idea/
+
+## Eclipse
+/.cproject
+/.externalToolBuilders/
+/.project
+/.pydevproject
+/.settings/
+
+## VSCode
+/.vscode/
+
+# CMake / make build files
+/build/
+cmake-build*
+CMakeCache.txt
+cmake_install.cmake
+/compile_commands.json
+Makefile
+CMakeUserPresets.json
+
+#python
+__pycache__/
+
+# etc.
+*.patch
+*.diff
+*.cbp
+googletest/googletest/generated/*
+deploy/
+cooddy_*.run

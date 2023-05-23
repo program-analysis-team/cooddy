@@ -1,6 +1,6 @@
 {
-  "description": "Null dereference",
   "kind": "NULL.DEREF",
+  "description": "Dereferencing of \"d->c->b[3]->a->x\" which can be null",
   "line": 20,
   "pos": 13,
   "positive": true

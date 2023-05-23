@@ -1,5 +1,5 @@
 {
-  "description": "Null dereference",
+  "description": "Dereferencing of \"s\" which can be null",
   "kind": "NULL.DEREF",
   "allowed_parse_error": true,
   "allowed_tool_error": true,

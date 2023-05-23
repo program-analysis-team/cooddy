@@ -13,6 +13,7 @@
 #include <TranslationUnit.h>
 #include <ast/CxxRecordDecl.h>
 #include <ast/Node.h>
+#include <utils/json-cpp.h>
 
 #include <memory>
 #include <set>
@@ -23,7 +24,7 @@ class DeclResolver;
 
 class Parser {
 public:
-    enum ParseFlags { INCLUDES_ONLY = 1, CREATE_PREAMBLE = 2, DUMP_AST = 4, IN_MEMORY_FILES = 8, AR_ENABLE = 16 };
+    enum ParseFlags { INCLUDES_ONLY = 1, CREATE_PREAMBLE = 2, DUMP_AST = 4, IN_MEMORY_FILES = 8 };
     enum ParseStages { DEFINITIONS, USAGES, AST };
 
     // LCOV_EXCL_START
@@ -100,6 +101,18 @@ public:
                                           const std::string& scopePath = "");
     // LCOV_EXCL_STOP
     struct ParserStatistics {
+        struct CompilationIssue {
+            std::string file;
+            std::string message;
+            std::string severity;
+            uint32_t line;
+            uint32_t column;
+
+            DECLARE_FIELDS("file", file, "message", message, "line", line, "column", column, "severity", severity);
+        };
+
+        std::unordered_map<std::string, std::vector<CompilationIssue>> compilationIssues;
+        uint32_t maxFatalErrorCount = 0;
         std::atomic<uint64_t> fatalErrorCount = 0;
         std::atomic<uint64_t> failedCFGCount = 0;
         std::set<std::string> unknownOptionsSet;

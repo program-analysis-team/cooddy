@@ -15,7 +15,6 @@ using CalleeList = std::vector<std::pair<const FunctionDecl*, Instruction>>;
 
 class DataFlowAnalyzer {
 public:
-    class PreParseConsumer;
     static constexpr uint32_t MAX_TRAVERSED_CHILDREN_COUNT = 1024;
 
     Annotation::Kind noReturnKind;
@@ -35,6 +34,11 @@ public:
 
     std::atomic<uint64_t> analysisTime = 0;
     std::atomic<uint64_t> executionTime = 0;
+    std::atomic<uint64_t> functionsCount = 0;
+    std::atomic<uint64_t> functionsMemorySize = 0;
+    std::atomic<uint64_t> pendingFunctionsCount = 0;
+    std::atomic<uint64_t> pendingMemorySize = 0;
+    std::atomic<uint64_t> undefinedFunctionsCount = 0;
 
     explicit DataFlowAnalyzer(Parser& parser, Workspace& workspace,
                               std::vector<std::vector<HCXX::DfaChecker*>>&& checkers)
@@ -121,7 +125,6 @@ public:
             ResolveVirtualFunction(*static_cast<RecordsTree::Node*>(classHandle), name, signature);
         }
 
-        friend class PreParseConsumer;
         DataFlowAnalyzer& myAnalyzer;
         TUnitPoolTask& myPoolTask;
         ProblemsHolder& myHolder;
@@ -135,15 +138,12 @@ public:
 
     void Analyze(const FunctionContext& context, const HCXX::Cfg& cfg, HCXX::ProblemsHolder& holder);
 
+    void LogMemoryStatistics();
+
     Workspace& GetWorkspace() const
     {
         return myWorkspace;
     }
-    inline uint64_t GetUndefinedFunctionsCounter()
-    {
-        return myUndefinedFunctionsCounter;
-    }
-
     Parser& GetParser() const
     {
         return myParser;
@@ -159,7 +159,6 @@ private:
     Workspace& myWorkspace;
     Parser& myParser;
     std::vector<std::vector<HCXX::DfaChecker*>> myCheckers;
-    std::atomic<uint64_t> myUndefinedFunctionsCounter = 0;
 };
 
 #endif  // COODDY_ANALYZER_SOURCE_DFA_DATAFLOWANALYZER_H_

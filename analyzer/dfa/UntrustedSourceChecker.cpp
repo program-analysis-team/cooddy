@@ -145,7 +145,7 @@ private:
     void ProcessTaintPropagation(DfaState& state)
     {
         if (state.GetParentAs<ParamVarDecl>() != nullptr) {
-            return;
+            return;  // LCOV_EXCL_LINE
         }
         for (auto& [annotation, node] : state.GetAnnotationSources(myTaintPropagationKind)) {
             if (!annotation.IsSourceRange() || state.GetNode() != node) {

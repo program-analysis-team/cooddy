@@ -1,5 +1,5 @@
 {
-  "description": "Null dereference",
+  "description": "Dereferencing of \"arr[0]\" which can be null",
   "kind": "NULL.DEREF",
   "line": 14,
   "pos": 5,

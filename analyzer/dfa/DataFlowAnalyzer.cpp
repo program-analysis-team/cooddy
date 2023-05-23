@@ -113,6 +113,23 @@ void DataFlowAnalyzer::CheckState(DfaState& state, HCXX::ProblemsHolder& holder,
     CALL_CHECKERS(checkers, checker->ExitState(state), analysis);
 }
 
+void DataFlowAnalyzer::LogMemoryStatistics()
+{
+    static uint32_t loggedFunctionsCount = 0;
+    static const uint32_t functionsCountFrameSize = 1000;
+    static const uint32_t mbSize = 1024 * 1024;
+
+    if (functionsCount - loggedFunctionsCount >= functionsCountFrameSize) {
+        // LCOV_EXCL_START
+        HCXX::Log(HCXX::LogLevel::INFO) << "Analysis info: functions=" << functionsCount << "("
+                                        << (functionsMemorySize / mbSize)
+                                        << " mbytes), pending=" << pendingFunctionsCount << "("
+                                        << (pendingMemorySize / mbSize) << " mbytes)\n";
+        loggedFunctionsCount = functionsCount;
+        // LCOV_EXCL_STOP
+    }
+}
+
 static bool CanAddToCallees(const Node& node, const FunctionDecl* func)
 {
     if (func == nullptr || func->IsImplicit() && func->GetKind() == Node::Kind::CXX_METHOD_DECL) {
@@ -291,7 +308,7 @@ void DataFlowAnalyzer::AnalyzeContext::SetFunctionFlags(FunctionContext& funcCtx
             functionFlags |= FunctionContext::UNDEFINED;
         } else if (!funcDecl.IsOperator() && !funcDecl.IsDefined() && !IsFunctionDefined(funcDecl)) {
             Log(LogLevel::WARNING) << "Can't find definition: " << funcDecl.GetMangledName() << std::endl;
-            ++myAnalyzer.myUndefinedFunctionsCounter;
+            ++myAnalyzer.undefinedFunctionsCount;
             functionFlags |= FunctionContext::UNDEFINED;
         }
     }
@@ -334,7 +351,7 @@ void DataFlowAnalyzer::AnalyzeContext::PostCheck()
         if (funcCtx != nullptr && !funcCtx->IsAttached() && !funcCtx->IsUndefined() && !funcCtx->IsPure() &&
             funcCtx->GetFunction() != nullptr) {
             Log(LogLevel::WARNING) << "Undefined function: " << funcCtx->GetSignature() << std::endl;
-            ++myAnalyzer.myUndefinedFunctionsCounter;
+            ++myAnalyzer.undefinedFunctionsCount;
         }
     }
     for (auto& funcCtx : myGlobalFunctions) {

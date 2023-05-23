@@ -94,6 +94,8 @@ private:
 
     bool IsUntrustedSource(ExprId exprId) override;
 
+    bool IsCallArgument(ExprId exprId) const override;
+
     z3::check_result CheckConstraint(const z3::expr& expr, bool useCache = true);
 
     bool CheckPaths(const std::vector<CheckPathParams>& params, uint64_t& duration, PathCallback callback) override;
@@ -114,6 +116,8 @@ private:
 
     /// For specified sink build Path Condition to all reachable sources.
     z3::expr MakePathCondition(const z3::expr& sinkExpr, MakePathContext&& context, bool checkFreeSymbols = false);
+
+    z3::expr MakePathConditionFromArgs(const z3::expr& expr, MakePathContext& context);
 
     z3::expr MergeItePathConditions(const z3::expr& iteExpr, MakePathContext& context);
 
@@ -141,6 +145,8 @@ private:
     {
         return !myWasTimeout && myTimer.Duration() < myTimeout;
     }
+
+    void AddUntrustedSourceByKind(ExprId expr, const UntrustedSource::SourceKind kind) override;
 
 private:
     z3::solver mySolver;

@@ -49,6 +49,15 @@ void Cfg::Serialize(IOStream& stream)
     }
 }
 
+void Cfg::AddNodeMemorySize(const Node& node)
+{
+    for (auto& child : node.GetChildren(true)) {
+        MemCounter counter;
+        child->GetMemorySize(counter);
+        myMemorySize += counter.GetSize();
+    }
+}
+
 std::vector<HCXX::CfgElement> Cfg::ProcessElementsOfBlock(CfgBlock& block, uint32_t blockPos, bool isEntryBlock,
                                                           GlobalsMap& globals)
 {
@@ -132,6 +141,9 @@ void Cfg::Init()
         }
         auto elements = ProcessElementsOfBlock(block, blocks.size(), b == order.back(), globals);
 
+        myMemorySize += sizeof(Cfg) + blocks.capacity() * sizeof(CfgBlock) +
+                        (successors.capacity() + predecessors.capacity()) * sizeof(CfgBlock::BlocksRef);
+
         blocks.emplace_back(blocks.size(), std::move(elements), std::move(successors), std::move(predecessors),
                             block.GetTerminatorCondition(), block.GetLabelStatement(), block.GetTerminatorStatement(),
                             block.IsEndlessLoop(), this);
@@ -143,6 +155,7 @@ void Cfg::Init()
     for (auto& param : myFunction->GetParams()) {
         param->Traverse([&](const Node& node) { node.AddRef(); });
     }
+    AddNodeMemorySize(*myFunction);
 }
 
 void Cfg::AddCtorInitializers(std::vector<HCXX::CfgElement>& elements)

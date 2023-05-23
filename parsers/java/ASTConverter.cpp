@@ -225,7 +225,7 @@ Type ASTConverter::ConvertType(JavaParser::TypeTypeContext* context, bool isCons
             type = ConvertPrimitiveType(PrimitiveTypeKind::DOUBLE);
         }
     } else if (auto classOrInterface = context->classOrInterfaceType(); classOrInterface != nullptr) {
-        type.myPointerFlags |= 1u;
+        type.myPointerFlags++;
         type.myIsDeclaration = 1;
         if (myMode != Mode::CLASS_DECLS) {
             JavaParser::ClassOrInterfaceTypeContext* classContext = context->classOrInterfaceType();

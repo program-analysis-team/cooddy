@@ -15,7 +15,14 @@
 FunctionContext::FunctionContext(DataFlowAnalyzer& analyzer, const RecordsTree& recordsTree,
                                  const std::string& signature)
     : myAnalyzer(analyzer), myRecordsTree(recordsTree), mySignatureRef(signature)
-{}
+{
+    ++myAnalyzer.functionsCount;
+}
+
+FunctionContext::~FunctionContext()
+{
+    --myAnalyzer.functionsCount;
+}
 
 void FunctionContext::SetFunctionFlags(uint32_t functionFlags, const FunctionDecl* function, UnitLanguage lang)
 {
@@ -49,6 +56,9 @@ void FunctionContext::Attach(TranslationUnitPtr& unit, std::shared_ptr<Cfg> cfg)
     myCfg = cfg;
     if (cfg != nullptr) {
         myBehavior = FunctionBehavior::Create(*cfg);
+        ++myAnalyzer.pendingFunctionsCount;
+        myAnalyzer.pendingMemorySize += cfg->GetMemorySize();
+        myAnalyzer.functionsMemorySize += cfg->GetMemorySize() + myBehavior->GetMaxInstruction();
     }
     myIsAttached = true;
 }
@@ -269,7 +279,12 @@ void FunctionContext::CleanUp()
     if (myBehavior != nullptr) {
         myBehavior->CleanUpMapping();
     }
-    myCfg.reset();
+    if (myCfg != nullptr) {
+        myAnalyzer.pendingMemorySize -= myCfg->GetMemorySize();
+        myAnalyzer.functionsMemorySize -= myCfg->GetMemorySize();
+        --myAnalyzer.pendingFunctionsCount;
+        myCfg.reset();
+    }
 }
 
 const ParamAnnotation& FunctionContext::GetAnnotation(uint32_t paramPos) const
@@ -470,4 +485,13 @@ std::string FunctionContext::GetArgName(Instruction argInstr, uint32_t argPos) c
     }
     static const char* numEnding[] = {"", "st", "nd", "rd"};
     return "the " + std::to_string(argPos) + (argPos >= 4 ? "th" : numEnding[argPos]) + " argument";
+}
+
+std::string FunctionContext::GetVarName(Instruction instr) const
+{
+    auto range = GetSourceRange(instr);
+    if (range.IsValid() && !myUnit->IsMacroExpansionRange(range)) {
+        return myUnit->GetSourceInRange(range);
+    }
+    return "";
 }

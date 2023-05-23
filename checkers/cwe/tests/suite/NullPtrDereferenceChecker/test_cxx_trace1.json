@@ -1,6 +1,6 @@
 {
-  "description": "Null dereference",
   "kind": "NULL.DEREF",
+  "description": "Dereferencing of \"p\" which can be null",
   "line": 5,
   "pos": 10,
   "trace": [
@@ -32,7 +32,7 @@
       "file": "test_cxx_trace1.cpp",
       "line": 5,
       "col": 10,
-      "desc": "Null dereference"
+      "desc": "Dereferencing of \"p\" which can be null"
     }
   ],
   "positive": true

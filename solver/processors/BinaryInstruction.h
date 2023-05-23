@@ -17,7 +17,7 @@ class BinaryInstruction : public InstructionProcessor {
         uint8_t isStaticAssigment : 1;
         uint8_t isAddrOperation : 1;
         uint8_t isUnsignedOperation : 1;
-        uint8_t isRheConstant : 1;
+        uint8_t isConstant : 1;
     };
 
     void Compile(const Node& node, CompileContext& context) override
@@ -37,8 +37,9 @@ class BinaryInstruction : public InstructionProcessor {
         opFlags.isAddrOperation = IsAddOrSubOperation(op) && lhs != nullptr && lhs->GetType().IsPointer();
         opFlags.isUnsignedOperation = IsSignSensitiveOperation(op) && GetUnsignedFlag(op, lhs, rhs);
 
-        auto rhsTyped = Node::Cast<TypedNode>(rhs);
-        opFlags.isRheConstant = IsRheConstOperation(op) && rhsTyped != nullptr && rhsTyped->IsConstExpr();
+        auto typed = Node::Cast<TypedNode>(expr);
+        opFlags.isConstant =
+            (expr->IsArithmeticOp() || expr->IsBitwiseOp()) && typed != nullptr && typed->IsConstExpr();
         context.Add(opFlags);
 
         if (op == BinaryExpression::Operation::COMMA) {
@@ -51,8 +52,8 @@ class BinaryInstruction : public InstructionProcessor {
         if (opFlags.isAddrOperation) {
             context.Add<uint32_t>(lhs->GetTranslationUnit()->GetSizeOfType(lhs->GetType().GetPointedType()) / 8);
         }
-        if (opFlags.isRheConstant) {
-            context.Add<int64_t>(rhsTyped->GetSLimitedValue());
+        if (opFlags.isConstant) {
+            context.Add<int64_t>(typed->GetSLimitedValue());
         }
     }
 
@@ -76,11 +77,6 @@ class BinaryInstruction : public InstructionProcessor {
             return typeLhs.IsUnsigned();
         }
         return typeLhs.IsUnsigned() && typedRhs->IsConstExpr() && !typedLhs->IsConstExpr();
-    }
-
-    bool IsRheConstOperation(BinaryExpression::Operation op)
-    {
-        return op == BinaryExpression::Operation::AND || op == BinaryExpression::Operation::AND_ASSIGN;
     }
 
     bool IsAddOrSubOperation(BinaryExpression::Operation op)
@@ -140,10 +136,12 @@ class BinaryInstruction : public InstructionProcessor {
     {
         int64_t rheVal = 0;
         int64_t lheVal = 0;
-        if (rhe.is_numeral_i64(rheVal) && lhe.is_numeral_i64(lheVal)) {
-            return context->CreateIntegerExpr(T(lheVal, rheVal));
+        bool isRheNumeral = rhe.is_numeral_i64(rheVal);
+        bool isLheNumeral = lhe.is_numeral_i64(lheVal);
+        if (isRheNumeral) {
+            return isLheNumeral ? context->CreateIntegerExpr(T(lheVal, rheVal)) : lhe;
         }
-        return lhe + rhe;
+        return isLheNumeral ? rhe : lhe + rhe;
     }
 
     z3::expr CreateRemExpr(const z3::expr& lhe, const z3::expr& rhe)
@@ -159,7 +157,7 @@ class BinaryInstruction : public InstructionProcessor {
         return a ^ b;
     }
     z3::expr GetAssigningRhe(ExecutionContext& context, BinaryExpression::Operation op, const z3::expr& lhe,
-                             const z3::expr& rhe, SymbolId& symbolId)
+                             z3::expr& rhe, SymbolId& symbolId)
     {
         switch (op) {
             case BinaryExpression::Operation::ASSIGN:
@@ -179,11 +177,11 @@ class BinaryInstruction : public InstructionProcessor {
             case BinaryExpression::Operation::SHR_ASSIGN:
                 return CreateShiftExpr(context, lhe, rhe, false);
             case BinaryExpression::Operation::AND_ASSIGN:
-                return lhe.is_bool() ? lhe & rhe : CreateAndExpr(context, lhe, rhe);
+                return lhe.is_bool() ? lhe & context->CastToBool(rhe) : CreateAndExpr(context, lhe, rhe);
             case BinaryExpression::Operation::XOR_ASSIGN:
-                return lhe.is_bool() ? lhe ^ rhe : CreateExpr<Xor>(context, lhe, rhe);
+                return lhe.is_bool() ? lhe ^ context->CastToBool(rhe) : CreateExpr<Xor>(context, lhe, rhe);
             case BinaryExpression::Operation::OR_ASSIGN:
-                return lhe.is_bool() ? lhe | rhe : CreateExpr<Or>(context, lhe, rhe);
+                return lhe.is_bool() ? lhe | context->CastToBool(rhe) : CreateExpr<Or>(context, lhe, rhe);
 
                 // LCOV_EXCL_START
             default:
@@ -193,8 +191,8 @@ class BinaryInstruction : public InstructionProcessor {
     }
 
     // COODDY_SUPPRESS
-    z3::expr ExecuteOp(ExecutionContext& context, BinaryExpression::Operation op, const z3::expr& lhe,
-                       const z3::expr& rhe, SymbolId& symbolId)
+    z3::expr ExecuteOp(ExecutionContext& context, BinaryExpression::Operation op, const z3::expr& lhe, z3::expr& rhe,
+                       SymbolId& symbolId)
     {
         switch (op) {
             case BinaryExpression::Operation::EQ:
@@ -214,11 +212,11 @@ class BinaryInstruction : public InstructionProcessor {
             case BinaryExpression::Operation::L_OR:
                 return lhe || rhe;
             case BinaryExpression::Operation::AND:
-                return lhe.is_bool() ? lhe & rhe : CreateAndExpr(context, lhe, rhe);
+                return lhe.is_bool() ? lhe & context->CastToBool(rhe) : CreateAndExpr(context, lhe, rhe);
             case BinaryExpression::Operation::XOR:
-                return lhe.is_bool() ? lhe ^ rhe : CreateExpr<Xor>(context, lhe, rhe);
+                return lhe.is_bool() ? lhe ^ context->CastToBool(rhe) : CreateExpr<Xor>(context, lhe, rhe);
             case BinaryExpression::Operation::OR:
-                return lhe.is_bool() ? lhe | rhe : CreateExpr<Or>(context, lhe, rhe);
+                return lhe.is_bool() ? lhe | context->CastToBool(rhe) : CreateExpr<Or>(context, lhe, rhe);
             case BinaryExpression::Operation::ADD:
                 return lhe + rhe;
             case BinaryExpression::Operation::SUB:
@@ -279,8 +277,8 @@ class BinaryInstruction : public InstructionProcessor {
         if (opFlags.isAddrOperation) {
             rhe = rhe * context->CreateIntegerExpr(context.Get<uint32_t>());
         }
-        if (opFlags.isRheConstant) {
-            rhe = context->CreateIntegerExpr(context.Get<int64_t>());
+        if (opFlags.isConstant) {
+            return context->CreateIntegerExpr(context.Get<int64_t>());
         }
         if (!IsAssignOperation(op)) {
             if (opFlags.isUnsignedOperation) {

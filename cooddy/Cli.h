@@ -10,12 +10,13 @@
 #include <Analyzer.h>
 #include <CompilerOptionsList.h>
 #include <dfa/TaintSettings.h>
-#include <string.h>
+#include <utils/CsvUtils.h>
 #include <utils/LocaleUtils.h>
 #include <utils/Log.h>
 #include <workspace/Profile.h>
 
 #include <cstdint>
+#include <cstring>
 #include <filesystem>
 #include <functional>
 #include <iostream>
@@ -58,7 +59,7 @@ inline cxxopts::Options ConstructOptions()
         cxxopts::value<std::vector<std::string>>()->default_value("all"))
     ("compiler", "path to compiler executable", cxxopts::value<std::string>()->default_value(""))
     ("reporter",
-        "one of following value: <out|json|json-html|json-code|csv|csv-html|libing|secb> or combination of reporters with comma separator",
+        "name of the one of built-in reporter: <out|json|json-html|json-code|csv|csv-html> or combination of reporters with comma separator. Also name os custom reporter is possible: in smaller case to represent dynamic library included in th project. For example: \"--reporter=sample\" to represent libSampleReporter.dll.",
         cxxopts::value<vector<string>>()->default_value("out"))
     ("gen-callchain", "generate call graph paths for the specified entry point",
         cxxopts::value<std::string>()->default_value(""))
@@ -67,7 +68,7 @@ inline cxxopts::Options ConstructOptions()
     ("results-path", "path where report will be stored",
         cxxopts::value<std::string>()->default_value(std::filesystem::current_path().string()))
     ("profile", "path to file with inspections profile",
-        cxxopts::value<std::string>()->default_value(""))
+        cxxopts::value<std::string>()->default_value("default"))
     ("min-problem-severity", "minimal severity of problem to report.\n  possible values: <error|warning|notify>",
         cxxopts::value<std::string>()->default_value("notify"))
     ("project-root", "path to project root in report",
@@ -93,8 +94,13 @@ inline cxxopts::Options ConstructOptions()
         cxxopts::value<std::string>()->default_value("EXTER_ATTACK"))
     ("taint-macro-summary", "print summary of issues found in functions annotated by macro",
         cxxopts::value<bool>()->default_value("true"))
+    ("taint-sde", "set macro used as an annotation to sensitive data exposure sources",
+        cxxopts::value<std::string>()->default_value("SENSI_INFO"))
+    ("analyze-with-fatal-errors",
+        "analyze source file if the number of fatal parse errors not greater than the value of this option",
+        cxxopts::value<uint32_t>()->default_value("20"))
     ("ignore-suppresses", "show suppressed warnings", cxxopts::value<bool>()->default_value("false"))
-    ("parse-errors-log","path to file to put parse errors",cxxopts::value<std::string>()->default_value(""))
+    ("parse-errors-log","path to log with parse errors", cxxopts::value<std::string>()->default_value(""))
     ("ast-dump", "serialize parsed source code in ast-file", cxxopts::value<bool>()->default_value("false"))
     ("export-call-graph", "Export call graph. No checkers will be executed.",
         cxxopts::value<bool>()->default_value("false"))
@@ -162,13 +168,6 @@ inline void SetLogLevel(const string& level)
     HCXX::Logger::SetLevel(logLevel);
 }
 
-inline void SetParseErrorLog(const string& path)
-{
-    if (!path.empty()) {
-        HCXX::Logger::SetParseErrorFile(path);
-    }
-}
-
 struct ExitStatus {
     enum : std::uint8_t {
         SUCCESS = 0,
@@ -176,6 +175,47 @@ struct ExitStatus {
         BAD_COMMANDLINE = 2,
     };
 };
+
+std::string GetSourceTextLine(const std::string& filePath, uint32_t line, uint32_t linesOfContext)
+{
+    auto file = HCXX::FileEntriesCache::GetInstance().GetFileEntry(filePath);
+
+    if (file == nullptr || file->lineOffsets.empty() || line >= file->lineOffsets.size()) {
+        return "";  // LCOV_EXCL_LINE
+    }
+
+    auto& lineOffsets = file->lineOffsets;
+
+    uint32_t startPos = line > linesOfContext ? lineOffsets[line - linesOfContext] : lineOffsets[0];
+    uint32_t endPos = line + linesOfContext >= lineOffsets.size() ? lineOffsets[lineOffsets.size() - 1]
+                                                                  : lineOffsets[line + linesOfContext];
+    return file->fileSource.substr(startPos, endPos - startPos);
+}
+
+inline void SaveParserErrorLog(HCXX::Parser& parser, const std::string& parseErrorLog)
+{
+    auto& issues = parser.statistics.compilationIssues;
+    if (issues.empty()) {
+        return;
+    }
+    std::filesystem::path logPath(parseErrorLog);
+    if (logPath.is_relative()) {
+        logPath = HCXX::EnvironmentUtils::GetSelfExecutableDir() / logPath;
+    }
+    if (std::filesystem::is_directory(logPath)) {
+        logPath = logPath / "parse_errors.csv";
+    }
+    static constexpr uint32_t linesOfContext = 5;
+    std::ofstream os(logPath);
+    HCXX::CsvUtils::WriteRow(os, {"Translation unit", "File", "Line", "Column", "Severity", "Message", "Source code"});
+    for (auto& [tu, issues] : issues) {
+        for (auto& issue : issues) {
+            HCXX::CsvUtils::WriteRow(
+                os, {tu, issue.file, std::to_string(issue.line), std::to_string(issue.column), issue.severity,
+                     issue.message, GetSourceTextLine(issue.file, issue.line, linesOfContext)});
+        }
+    }
+}
 
 // Wrapper for analysis to add AR_ENABLE flag to consumer
 inline void RunAnalysis(const cxxopts::ParseResult& parsedArgs, std::unique_ptr<HCXX::Analyzer> analyzer,
@@ -257,7 +297,10 @@ inline int RunAnalyses(cxxopts::ParseResult& parsedArgs)
     compileOptions.AddExtraOptions(extraOptions.options);
 
     auto taintMacro = parsedArgs["taint-macro"].as<std::string>();
-    CompilerOptions parserOptions{{1, TaintMacroCliDefinition(taintMacro)}, parsedArgs["compiler"].as<std::string>()};
+    auto taintSde = parsedArgs["taint-sde"].as<std::string>();
+    CompilerOptions parserOptions{{TaintMacroCliDefinition(taintMacro, "__cooddy_security_risk"),
+                                   TaintMacroCliDefinition(taintSde, "__cooddy_security_sde")},
+                                  parsedArgs["compiler"].as<std::string>()};
 
     std::string lang = parsedArgs["lang"].as<string>();
     if (lang == "default") {
@@ -266,8 +309,10 @@ inline int RunAnalyses(cxxopts::ParseResult& parsedArgs)
     if (!lang.empty()) {
         parserOptions.options.push_back("-x=" + lang);
     }
+
     // Create Parser
     std::unique_ptr<HCXX::Parser> parser = HCXX::Parser::Create(parserOptions, analyzeScope.string());
+    parser->statistics.maxFatalErrorCount = parsedArgs["analyze-with-fatal-errors"].as<uint32_t>();
 
     // Create Analyzer
     std::unique_ptr<HCXX::Analyzer> analyzer = HCXX::Analyzer::Create(*parser, workspace);
@@ -293,8 +338,7 @@ inline int RunAnalyses(cxxopts::ParseResult& parsedArgs)
                 initFlags |= Reporter::CODE_IN_REPORT;
             }
         }
-        std::unique_ptr<HCXX::Parser> reportParser = HCXX::Parser::Create();
-        reporter.Init(*reportParser, parsedArgs["results-path"].as<std::string>(), initFlags);
+        reporter.Init(*parser, parsedArgs["results-path"].as<std::string>(), initFlags);
 
         std::string mangleQuery = parsedArgs["mangle"].as<std::string>();
         if (!mangleQuery.empty()) {
@@ -328,6 +372,12 @@ inline int RunAnalyses(cxxopts::ParseResult& parsedArgs)
             consumer.OutReport(callGraphFileName);
         }
     }
+
+    auto parseErrorLog = parsedArgs["parse-errors-log"].as<std::string>();
+    if (!parseErrorLog.empty()) {
+        SaveParserErrorLog(*parser, parseErrorLog);
+    }
+
     return ExitStatus::SUCCESS;
 }
 

@@ -203,6 +203,13 @@ public:
         myCurStack.back().exprCache.emplace(instruction, expr);
     }
 
+    // returns SymbolId if it presented in symbols cache, otherwise adds it to symbols cache and returns nullptr
+    const SymbolId* GetSymbolBySolverId(uint32_t id, const SymbolId& symbol)
+    {
+        auto it = myCurStack.back().symbolsCache.emplace(id, symbol);
+        return it.second ? nullptr : &it.first->second;
+    }
+
     void AddArrayMaxValue(const z3::expr& arrExpr, int64_t maxVal)
     {
         myArrMaxValue.emplace(arrExpr.id(), std::make_pair(arrExpr, maxVal));
@@ -258,6 +265,7 @@ protected:
         SymbolsSet setSymbols;
         SymbolsContextPtr symbols;
         std::unordered_map<Instruction, z3::expr> exprCache;
+        std::unordered_map<uint32_t, SymbolId> symbolsCache;
     };
 
     struct CallInfo {

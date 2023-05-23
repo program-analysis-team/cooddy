@@ -40,7 +40,7 @@ public:
 
     bool IsPointer() const
     {
-        return myPointerFlags & 1u;
+        return myPointerFlags > 0;
     }
 
     bool IsReference() const
@@ -82,7 +82,7 @@ public:
     {
         uint8_t pointerFlags = this->myPointerFlags;
         uint8_t constantFlags = this->myConstantFlags;
-        while (pointerFlags & 1u) {
+        while (pointerFlags-- > 0) {
             constantFlags >>= 1u;
             pointerFlags >>= 1u;
         }
@@ -94,10 +94,15 @@ public:
         return myIsRvalueType;
     }
 
+    bool IsSensitiveData() const
+    {
+        return myIsSensitiveData;
+    }
+
     Type GetPointedType() const
     {
         Type result(*this);
-        result.myPointerFlags >>= 1u;
+        result.myPointerFlags--;
         result.myReferenceFlags >>= 1u;
         result.myConstantFlags >>= 1u;
         return result;
@@ -159,15 +164,16 @@ public:
           myIsArray(0),
           myIsFloatingType(0),
           myIsIntegerType(0),
-          myIsRvalueType(0)
+          myIsRvalueType(0),
+          myIsSensitiveData(0)
     {}
 
 private:
     const Node* myDeclNode;
     uint32_t mySizeInBits;
-    uint8_t myPointerFlags;
     uint8_t myReferenceFlags;
     uint8_t myConstantFlags;
+    uint8_t myPointerFlags : 7;  // 0-8 number of bits in myReferenceFlags or myConstantFlags
     uint8_t myIsUnsigned : 1;
     uint8_t myIsDeclaration : 1;
     uint8_t myIsVariableArray : 1;
@@ -176,6 +182,7 @@ private:
     uint8_t myIsFloatingType : 1;
     uint8_t myIsIntegerType : 1;
     uint8_t myIsRvalueType : 1;
+    uint8_t myIsSensitiveData : 1;
 
     friend class ASTVisitor;
     friend class ::ASTConverter;

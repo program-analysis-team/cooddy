@@ -1,0 +1,14 @@
+{
+  "description": "Sensitive data leak",
+  "kind": "TAINT.SDE",
+  "positive": true,
+  "problems": [
+    {
+      "line": 62,
+      "pos": 70
+    }
+  ],
+  "os": [
+    "Windows"
+  ]
+}

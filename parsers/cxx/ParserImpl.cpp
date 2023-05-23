@@ -280,7 +280,9 @@ std::unique_ptr<clang::ASTUnit> ParserImpl::CreateASTUnit(HCXX::TranslationUnit&
     if (unit.HasParseErrors()) {
         consumer.OnParseError();
     }
-
+    if (diagConsumer->GetFatalErrorCount() > statistics.maxFatalErrorCount) {
+        return nullptr;
+    }
     return std::move(astUnit);
 }
 

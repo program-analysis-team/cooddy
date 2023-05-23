@@ -1,0 +1,12 @@
+{
+  "description": "Sensitive data leak",
+  "kind": "TAINT.SDE",
+  "positive": true,
+  "problems": [
+    {
+      "file_path": "std_testcase_io.h",
+      "line": 28,
+      "pos": 24
+    }
+  ]
+}

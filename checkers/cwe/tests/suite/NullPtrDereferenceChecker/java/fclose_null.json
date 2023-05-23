@@ -1,6 +1,6 @@
 {
-  "description": "Null dereference",
   "kind": "NULL.DEREF",
+  "description": "Dereferencing of \"fileOutputStream\" which can be null",
   "positive": true,
   "line": 6,
   "pos": 9

@@ -14,7 +14,7 @@ Logger Logger::myInstance(LogLevel::WARNING);
 
 void Logger::LogToStream(std::ostream& out, const char* msg, LogLevel level)
 {
-    static const char* levelStr[] = {"OFF", "FATAL", "PARSE_ERROR", "ERROR", "WARNING", "INFO", "DEBUG", "TRACE"};
+    static const char* levelStr[] = {"OFF", "FATAL", "ERROR", "WARNING", "INFO", "DEBUG", "TRACE"};
 
     auto currentTime = std::chrono::system_clock::now();
     std::time_t t = std::chrono::system_clock::to_time_t(currentTime);
@@ -25,21 +25,12 @@ void Logger::LogToStream(std::ostream& out, const char* msg, LogLevel level)
     out << '[' << std::put_time(&tm, "%H:%M:%S.") << millis << ']';
     out << '[' << std::this_thread::get_id() << ']';
     out << '[' << levelStr[static_cast<int>(level)] << "] ";
-    if (level == LogLevel::PARSE_ERROR) {
-        out << '\n';
-    }
     out << msg;
     out.flush();
 }
 
 void Logger::Log(const char* msg, LogLevel level)
 {
-    if (level == LogLevel::PARSE_ERROR) {
-        if (!myFileStream.is_open()) {
-            return;
-        }
-        return LogToStream(myFileStream, msg, level);
-    }
     LogToStream(*myStream, msg, level);
 }
 

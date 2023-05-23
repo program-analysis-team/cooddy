@@ -19,7 +19,10 @@ public:
             static auto parser = HCXX::Parser::Create(HCXX::CompilerOptions{{"-x=java"}});
             return *parser;
         }
-        static auto parser = HCXX::Parser::Create(HCXX::CompilerOptions{{TaintMacroCliDefinition("EXTER_ATTACK")}, ""});
+        static auto parser = HCXX::Parser::Create(
+            HCXX::CompilerOptions{{TaintMacroCliDefinition("EXTER_ATTACK", "__cooddy_security_risk"),
+                                   TaintMacroCliDefinition("SENSI_INFO", "__cooddy_security_sde")},
+                                  ""});
         return *parser;
     }
 

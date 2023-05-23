@@ -64,6 +64,7 @@ void JsonReporter::Flush()
     flushed = true;
     descriptor.endTime = GetCurrentTime();
     descriptor.endTimeStamp = std::time(0);
+    CopyCompilationIssues();
     if (myFileStream.is_open()) {
         myFileStream.close();
     }
@@ -72,6 +73,19 @@ void JsonReporter::Flush()
     myFileStream << jsoncpp::to_string(descriptor, "\n");
     myFileStream.flush();
     myFileStream.close();
+}
+
+void JsonReporter::CopyCompilationIssues()
+{
+    if (myParser == nullptr) {
+        return;
+    }
+    for (auto& [tu, issues] : myParser->statistics.compilationIssues) {
+        descriptor.compilationIssues.emplace_back(CompilationIssue{tu});
+        for (auto& issue : issues) {
+            descriptor.compilationIssues.back().issues.emplace_back(issue);
+        }
+    }
 }
 
 std::string JsonReporter::GetCurrentTime()

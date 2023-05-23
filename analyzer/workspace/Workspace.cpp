@@ -144,9 +144,7 @@ void Workspace::GetInspectionsProfile(std::string_view profileName)
         myProfile = std::make_unique<Profile>(myDefaultWorkspace->GetProfile());
         return;
     }
-    if (profileName.empty()) {
-        profileName = DEFAULT_PROFILE;  // LCOV_EXCL_LINE (HCAT-2802)
-    }
+
     std::vector<std::string> searchPaths{myWorkingDir.string(), myWorkspaceRoot.string()};
     if (myDefaultWorkspace != nullptr) {
         searchPaths.emplace_back(myDefaultWorkspace->myWorkspaceRoot.string());

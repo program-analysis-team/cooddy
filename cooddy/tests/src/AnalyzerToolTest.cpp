@@ -169,6 +169,26 @@ TEST_F(AnalyzerToolTest, AstDumpTestGlobals)
     ASSERT_EQ(astProblems.GetProblems()[0].line, 7);
 }
 
+TEST_F(AnalyzerToolTest, AnalyzeWithFatalErrors)
+{
+    Workspace workspace(TEST_SUITE_PATH("analyzerToolTest/test_fatal_errors.cpp").string(),
+                        {"NullPtrDereferenceChecker"});
+    auto parser = HCXX::Parser::Create();
+    {
+        ProblemsList problemsList(workspace);
+        TestAnalyze(workspace, problemsList, nullptr, parser.get());
+        ASSERT_EQ(problemsList.GetProblems().size(), 0);
+        myTestErrorCheckConsumer.ClearToolError();
+    }
+    {
+        ProblemsList problemsList(workspace);
+        parser->statistics.maxFatalErrorCount = 20;
+        TestAnalyze(workspace, problemsList, nullptr, parser.get());
+        ASSERT_EQ(problemsList.GetProblems().size(), 1);
+        myTestErrorCheckConsumer.ClearToolError();
+    }
+}
+
 TEST_F(AnalyzerToolTest, UniqueValueInResultJsonTest)
 {
     auto file = testDirectory.append("test_unique.cpp").string();
@@ -199,7 +219,7 @@ TEST_F(AnalyzerToolTest, TraceInResultJsonTest)
 
     auto& el = result[0];
     // We expect only one defect Null dereference
-    ASSERT_EQ("Null dereference", el.description);
+    ASSERT_EQ("Dereferencing of \"myString\" which can be null", el.description);
     ASSERT_EQ(4, el.problemTrace.size());
     // And trace with 4 events
     auto it = el.problemTrace.begin();
@@ -984,43 +1004,43 @@ TEST_F(AnalyzerToolTest, OutReporterSmokeTest)
 
 TEST_F(AnalyzerToolTest, ParseErrorLogTest)
 {
-    TempFile result("parse_error.log");
-
+    std::string parseLog("parse_errors.csv");
+    TempFile result(EnvironmentUtils::GetSelfExecutableDir() / parseLog);
     auto file = TEST_SUITE_PATH("analyzerToolTest").append("test_parse_error_log.cpp").string();
     Workspace workspace(std::move(file));
-
-    Logger::SetParseErrorFile("parse_error.log");
-
-    auto analyzer = Analyzer::Create(TestBaseClass::GetParser(), workspace);
+    auto parser = Parser::Create();
+    parser->statistics.maxFatalErrorCount = 10;
+    auto analyzer = Analyzer::Create(*parser, workspace);
     ProblemsList problemsList(workspace);
     TestErrorCheckConsumer testConsumer;
     analyzer->Analyze(workspace.GetCompilerOptions(), problemsList, testConsumer);
+    ASSERT_FALSE(parser->statistics.compilationIssues.empty());
+    ASSERT_EQ((*parser->statistics.compilationIssues.begin()).second.size(), 2);
     ASSERT_TRUE(testConsumer.HasToolError());
-    Logger::CloseFileStream();
-
+    SaveParserErrorLog(*parser, parseLog);
     ASSERT_FALSE(result.IsEmpty());
+    parser->statistics.compilationIssues.clear();
+    SaveParserErrorLog(*parser, parseLog);
 }
 
-/// Test Logger::SetParseErrorFile being passed a directory
 TEST_F(AnalyzerToolTest, ParseErrorLogTest2)
 {
-    TempDir dir("AnalyzerToolTest.ParseErrorLogTest2");
-
+    auto dirPath = TEST_SUITE_PATH("analyzerToolTest") / "AnalyzerToolTest.ParseErrorLogTest2";
+    TempDir dir(dirPath);
+    TempFile result(dirPath / "parse_errors.csv");
+    create_directory(dirPath);
     auto file = TEST_SUITE_PATH("analyzerToolTest").append("test_parse_error_log.cpp").string();
     Workspace workspace(std::move(file));
-
-    create_directory("AnalyzerToolTest.ParseErrorLogTest2");
-    Logger::SetParseErrorFile("AnalyzerToolTest.ParseErrorLogTest2");
-
-    auto analyzer = Analyzer::Create(TestBaseClass::GetParser(), workspace);
+    auto parser = Parser::Create();
+    parser->statistics.maxFatalErrorCount = 10;
+    auto analyzer = Analyzer::Create(*parser, workspace);
     ProblemsList problemsList(workspace);
     TestErrorCheckConsumer testConsumer;
     analyzer->Analyze(workspace.GetCompilerOptions(), problemsList, testConsumer);
     ASSERT_TRUE(testConsumer.HasToolError());
-    Logger::CloseFileStream();
-
-    TempFile result("AnalyzerToolTest.ParseErrorLogTest2/cooddy_parse_errors.log");
-
+    ASSERT_FALSE(parser->statistics.compilationIssues.empty());
+    ASSERT_EQ((*parser->statistics.compilationIssues.begin()).second.size(), 2);
+    SaveParserErrorLog(*parser, dirPath.string());
     ASSERT_FALSE(result.IsEmpty());
 }
 

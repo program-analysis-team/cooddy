@@ -18,7 +18,8 @@ struct UntrustedSourceExpr : public ::UntrustedSource {
 
     bool IsExternal() const
     {
-        return sourceKind == UntrustedSource::CALL_ARG || sourceKind == UntrustedSource::PROPAGATION;
+        return sourceKind == UntrustedSource::CALL_ARG || sourceKind == UntrustedSource::PROPAGATION ||
+               sourceKind == UntrustedSource::SENSITIVE_DATA;
     }
 };
 

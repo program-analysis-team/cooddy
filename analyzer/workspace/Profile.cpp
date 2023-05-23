@@ -79,9 +79,7 @@ static fs::path FindProfile(std::string_view profileName, const std::vector<std:
     if (!nameAsPath.has_parent_path()) {
         for (fs::path candidate : searchPaths) {
             candidate.append(profileName).concat(".profile.json");
-
             if (fs::exists(candidate)) {
-                Log(LogLevel::DEBUG) << "Profile found: " << candidate << "\n";
                 return candidate;
             }
         }
@@ -103,11 +101,7 @@ static fs::path FindProfile(std::string_view profileName, const std::vector<std:
             }
         }
     }
-
-    //  LCOV_EXCL_START
-    Log(LogLevel::DEBUG) << "No profile found: \"" << profileName << "\"\n";
     return {};
-    //  LCOV_EXCL_STOP
 }
 
 void Profile::NormalizeConfig()
@@ -145,7 +139,7 @@ void Profile::NormalizeConfig()
 void Profile::LoadBase(const fs::path& profilePath)
 {
     if (profilePath.empty()) {
-        return;  // LCOV_EXCL_LINE (HCAT-2802)
+        return;
     }
     myPath = profilePath;
     try {
@@ -170,9 +164,18 @@ Profile::Profile(std::string_view profileName, const std::vector<std::string>& s
     CustomSettings settings;
     if (!settingsProfile.empty()) {
         LoadBase(FindProfile(settingsProfile, searchPaths));
-        std::swap(settings, mySettings);
     }
-    LoadBase(FindProfile(profileName, searchPaths));
+    if (profileName.empty()) {
+        return;  // LCOV_EXCL_LINE (HCAT-2802)
+    }
+    std::swap(settings, mySettings);
+    const fs::path& profilePath = FindProfile(profileName, searchPaths);
+    LoadBase(profilePath);
+    if (!profilePath.empty()) {
+        Log(LogLevel::DEBUG) << "Profile found: " << profilePath << "\n";
+    } else {
+        Log(LogLevel::ERROR) << "No profile found: \"" << profileName << "\"\n";
+    }
     settings.Merge(mySettings, true);
     std::swap(settings, mySettings);
 
@@ -186,5 +189,7 @@ Profile::Profile(std::string_view profileName, const std::vector<std::string>& s
     if (!myModule.empty()) {
         CheckersFactory::GetInstance().AddModule(myModule);
     }
-    Log(HCXX::LogLevel::INFO) << "Profile is loaded: '" << myPath << "'\n";
+    if (!profilePath.empty()) {
+        Log(HCXX::LogLevel::INFO) << "Profile is loaded: '" << myPath << "'\n";
+    }
 }

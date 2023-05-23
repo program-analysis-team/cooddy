@@ -6,13 +6,16 @@
 
 #include <codecvt>
 #include <cwchar>
+#include <fstream>
 #include <iostream>
 #include <locale>
 #include <memory>
 #include <string>
+#include <thread>
 #include <vector>
 
 #include "deps/whereami.h"
+#include "utils/Log.h"
 #include "utils/StrUtils.h"
 
 #if defined(_WIN32)
@@ -304,4 +307,39 @@ tcb::span<const char* const> Argv()
 // LCOV_EXCL_STOP
 
 }  // namespace EnvironmentUtils
+
+#ifdef _WIN32
+uint32_t GetMaxThreadsCount()
+{
+    return std::thread::hardware_concurrency();
+}
+#else
+/*
+ * Returns the number of concurrent threads supported by the OS environment.
+ * Also this function takes into account total available RAM and ensures that each thread can use at least 2Gb of RAM
+ * For example, if there are 64 CPUs and 32Gb of RAM, than this function will return 17 (=min(64, 32/2 + 1)).
+ */
+uint32_t GetMaxThreadsCount()
+{
+    uint64_t totalMemSize = UINT64_MAX;
+    std::ifstream memInfo("/proc/meminfo");
+    for (std::string token; memInfo >> token; memInfo.ignore(std::numeric_limits<std::streamsize>::max(), '\n')) {
+        if (token == "MemTotal:") {
+            memInfo >> totalMemSize;
+            totalMemSize *= 1024;
+            break;
+        }
+    }
+    uint64_t memLimitSize = UINT64_MAX;
+    std::ifstream memLimit("/sys/fs/cgroup/memory/memory.limit_in_bytes");
+    memLimit >> memLimitSize;
+
+    uint32_t maxThreads = std::thread::hardware_concurrency();
+    Log(LogLevel::INFO) << "System info: mem_size=" << totalMemSize << ", mem_limit=" << memLimitSize
+                        << ", cpu_count=" << maxThreads << "\n";
+
+    return std::min(maxThreads, uint32_t(std::min(totalMemSize, memLimitSize) / INT32_MAX) + 1);
+}
+#endif
+
 }  // namespace HCXX

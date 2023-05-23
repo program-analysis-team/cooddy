@@ -24,6 +24,7 @@ class DataFlowAnalyzer;
 class FunctionContext : public DfaFunctionContext {
 public:
     FunctionContext(DataFlowAnalyzer& analyzer, const RecordsTree& recordsTree, const std::string& signature);
+    ~FunctionContext();
 
     void SetFunctionFlags(uint32_t functionFlags, const FunctionDecl* function, UnitLanguage lang);
 
@@ -181,6 +182,8 @@ public:
     void SetTaintProblemInfo(Problem& problem) const override;
 
     std::string GetArgName(Instruction argInstr, uint32_t argPos) const override;
+
+    std::string GetVarName(Instruction instr) const override;
 
     void SortAnnotations();
 

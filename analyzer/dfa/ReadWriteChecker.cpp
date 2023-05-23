@@ -12,6 +12,7 @@
 #include <ast/FieldDecl.h>
 #include <ast/MemberExpression.h>
 #include <ast/ReturnStatement.h>
+#include <ast/ThisExpression.h>
 #include <ast/UnaryExpression.h>
 #include <dfa/BuildInDfaChecker.h>
 #include <dfa/DfaChecker.h>
@@ -247,31 +248,49 @@ public:
         return unary != nullptr && unary->GetOperation() == UnaryExpression::Operation::ADDR_OF;
     }
 
-    void AnnotatePassByRef(DfaState& state)
+    void AnnotatedAssignedNodeAsPassByRef(DfaState& state)
     {
-        // LCOV_EXCL_START
-        // something passed to reference to left
         auto binExpr = state.GetParentAs<BinaryExpression>();
-        if (binExpr != nullptr && binExpr->IsAssignOp() && binExpr->GetRightOperand() == state.GetNode()) {
-            auto lhs = binExpr->GetLeftOperand();
-            auto typedLhs = Node::Cast<TypedNode>(lhs);
-            if ((lhs != nullptr && lhs->GetType().IsReference()) ||
-                (typedLhs != nullptr && typedLhs->GetDeclaration() == nullptr)) {
+        if (binExpr == nullptr || !binExpr->IsAssignOp() || binExpr->GetRightOperand() != state.GetNode()) {
+            return;
+        }
+        auto typedLhs = Node::Cast<TypedNode>(binExpr->GetLeftOperand());
+        if (typedLhs == nullptr) {
+            return;
+        }
+        if (typedLhs->GetType().IsReference() || typedLhs->GetDeclaration() == nullptr) {
+            state.Annotate(myPassByRef);
+
+        } else if (auto memExprLhs = Node::Cast<MemberExpression>(typedLhs->GetInnerNode()); memExprLhs != nullptr) {
+            auto base = Node::Cast<TypedNode>(memExprLhs->GetBase());
+            auto baseDecl = base != nullptr ? Node::Cast<VarDecl>(base->GetDeclaration()) : nullptr;
+            if (Node::Cast<ThisExpression>(base) == nullptr &&
+                (memExprLhs->IsArrow() || baseDecl == nullptr || !baseDecl->IsLocalVariableDeclaration())) {
+                // annotate assignment value to all member expressions, except 'this' and local variable members
                 state.Annotate(myPassByRef);
             }
         }
+        auto offset = state.GetMemoryOffset();
+        if (state.GetDeclState() != nullptr && offset.ExtractSubOffset().first == VirtualOffset::Kind::INDEX &&
+            offset.ExtractSubOffset().first == VirtualOffset::Kind::ADDR_OF) {
+            state.GetDeclState()->Annotate(myPassByRef);
+        }
+    }
 
-        auto typedNode = state.GetNodeAs<TypedNode>();
-        if (typedNode != nullptr && typedNode->GetDeclaration() != nullptr &&
-            typedNode->GetDeclaration()->GetType().IsReference()) {
-            state.GetFuncState().GetState(typedNode->GetDeclaration()).Annotate(myPassByRef);
-            state.Annotate(myPassByRef);
+    void AnnotatePassByRef(DfaState& state)
+    {
+        AnnotatedAssignedNodeAsPassByRef(state);
+
+        if (auto typedNode = state.GetNodeAs<TypedNode>(); typedNode != nullptr) {
+            if (auto decl = typedNode->GetDeclaration(); decl != nullptr && decl->GetType().IsReference()) {
+                state.GetFuncState().GetState(decl).Annotate(myPassByRef);
+                state.Annotate(myPassByRef);
+            }
         }
 
         if (IsPassedAsRefArg(state)) {
             state.Annotate(myPassByRef);
         }
-        // LCOV_EXCL_STOP
     }
 
     bool IsPassedAsRefArg(DfaState& state)

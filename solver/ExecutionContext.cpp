@@ -621,11 +621,11 @@ void ExecutionContext::ModifyLoopCondition(z3::expr& condition, LoopNode& loop, 
     auto newCondition = condition.substitute(loop.iterExpr, loop.initExpr);
     auto untrustedSource = branch == 0 ? myUntrustedSources.Check(newCondition) : std::nullopt;
     if (loopEntrance) {
-        auto throwCondition = !condition;
-        condition = newCondition;
         if (branch == 0) {
+            auto throwCondition = newCondition && !condition;
             AddThrowExpr(&throwCondition);
         }
+        condition = newCondition;
     }
     if (!loop.addedItersAsUntrusted && untrustedSource) {
         AddLoopItersAsUntrusted(condition, loop, *untrustedSource);
@@ -768,19 +768,19 @@ const BasicBlock* ExecutionContext::GetNextBlockForExecution()
 bool ExecutionContext::GetSuccessorForLastBlockInLoop(uint32_t& successor)
 {
     auto& loops = myCurStack.back().loopsStack;
-    if (!loops.empty()) {
-        auto& loop = loops.back();
-        if (loop.shouldExecute && loop.entranceBlock.IsDoWhileLoop()) {
-            return true;
-        }
-
-        auto& blocks = myCallInfo[myCurStack.back().callId].function->GetBlocks();
-        auto successorsCount = blocks[loop.entranceBlock.GetPosition()].GetSuccessorsCount();
-        successor = successorsCount > 1 ? blocks[loop.entranceBlock.GetPosition()].GetSuccessor(successorsCount - 1)
-                                        : blocks.size();  // LCOV_EXCL_LINE
-        return successor < myCurStack.back().block;
+    if (loops.empty()) {
+        return false;  // LCOV_EXCL_LINE
     }
-    return false;
+    auto& loop = loops.back();
+    if (loop.shouldExecute && loop.entranceBlock.IsDoWhileLoop()) {
+        return true;
+    }
+
+    auto& blocks = myCallInfo[myCurStack.back().callId].function->GetBlocks();
+    auto successorsCount = blocks[loop.entranceBlock.GetPosition()].GetSuccessorsCount();
+    successor = successorsCount > 1 ? blocks[loop.entranceBlock.GetPosition()].GetSuccessor(successorsCount - 1)
+                                    : blocks.size();  // LCOV_EXCL_LINE
+    return successor < myCurStack.back().block;
 }
 
 bool ExecutionContext::ShouldExecuteLoop(uint32_t& successor)

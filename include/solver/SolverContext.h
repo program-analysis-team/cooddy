@@ -102,7 +102,7 @@ struct CheckPathParams {
 };
 
 struct UntrustedSource {
-    enum SourceKind { NONE, CALL_ARG, ITERATOR, PROPAGATION, BOUNDARY_CONDITION, STRING_LENGTH };
+    enum SourceKind { NONE, CALL_ARG, ITERATOR, PROPAGATION, BOUNDARY_CONDITION, STRING_LENGTH, SENSITIVE_DATA };
 
     SourceKind sourceKind = SourceKind::NONE;
     SourceId sourceId = 0;
@@ -208,6 +208,9 @@ struct SolverContext {
     // If result is true, callExecInfo will contain information about call function instruction
     virtual bool IsCallExpr(CallExecInfo* callExecInfo = nullptr) const = 0;
 
+    // Returns true if current instruction is call argument expression
+    virtual bool IsCallArgument(ExprId exprId) const = 0;
+
     // Returns count of arguments for call instruction
     virtual size_t GetCallArgsCount() const = 0;
 
@@ -248,6 +251,8 @@ struct SolverContext {
 
     // Get full execution array
     virtual const std::vector<ExecInfo>& GetExecInfoArray() = 0;
+
+    virtual void AddUntrustedSourceByKind(ExprId expr, const UntrustedSource::SourceKind kind) = 0;
 };
 
 };  // namespace HCXX

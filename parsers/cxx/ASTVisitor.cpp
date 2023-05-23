@@ -199,7 +199,18 @@ bool CanDefineSizeForType(const clang::Type& clangType, clang::TagDecl* tagDecl)
            !clangType.isSpecificBuiltinType(clang::BuiltinType::BoundMember) &&
            !clangType.isSpecificBuiltinType(clang::BuiltinType::Overload);
 }
-
+Type ASTVisitor::ConvertType(const clang::QualType& qualType, const clang::AttrVec& attrs)
+{
+    auto type = ConvertType(qualType);
+    for (auto& attr : attrs) {
+        if (attr->getKind() == clang::attr::Kind::Annotate &&
+            static_cast<clang::AnnotateAttr*>(attr)->getAnnotation() == "__cooddy_security_sde") {
+            type.myIsSensitiveData = true;
+            break;
+        }
+    }
+    return type;
+}
 Type ASTVisitor::ConvertType(const clang::QualType& qualType)
 {
     // LCOV_EXCL_START
@@ -213,10 +224,9 @@ Type ASTVisitor::ConvertType(const clang::QualType& qualType)
     Type type;
     if (clangType->isPointerType() || clangType->isReferenceType()) {
         type = ConvertType(clangType->getPointeeType());
-        type.myPointerFlags <<= 1u;
+        type.myPointerFlags++;
         type.myReferenceFlags <<= 1u;
         type.myConstantFlags <<= 1u;
-        type.myPointerFlags |= 1u;
         type.myReferenceFlags |= clangType->isReferenceType();
         type.myIsRvalueType = originalType->isRValueReferenceType();
     } else {
@@ -429,9 +439,9 @@ struct NodeTypesMapper;
 DECLARE_STMT_CONVERTER(MemberExpr, MemberExpression)
 {
     ParentForCallExprBuilder builder(*visitor, *node, clangNode->getBase());
-    new (node)
-        MemberExpression(visitor->ConvertType(clangNode->getType()), clangNode->getMemberDecl()->getNameAsString(),
-                         builder.Create(), visitor->GetNode(clangNode->getMemberDecl()), clangNode->isArrow());
+    new (node) MemberExpression(visitor->ConvertType(clangNode->getType(), clangNode->getMemberDecl()->getAttrs()),
+                                clangNode->getMemberDecl()->getNameAsString(), builder.Create(),
+                                visitor->GetNode(clangNode->getMemberDecl()), clangNode->isArrow());
 }
 
 template <typename TClangNodeType>
@@ -583,7 +593,7 @@ DECLARE_DECL_CONVERTER(Field, FieldDecl)
     uint32_t fieldIndex = clangNode->getFieldIndex();
     const clang::RecordDecl* parent = clangNode->getParent();
 
-    Type type = visitor->ConvertType(clangNode->getType());
+    Type type = visitor->ConvertType(clangNode->getType(), clangNode->getAttrs());
     auto align = 0;
     if (clangNode->isBitField()) {
         type.SetSizeInBits(clangNode->getBitWidthValue(visitor->GetContext()));
@@ -609,9 +619,32 @@ DECLARE_DECL_CONVERTER(Field, FieldDecl)
     visitor->AddNode(*node, *declName, {nameLoc, nameLoc.getLocWithOffset(name.empty() ? 0 : name.size() - 1)});
 }
 
+template <class T>
+const T* FindLinkageInfo(ASTVisitor& visitor, const std::vector<T>& vecInfo)
+{
+    auto result = &vecInfo.front();
+    auto& curDir = visitor.GetTranslationUnit().GetCompilerOptions().directory;
+    size_t maxPrefix = 0;
+    for (auto& info : vecInfo) {
+        if (info.unit == nullptr) {
+            continue;  // LCOV_EXCL_LINE
+        }
+        auto& dir = info.unit->GetCompilerOptions().directory;
+        size_t prefix = 0;
+        while (prefix < curDir.size() && prefix < dir.size() && curDir[prefix] == dir[prefix]) {
+            ++prefix;
+        }
+        if (prefix > maxPrefix) {
+            result = &info;
+            maxPrefix = prefix;
+        }
+    }
+    return result;
+}
+
 std::pair<Type, uint32_t> ASTVisitor::GetVarDeclInfo(const clang::VarDecl& varDecl)
 {
-    Type type = ConvertType(varDecl.getType());
+    Type type = ConvertType(varDecl.getType(), varDecl.getAttrs());
     if (varDecl.isLocalVarDecl()) {
         return {type, 0};
     }
@@ -629,12 +662,7 @@ std::pair<Type, uint32_t> ASTVisitor::GetVarDeclInfo(const clang::VarDecl& varDe
     if (!type.IsArray() || type.mySizeInBits != 0) {
         return {type, varInfoArr->front().uniqueId};
     }
-    for (auto varInfo : *varInfoArr) {
-        if (type.mySizeInBits == 0 || (varInfo.unit != nullptr && myTranslationUnit.GetCompilerOptions().directory ==
-                                                                      varInfo.unit->GetCompilerOptions().directory)) {
-            type.mySizeInBits = varInfo.sizeOfType;
-        }
-    }
+    type.mySizeInBits = FindLinkageInfo(*this, *varInfoArr)->sizeOfType;
     if (type.mySizeInBits > 0) {
         type.myIsConstantArray = 1;
     }
@@ -687,8 +715,9 @@ DECLARE_DECL_CONVERTER(ParmVar, ParamVarDecl)
     VarDecl::Attributes attributes;
     const Node* arraySizeExpr = nullptr;
     InitCommonValuesOfVarDecl(attributes, arraySizeExpr, clangNode->getTypeSourceInfo(), *visitor);
-    new (node) ParamVarDecl(clangNode->getNameAsString(), visitor->ConvertType(clangNode->getType()),
-                            ConvertTypeName(clangNode->getType()), arraySizeExpr);
+    new (node)
+        ParamVarDecl(clangNode->getNameAsString(), visitor->ConvertType(clangNode->getType(), clangNode->getAttrs()),
+                     ConvertTypeName(clangNode->getType()), arraySizeExpr);
 }
 
 template <class TClangType>
@@ -870,7 +899,8 @@ DECLARE_DECL_CONVERTER(Namespace, NamespaceDecl)
 
 DECLARE_STMT_CONVERTER(DeclRefExpr, RefExpression)
 {
-    new (node) RefExpression(visitor->GetNode(clangNode->getDecl()), visitor->ConvertType(clangNode->getType()));
+    new (node) RefExpression(visitor->GetNode(clangNode->getDecl()),
+                             visitor->ConvertType(clangNode->getType(), clangNode->getDecl()->getAttrs()));
 }
 
 DECLARE_DECL_CONVERTER(CXXRecord, CxxRecordDecl)
@@ -1042,14 +1072,7 @@ std::string GetMangledName(ASTVisitor& visitor, const clang::FunctionDecl& func,
         auto funcInfoArr =
             crossContext != nullptr ? crossContext->FindFunctionDef(defFunc->getQualifiedNameAsString()) : nullptr;
         if (funcInfoArr != nullptr && funcInfoArr->size() > 1) {
-            auto defUnit = funcInfoArr->front().unit;
-            auto& curDir = visitor.GetTranslationUnit().GetCompilerOptions().directory;
-            for (auto funcInfo : *funcInfoArr) {
-                if (funcInfo.unit->GetCompilerOptions().directory == curDir) {
-                    defUnit = funcInfo.unit;
-                }
-            }
-            mangledName += "/" + std::to_string(uintptr_t(defUnit));
+            mangledName += "/" + std::to_string(uintptr_t(FindLinkageInfo(visitor, *funcInfoArr)->unit));
         }
     }
     if (visitor.GetTranslationUnit().GetSizeOfPointer() == 32) {

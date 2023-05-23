@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.25)
 project(Analyzer)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_BUILD_RPATH_USE_ORIGIN ON)
+set(CMAKE_INSTALL_RPATH $ORIGIN)
 
 if (MSVC)
     set(BUILD_SHARED_LIBS ON)

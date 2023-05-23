@@ -1,6 +1,6 @@
 {
-  "description": "Null dereference",
   "kind": "NULL.DEREF",
+  "description": "Dereferencing of \"pFile\" which can be null",
   "positive": true,
   "line": 5,
   "pos": 12,

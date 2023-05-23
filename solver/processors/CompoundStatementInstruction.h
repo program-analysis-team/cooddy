@@ -5,6 +5,7 @@
 #ifndef COODDY_ANALYZER_SOURCE_SOLVER_PROCESSORS_COMPOUNDSTATEMENTINSTRUCTION_H_
 #define COODDY_ANALYZER_SOURCE_SOLVER_PROCESSORS_COMPOUNDSTATEMENTINSTRUCTION_H_
 
+#include <ast/CompoundStatement.h>
 #include <ast/Node.h>
 
 namespace Processor {
@@ -15,18 +16,17 @@ class CompoundStatementInstruction : public InstructionProcessor {
         auto children = node.GetChildren();
         context.Add<uint32_t>(children.size());
         for (auto child : children) {
-            context.Compile(child);
+            // Ignore nested compound statements due to too long execution of huge hierarchy of compound statements
+            context.Compile(Node::Cast<CompoundStatement>(child) == nullptr ? child : nullptr);
         }
     }
     z3::expr Execute(ExecutionContext& context, SymbolId& symbolId) override
     {
         auto size = context.Get<uint32_t>();
-        if (size > 1) {
-            for (auto i = 0; i < size - 1; i++) {
-                context.Execute();
-            }
+        for (auto i = 0; i < size; i++) {
+            context.Execute();
         }
-        return context.Execute(&symbolId);
+        return context->CreateSymbolExpr(symbolId);
     }
 };
 

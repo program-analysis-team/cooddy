@@ -54,7 +54,6 @@ int main(int argc, const char* const* argv)
     }
 
     SetLogLevel(parsedArgs["log"].as<std::string>());
-    SetParseErrorLog(parsedArgs["parse-errors-log"].as<std::string>());
     Log(LogLevel::INFO) << versionInfo.str() << std::endl;
 
     ReportUnknownArgs(parsedArgs);

@@ -37,7 +37,7 @@ public:
         IS_CONST_EXPR = 2,
         IS_ANONYMOUS = 3,
         IS_MATRIX = 4,
-        IS_VA_ARG = 5,
+        IS_VA_ARG = 5
     };
     using Attributes = std::bitset<16>;
 

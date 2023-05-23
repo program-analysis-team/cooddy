@@ -37,8 +37,12 @@ public:
     {
         return myArraySizeExpr;
     }
-
     bool IsMemoryBuffer(uint32_t& sizeofBuffer) const override;
+
+    void TraverseChildren(TraverseCallback callback) const override
+    {
+        CALL_CALLBACK(myArraySizeExpr, callback);
+    }
 
 private:
     std::string myTypeName;

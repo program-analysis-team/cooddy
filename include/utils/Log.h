@@ -14,14 +14,13 @@
 namespace HCXX {
 
 enum class LogLevel {
-    OFF = 0,
-    FATAL = 1,
-    PARSE_ERROR = 2,
-    ERROR = 3,
-    WARNING = 4,
-    INFO = 5,
-    DEBUG = 6,
-    TRACE = 7,
+    OFF,
+    FATAL,
+    ERROR,
+    WARNING,
+    INFO,
+    DEBUG,
+    TRACE,
 };
 
 class Logger {
@@ -31,17 +30,6 @@ public:
     static void SetLevel(LogLevel level)
     {
         myInstance.myLevel = level;
-    }
-
-    static void SetParseErrorFile(const std::string& parseErrorFile)
-    {
-        std::filesystem::path resultsPath = parseErrorFile;
-
-        if (std::filesystem::is_directory(resultsPath)) {
-            resultsPath.append("cooddy_parse_errors.log");
-        }
-
-        myInstance.myFileStream.open(resultsPath);
     }
 
     static LogLevel GetLevel()
@@ -54,13 +42,6 @@ public:
         myInstance.myStream = &stream;
     }
 
-    static void CloseFileStream()
-    {
-        if (myInstance.myFileStream.is_open()) {
-            myInstance.myFileStream.close();
-        }
-    }
-
 private:
     void Log(const char* msg, LogLevel level);
     void LogToStream(std::ostream& out, const char* msg, LogLevel level);
@@ -69,7 +50,6 @@ private:
     friend class Log;
     std::mutex myMutex;
     std::ostream* myStream;
-    std::ofstream myFileStream;
     LogLevel myLevel;
 };
 

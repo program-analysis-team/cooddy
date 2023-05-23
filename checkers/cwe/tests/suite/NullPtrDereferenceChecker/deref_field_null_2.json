@@ -1,6 +1,6 @@
 {
-  "description": "Null dereference",
   "kind": "NULL.DEREF",
+  "description": "Dereferencing of \"b->m3[2]\" which can be null",
   "line": 12,
   "pos": 13,
   "positive": true

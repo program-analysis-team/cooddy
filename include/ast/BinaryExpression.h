@@ -120,12 +120,12 @@ public:
             case Operation::MUL:
                 return op1 * op2;
             case Operation::DIV:
-                if (op2 == 0) {
+                if (op2 == 0 || op1 == INT64_MIN && op2 == -1) {
                     return UNDEF_VALUE;  // LCOV_EXCL_LINE: HCAT-2777
                 }
                 return op1 / op2;
             case Operation::REM:
-                if (op2 == 0) {
+                if (op2 == 0 || op1 == INT64_MIN && op2 == -1) {
                     return UNDEF_VALUE;  // LCOV_EXCL_LINE: HCAT-2777
                 }
                 return op1 % op2;

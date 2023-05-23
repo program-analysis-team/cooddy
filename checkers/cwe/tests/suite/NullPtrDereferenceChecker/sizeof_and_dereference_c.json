@@ -1,6 +1,6 @@
 {
-  "description": "Null dereference",
   "kind": "NULL.DEREF",
+  "description": "Dereferencing of \"pointer\" which can be null",
   "positive": true,
   "line": 9,
   "pos": 5

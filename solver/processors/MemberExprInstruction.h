@@ -59,15 +59,23 @@ class MemberExprInstruction : public InstructionProcessor {
 
     z3::expr Execute(ExecutionContext& context, SymbolId& symbolId) override
     {
-        context.Execute(&symbolId);
+        auto expr = context.Execute(&symbolId);
         auto fieldIndex = context.Get<uint32_t>();
 
         auto addSizeToContext = context.Get<bool>();
         if (fieldIndex == 0) {
             return context->CreateSymbolExpr(symbolId);
         }
+
+        if (!expr.is_const()) {
+            if (auto cachedSymbolPtr = context->GetSymbolBySolverId(expr.id(), symbolId); cachedSymbolPtr != nullptr) {
+                symbolId = *cachedSymbolPtr;
+            }
+        }
+
         auto objSymbolId = symbolId;
         auto result = context->GetSubSymbol(symbolId, VirtualOffset(VirtualOffset::Kind::INDEX, fieldIndex - 1));
+
         if (addSizeToContext) {
             auto sizeInfo = context.Get<SizeInfo>();
             if (sizeInfo.isFlexArray) {

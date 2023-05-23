@@ -1,6 +1,6 @@
 {
-  "description": "Null dereference",
   "kind": "NULL.DEREF",
+  "description": "Dereferencing of \"f11.field\" which can be null",
   "line": 12,
   "pos": 13,
   "positive": true

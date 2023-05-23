@@ -1,0 +1,7 @@
+{
+  "description": "Sensitive data leak",
+  "kind": "TAINT.SDE",
+  "line": 10,
+  "pos": 11,
+  "positive": true
+}

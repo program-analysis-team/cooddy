@@ -49,6 +49,11 @@ public:
             if (state.GetFuncState().GetContext().IsCalleeDefined(callExpr)) {
                 return;
             }
+            for (auto [n, s] : state.GetAnnotationSources(myFreeSinkKind)) {
+                if (s == state.GetNode()) {
+                    return;
+                }
+            }
             auto argPos = callExpr->FindArgument(*state.GetNode());
             if (!argPos) {
                 return;
@@ -64,6 +69,7 @@ public:
                               uint32_t flags = 0)
     {
         if (state.HasAnnotation(source)) {
+            flags |= CheckPathParams::Flags::CHECK_UNREACHABLE_SINK | CheckPathParams::USE_POINTER_ARITHMETIC;
             state.AddSuspiciousPath({*this, sink, source, StrLocales::GetStringLocale(sourceName), {}, flags});
         }
     }
@@ -72,23 +78,22 @@ public:
         if (SkipState(state)) {
             return;
         }
-        TryAddSuspiciousPath(state, myUnlockResourceKind, myLockResourceKind, "RESOURCE_SOURCE",
-                             CheckPathParams::Flags::CHECK_UNREACHABLE_SINK | CheckPathParams::USE_POINTER_ARITHMETIC);
+        TryAddSuspiciousPath(state, myUnlockResourceKind, myLockResourceKind, "RESOURCE_SOURCE");
         if (SkipStateAlloc(state)) {
             return;
         }
         TryAddSuspiciousPath(state, myFreeDescriptorKind, myAllocDescriptorKind, "DESCRIPTOR_SOURCE",
-                             CheckPathParams::Flags::CHECK_UNREACHABLE_SINK |
-                                 CheckPathParams::Flags::USE_EXIT_SYMBOLS_AS_SINKS |
-                                 CheckPathParams::USE_POINTER_ARITHMETIC);
+                             CheckPathParams::Flags::USE_EXIT_SYMBOLS_AS_SINKS);
         TryAddSuspiciousPath(state, myFreeSinkKind, myAllocSourceKind, "ALLOC_SOURCE",
-                             CheckPathParams::Flags::CHECK_UNREACHABLE_SINK |
-                                 CheckPathParams::Flags::USE_EXIT_SYMBOLS_AS_SINKS |
-                                 CheckPathParams::USE_POINTER_ARITHMETIC);
+                             CheckPathParams::Flags::USE_EXIT_SYMBOLS_AS_SINKS);
     }
     bool OnSourceExecuted(const SourceExecInfo& sourceInfo) override
     {
         auto& solverCtx = sourceInfo.context;
+        if (sourceInfo.path.sourceKind == myLockResourceKind && solverCtx.IsCallArgument(sourceInfo.exprId)) {
+            // ignore lock sources if lock object is passed as a parameter of the function
+            return false;
+        }
         solverCtx.AddCondition(sourceInfo.exprId, {Condition::Operation::GT, 0});
         return true;
     }
@@ -175,10 +180,7 @@ private:
                 return true;
             }
         }
-        auto typedNode = state.GetNodeAs<TypedNode>();
-        if (typedNode != nullptr && Node::Cast<ParamVarDecl>(typedNode->GetDeclaration()) != nullptr) {
-            return true;
-        }
+
         // skip allocations into an array member as a parameter (&array[index])
         auto unaryExpr = Node::Cast<UnaryExpression>(state.GetNode()->GetInnerNode());
         if (unaryExpr != nullptr && unaryExpr->GetOperation() == UnaryExpression::Operation::ADDR_OF) {

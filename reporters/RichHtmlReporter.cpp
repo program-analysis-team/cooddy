@@ -218,6 +218,7 @@ void RichHtmlReporter::FlushStream(const std::filesystem::path& fileName)
         InvalidateTemplateStr();
     }
 
+    CopyCompilationIssues();
     string jsonStr = PackData(jsoncpp::to_string(descriptor, "\n"));
 
     if (myFileStream.is_open()) {

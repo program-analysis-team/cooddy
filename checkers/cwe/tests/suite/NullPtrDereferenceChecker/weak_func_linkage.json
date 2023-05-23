@@ -1,5 +1,5 @@
 {
-  "description": "Null dereference",
+  "description": "Dereferencing of \"a\" which can be null",
   "kind": "NULL.DEREF",
   "testcase_directory": "weak_func_linkage",
   "file_path": "weak_func_linkage/bar.c",

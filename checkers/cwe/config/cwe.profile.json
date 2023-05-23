@@ -45,6 +45,12 @@
         {"id": "NULL.UNTRUSTED.DEREF", "severity": "Warning", "enabled": true}
       ]
     },
+    "SensitiveDataExposureChecker": {
+      "languages" : ["c", "c++", "java"],
+      "inspections" : [
+        {"id": "TAINT.SDE", "severity": "Error", "enabled": true}
+      ]
+    },
     "MismatchedMemManagementChecker": {
       "languages" : ["c", "c++"],
       "inspections" : [

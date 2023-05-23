@@ -1,0 +1,75 @@
+{
+  "description": "Sensitive data leak",
+  "kind": "TAINT.SDE",
+  "positive": true,
+  "problems": [
+    {
+      "line": 24,
+      "pos": 12
+    },
+    {
+      "line": 40,
+      "pos": 14
+    },
+    {
+      "line": 28,
+      "pos": 35
+    },
+    {
+      "line": 20,
+      "pos": 28
+    },
+    {
+      "line": 32,
+      "pos": 19
+    },
+    {
+      "line": 36,
+      "pos": 36
+    },
+    {
+      "line": 48,
+      "pos": 21
+    },
+    {
+      "line": 52,
+      "pos": 30
+    },
+    {
+      "line": 72,
+      "pos": 15
+    },
+    {
+      "line": 60,
+      "pos": 37
+    },
+    {
+      "line": 64,
+      "pos": 20
+    },
+    {
+      "line": 84,
+      "pos": 12
+    },
+    {
+      "line": 80,
+      "pos": 22
+    },
+    {
+      "line": 44,
+      "pos": 43
+    },
+    {
+      "line": 56,
+      "pos": 13
+    },
+    {
+      "line": 68,
+      "pos": 32
+    },
+    {
+      "line": 76,
+      "pos": 39
+    }
+  ]
+}

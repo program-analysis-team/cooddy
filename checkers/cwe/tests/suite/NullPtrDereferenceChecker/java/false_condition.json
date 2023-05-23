@@ -1,5 +1,5 @@
 {
-  "description": "Null dereference",
+  "description": "Dereferencing of \"str\" which can be null",
   "kind": "NULL.DEREF",
   "problems": [
     {

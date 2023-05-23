@@ -1,5 +1,5 @@
 {
-  "description": "Null dereference",
+  "description": "Dereferencing of \"dataInfo->buff\" which can be null",
   "kind": "NULL.DEREF",
   "line": 19,
   "pos": 18,

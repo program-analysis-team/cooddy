@@ -1,5 +1,5 @@
 {
-  "description": "Null dereference",
+  "description": "Dereferencing of \"p\" which can be null",
   "kind": "NULL.DEREF",
   "file_path": "static_functions/foo.c",
   "line": 7,

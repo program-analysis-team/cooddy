@@ -48,6 +48,7 @@ AnalyzerImpl::AnalyzerImpl(Parser& parser, Workspace& workspace) : myParser(pars
 
 AnalyzerImpl::~AnalyzerImpl()
 {
+    myTreadPool.WaitAll();
     LogStatistics();
 }
 
@@ -83,7 +84,7 @@ void AnalyzerImpl::LogStatistics()
     dfaStat.checkPathTime += myDfaAnalyzer->executionTime;
     stat.AddCheckerStat("#DfaEngine", dfaStat);
 
-    stat.LogStatistics(myTreadPool.GetRunTime(), myDfaAnalyzer->GetUndefinedFunctionsCounter(), myParser.statistics,
+    stat.LogStatistics(myTreadPool.GetRunTime(), myDfaAnalyzer->undefinedFunctionsCount, myParser.statistics,
                        myUnitsStat, myWorkspace.GetOptions().settings.resultManUrl);
 }
 
@@ -305,6 +306,7 @@ void AnalyzerImpl::AnalyzeContext::AnalyzeUnit(TranslationUnitPtr& unit)
     }
     myConsumer->OnAnalysisEnd(*unit);
     HCXX::Log(HCXX::LogLevel::INFO) << "Analysis finished: " << unit->GetMainFileName() << std::endl;
+    myAnalyzer->myDfaAnalyzer->LogMemoryStatistics();
     unit->ClearUnusedData();
 }
 

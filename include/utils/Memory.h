@@ -25,4 +25,37 @@ inline std::shared_ptr<T> MakeSharedNoDelete(T& obj) noexcept
     return std::shared_ptr<T>{std::shared_ptr<T>{}, &obj};
 }
 
+/**
+ * This class allows to calculate the size of memory allocated to an object of a certain type.
+ */
+class MemCounter {
+public:
+    void operator<<(std::nullptr_t) {}
+
+    MemCounter& operator<<(const std::string& value)
+    {
+        mySize += sizeof(std::string) + value.capacity();
+        return *this;
+    }
+    template <class T>
+    MemCounter& operator<<(const std::vector<T>& value)
+    {
+        mySize += sizeof(std::vector<T>) + value.capacity() * sizeof(T);
+        return *this;
+    }
+    template <class T>
+    MemCounter& operator<<(const T&)
+    {
+        mySize += sizeof(T);
+        return *this;
+    }
+    uint32_t GetSize() const
+    {
+        return mySize;
+    }
+
+private:
+    uint32_t mySize = 0;
+};
+
 #endif  // COODDY_ANALYZER_INCLUDE_UTILS_MEMORY_H_

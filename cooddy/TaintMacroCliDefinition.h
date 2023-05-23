@@ -9,13 +9,14 @@
 #include <string_view>
 
 /// Produce a CLI option for GCC which defines specified macro as an AST annotation "__cooddy_security_risk".
-inline std::string TaintMacroCliDefinition(std::string_view taintMacro)
+inline std::string TaintMacroCliDefinition(std::string_view taintMacro, std::string_view annotation)
 {
     std::string result;
     result += "-D";
     result += taintMacro;
-    result += "=__attribute__((annotate(\"__cooddy_security_risk\")))";
-
+    result += "=__attribute__((annotate(\"";
+    result += annotation;
+    result += "\")))";
     return result;
 }
 

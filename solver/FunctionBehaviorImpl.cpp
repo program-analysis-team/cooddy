@@ -98,7 +98,7 @@ void FunctionBehaviorImpl::ProcessBlockSuccessors(ExecutionContext& execCtx, con
         uint32_t successor = block.GetSuccessor(i);
         if (successor > block.GetPosition()) {
             if (!execCtx.GetSuccessorForLastBlockInLoop(successor)) {
-                continue;
+                continue;  // LCOV_EXCL_LINE
             }
         }
         z3::expr joinCondition =

@@ -217,10 +217,11 @@ void BasicBlock::InitLoop(const CfgBlock& block)
     auto loopStmt = Node::Cast<LoopStatement>(block.GetTerminatorStatement());
     if (loopStmt != nullptr) {
         myIsDoWhileLoop = loopStmt->GetLoopKind() == LoopStatement::LoopKind::DO_WHILE;
-        auto loop = block.FindNearestLoop();
-        if (loop.first != 0 && (loop.second == block.GetPos() || myIsDoWhileLoop)) {
-            myIsLoopEntrance = 1;
-            myEndOfLoop = loop.first;
-        }
+    }
+    auto loop = block.FindNearestLoop();
+
+    if (loop.first != 0 && (loop.second == block.GetPos() || myIsDoWhileLoop)) {
+        myIsLoopEntrance = 1;
+        myEndOfLoop = loop.first;
     }
 }

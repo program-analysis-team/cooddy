@@ -1,12 +1,13 @@
 {
-  "description": "Null dereference",
   "kind": "NULL.DEREF",
   "problems": [
     {
+      "description": "Dereferencing of \"dataBuffInfo2.dataBuff\" which can be null",
       "line": 17,
       "pos": 16
     },
     {
+      "description": "Dereferencing of \"dataBuffInfo1.dataBuff\" which can be null",
       "line": 14,
       "pos": 16
     }

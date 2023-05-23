@@ -230,6 +230,9 @@
   "UNINITIALIZED_VARIABLE_USAGE": {
     "EN": "Uninitialized variable usage"
   },
+  "SENSITIVE_DATA_LEAK": {
+    "EN": "Sensitive data"
+  },
   "USE_AFTER_FREE": {
     "EN": "Use after free"
   },
@@ -246,7 +249,7 @@
     "EN": "Possible overflow of char array"
   },
   "NullPtrDereferenceChecker": {
-    "EN": "Null dereference"
+    "EN": "Dereferencing of \"%1%\" which can be null"
   },
   "UninitializedMemoryUsageChecker": {
     "EN": "The variable '%1%' is an uninitialized value."
@@ -265,6 +268,9 @@
   },
   "BufferMaxSizeChecker": {
     "EN": "Size of the %1% can be less than %2%"
+  },
+  "SensitiveDataExposureChecker": {
+    "EN": "Sensitive data leak"
   },
   "WrongStringIncrementChecker": {
     "EN": "Possible overflow of char array"

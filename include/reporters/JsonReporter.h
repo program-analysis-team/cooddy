@@ -11,6 +11,7 @@
 #include <unordered_map>
 #include <vector>
 
+#include "Parser.h"
 #include "Reporter.h"
 #include "utils/json-cpp.h"
 
@@ -147,6 +148,13 @@ public:
         }
     };
 
+    struct CompilationIssue {
+        std::string tu;
+        std::vector<Parser::ParserStatistics::CompilationIssue> issues;
+
+        DECLARE_FIELDS("tu", tu, "issues", issues)
+    };
+
     struct ReportDescriptor {
         std::string profile;
         std::string commandLine;
@@ -160,6 +168,7 @@ public:
         std::vector<ProblemDescriptor> problems;
         std::unordered_map<std::string, std::string> configurations;
         std::unordered_map<string, CodeSnippet> codeSnippets;
+        std::vector<CompilationIssue> compilationIssues;
         std::string taintManUrl;
 
         template <class X>
@@ -171,7 +180,7 @@ public:
                             startTimeStamp, "end_timestamp", endTimeStamp, "profile", profile, "command_line",
                             commandLine, "git_commit", gitCommit, "git_version", gitVersion, "project_git_summary",
                             projectGitSummary, "problems", problems, "code_snippets", codeSnippets, "configurations",
-                            configurations, "taint_man_url", taintManUrl);
+                            configurations, "taint_man_url", taintManUrl, "compilation_issues", compilationIssues);
         }
     };
 
@@ -180,6 +189,8 @@ public:
     std::string GetCurrentTime();
 
     void RegisterProblemImpl(const Problem& problem) override;
+
+    void CopyCompilationIssues();
 
     ReportDescriptor descriptor;
     bool flushed = false;

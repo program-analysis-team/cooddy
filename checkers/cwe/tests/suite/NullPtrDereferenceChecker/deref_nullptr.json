@@ -1,6 +1,6 @@
 {
-  "description": "Null dereference",
   "kind": "NULL.DEREF",
+  "description": "Dereferencing of \"a\" which can be null",
   "line": 4,
   "pos": 14,
   "positive": true,
@@ -15,7 +15,7 @@
       "file": "deref_nullptr.cpp",
       "line": 4,
       "col": 14,
-      "desc": "Null dereference"
+      "desc": "Dereferencing of \"a\" which can be null"
     }
   ]
 }

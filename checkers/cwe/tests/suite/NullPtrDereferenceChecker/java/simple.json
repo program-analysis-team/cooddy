@@ -1,6 +1,6 @@
 {
-  "description": "Null dereference",
   "kind": "NULL.DEREF",
+  "description": "Dereferencing of \"sString\" which can be null",
   "line": 4,
   "pos": 9,
   "pos_end": 16,

@@ -168,7 +168,7 @@ void PathChecker::MakeUnreachableSinkConditions(CheckContext& context)
 {
     for (auto& sourceId : context.params.sources) {
         auto& source = myStoredExpressions[sourceId];
-        ExpressionsMap sourceIds = {{source.expr.id(), std::vector<ExprId>()}};
+        ExpressionsMap sourceIds = {{source.expr.id(), {sourceId}}};
         z3::expr sinkCond = CreateBoolExpr(false);
         for (auto& sinkId : context.params.sinks) {
             auto& sink = myStoredExpressions[sinkId];
@@ -357,6 +357,11 @@ z3::expr PathChecker::CheckTaintCondition(const z3::expr& expr, MakePathContext&
         context.hasFreeSymbols = true;
         return expr == 1;  // for free symbols use constant value
     }
+    return MakePathConditionFromArgs(expr, context);
+}
+
+z3::expr PathChecker::MakePathConditionFromArgs(const z3::expr& expr, MakePathContext& context)
+{
     z3::expr res = myTrueExpr;
     for (size_t i = 0, n = expr.num_args(); i < n; ++i) {
         res = res && MakePathCondition(expr.arg(i), std::move(context));
@@ -753,6 +758,17 @@ bool PathChecker::IsUntrustedSource(ExprId exprId)
     return myUntrustedSources.Check(myStoredExpressions[exprId].expr).has_value();
 }
 
+bool PathChecker::IsCallArgument(ExprId exprId) const
+{
+    auto symbolId = SymbolId::CreateSymbolIdFromExpr(myStoredExpressions[exprId].expr);
+    if (!symbolId) {
+        return false;
+    }
+    auto& callArgs = GetCallArgs(myCurStack.back().callStackPos);
+    uint32_t argPos = FunctionBehaviorImpl::GetArgPos(*symbolId);
+    return argPos < callArgs.size();
+}
+
 void PathChecker::AddStringCondition(const std::string& cond, bool setResult, uint32_t argPos, VirtualOffset offset)
 {
     z3::expr constraints = myTrueExpr;
@@ -783,4 +799,12 @@ void PathChecker::AddStringCondition(const std::string& cond, bool setResult, ui
         myConstraints = myConstraints && *expr;
     };
     myConstraints = myConstraints && constraints;
+}
+
+void PathChecker::AddUntrustedSourceByKind(ExprId expr, const UntrustedSource::SourceKind kind)
+{
+    auto untrustedExpr = myStoredExpressions[expr];
+    UntrustedSourceExpr source{
+        kind, 0, untrustedExpr.execId, 0, nullptr, untrustedExpr.expr, untrustedExpr.condition, untrustedExpr.expr};
+    AddUntrustedSource(std::move(source));
 }
