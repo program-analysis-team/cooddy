@@ -1,19 +1,14 @@
 Cooddy uses standalone libraries of **clang** and **z3**, so manual build of specified versions is required. Now Cooddy is based on LLVM 14.0 and z3 4.8.9. As far as backward compatibility of LLVM project is not guaranteed we recommend to use these versions.
 
-#### 
- Build z3
-
+#### Build z3
 
 More info about z3 build: [here](https://github.com/Z3Prover/z3).
-
-
 
 
 <details>
 
 <summary>Windows (MINGW)
 </summary>
-
 
 ```bash
 wget https://github.com/Z3Prover/z3/archive/refs/tags/z3-4.8.9.zip
@@ -25,7 +20,6 @@ make install
 export Z3_HOME=<path_to_z3_installation>
 ```
 
-
 </details>
 
 
@@ -36,24 +30,17 @@ export Z3_HOME=<path_to_z3_installation>
 <summary>Linux
 </summary>
 
-
-```
+```bash
 wget https://github.com/Z3Prover/z3/releases/download/z3-4.8.9/z3-4.8.9-x64-ubuntu-16.04.zip
 unzip z3-4.8.9-x64-ubuntu-16.04.zip
 export Z3_HOME=<path_to_z3_installation>
 ```
 
-
 </details>
 
-#### 
- Build Clang
-
+#### Build Clang
 
 More info about clang build: [here](https://llvm.org/docs/GettingStarted.html#getting-the-source-code-and-building-llvm).
-
-
-
 
 ```bash
 wget https://github.com/llvm/llvm-project/archive/refs/tags/llvmorg-14.0.0.zip

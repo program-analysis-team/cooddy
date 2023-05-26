@@ -32,13 +32,12 @@ var zi = source => {
     };
 
     var sourceIndex = 0;
-    var getSource = () => source[sourceIndex++].codePointAt(0);
+    var getSource = () => sourceIndex < source.length ? source[sourceIndex++].codePointAt(0) : 0;
     var tag = 0;
     var bc = 0;
     var dest = [];
-    var destLen = 0;
     var writeDest = i => {
-        dest[destLen++] = String.fromCharCode(i)
+        dest.push(String.fromCharCode(i))
     };
 
     var ltree = createTree();  /* dynamic length/symbol tree */
@@ -73,13 +72,12 @@ var zi = source => {
     /* ----------------------- *
      * -- utility functions -- *
      * ----------------------- */
-
+    var i, sum;
     /* build extra bits and base tables */
     var tinf_build_bits_base = (bits, base, delta, first) => {
-        var i, sum;
 
         /* build bits table */
-        for (i = 0; i < delta; ++i) bits[i] = 0;
+        bits.fill(0);
         for (i = 0; i < 30 - delta; ++i) bits[i + delta] = i / delta | 0;
 
         /* build base table */
@@ -91,8 +89,6 @@ var zi = source => {
 
     /* build the fixed huffman trees */
     var tinf_build_fixed_trees = (lt, dt) => {
-        var i;
-
         /* build fixed length tree */
         lt.t.fill(0);
 
@@ -117,8 +113,6 @@ var zi = source => {
     var offs = createArray(16);
 
     var tinf_build_tree = (t, lengths, off, num) => {
-        var i, sum;
-
         /* clear code length count table */
         t.t.fill(0);
 
@@ -204,7 +198,7 @@ var zi = source => {
     /* given a data stream, decode dynamic trees from it */
     var tinf_decode_trees = (lt, dt) => {
         var hlit, hdist, hclen;
-        var i, num, length;
+        var i, num, length, sym, prev;
 
         /* get 5 bits HLIT (257-286) */
         hlit = tinf_read_bits(5, 257);
@@ -215,13 +209,11 @@ var zi = source => {
         /* get 4 bits HCLEN (4-19) */
         hclen = tinf_read_bits(4, 4);
 
-        for (i = 0; i < 19; ++i) lengths[i] = 0;
-
+        lengths.fill(0);
         /* read code lengths for code length alphabet */
         for (i = 0; i < hclen; ++i) {
             /* get 3 bits code length (0-7) */
-            var clen = tinf_read_bits(3, 0);
-            lengths[clcidx[i]] = clen;
+            lengths[clcidx[i]] = tinf_read_bits(3, 0);
         }
 
         /* build code length tree */
@@ -229,10 +221,10 @@ var zi = source => {
 
         /* decode code lengths for the dynamic trees */
         for (num = 0; num < hlit + hdist;) {
-            var sym = tinf_decode_symbol(code_tree);
+            sym = tinf_decode_symbol(code_tree);
             if (sym == 16) {
                 /* copy previous code length 3-6 times (read 2 bits) */
-                var prev = lengths[num - 1];
+                prev = lengths[num - 1];
                 for (length = tinf_read_bits(2, 3); length; --length) {
                     lengths[num++] = prev;
                 }
@@ -283,11 +275,11 @@ var zi = source => {
                 dist = tinf_decode_symbol(dt);
 
                 /* possibly get more bits from distance code */
-                offs = destLen - tinf_read_bits(dist_bits[dist], dist_base[dist]);
+                offs = dest.length - tinf_read_bits(dist_bits[dist], dist_base[dist]);
 
                 /* copy match */
                 for (i = offs; i < offs + length; ++i) {
-                    dest[destLen++] = dest[i];
+                    dest.push(dest[i]);
                 }
             }
         }
@@ -319,30 +311,7 @@ var zi = source => {
         /* make sure we start next block on a byte boundary */
         bc = 0;
     }
-
-    /* inflate stream from source*/
-    var tinf_uncompress = () => {
-        var bfinal, btype;
-
-        do {
-            /* read final block flag */
-            bfinal = tinf_getbit();
-
-            /* read block type (2 bits) */
-            btype = tinf_read_bits(2, 0);
-
-            /* decompress block */
-            if (btype == 0)
-                tinf_inflate_uncompressed_block();
-            else if (btype == 1)
-                tinf_inflate_block_data(sltree, sdtree);
-            else {
-                tinf_decode_trees(ltree, dtree);
-                tinf_inflate_block_data(ltree, dtree);
-            }
-        } while (!bfinal);
-        return dest.slice(0, destLen).join("");
-    }
+    var bfinal, btype;
 
     /* -------------------- *
      * -- initialization -- *
@@ -358,5 +327,23 @@ var zi = source => {
     /* fix a special case */
     length_bits[28] = 0;
     length_base[28] = 258;
-    return tinf_uncompress();
+
+    do {
+        /* read final block flag */
+        bfinal = tinf_getbit();
+
+        /* read block type (2 bits) */
+        btype = tinf_read_bits(2, 0);
+
+        /* decompress block */
+        if (btype == 0)
+            tinf_inflate_uncompressed_block();
+        else if (btype == 1)
+            tinf_inflate_block_data(sltree, sdtree);
+        else {
+            tinf_decode_trees(ltree, dtree);
+            tinf_inflate_block_data(ltree, dtree);
+        }
+    } while (!bfinal);
+    return dest.join("");
 }

@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/ingydotnet/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/program-analysis-team/HTMLReporter
+	branch = master
+	commit = 3dd0878f284126ab9ba19f6e83233a30c2bc0379
+	parent = 76ca04913ae5c48b67fdb4d9816166ff83a7cbeb
+	method = merge
+	cmdver = 0.4.6

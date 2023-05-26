@@ -1,4 +1,4 @@
-The presentation of result is depend on which reporter was used, during the analyses. The examples of the result of each reporter you can see below 
+The presentation of result is depend on which reporter was used, during the analyses. The examples of the result of each reporter you can see below
 
 
 
@@ -11,15 +11,11 @@ Result will be presented in cooddy_result.json, which is located in the current 
 
 By calling following example of analyses
 
-
-
 ```bash
 /mnt/d/work/Cooddy/build/release/cooddy --scope=/mnt/d/work/kvdb_test --results-path=/mnt/d --reporter=json
 ```
 
 the content of result will be following
-
-
 
 ```json
 {
@@ -71,7 +67,6 @@ the content of result will be following
 }
 ```
 
-
 </details>
 
 
@@ -79,13 +74,11 @@ the content of result will be following
 
 <details>
 
-<summary>Result in human readable format
+<summary>Result in human-readable format
 </summary>
 By default result will be printed in output of the console. If saving result in human-readable format in file is required, you need to pass path to location of result file to argument results-path. This file contains list of problems, found in scope.
 
 By calling following example of analyses
-
-
 
 ```bash
 /mnt/d/work/Cooddy/build/release/cooddy --scope=/mnt/d/work/kvdb_test --results-path=/mnt/d
@@ -93,12 +86,9 @@ By calling following example of analyses
 
 the content of result will be following
 
-
-
 ```
 Problem found. NullPtrDereferenceCheker: Null dereference File: /mnt/d/work/test_projects/sqlite_vm/mnt/storage/projects-for-analysis/sqlite/bld/sqlite3.c:59362:6, Trace: File: /mnt/d/work/test_projects/sqlite_vm/mnt/storage/projects-for-analysis/sqlite/bld/sqlite3.c:55128:44 File: /mnt/d/work/test_projects/sqlite_vm/mnt/storage/projects-for-analysis/sqlite/bld/sqlite3.c:55128:44 Problem found. UninitializedMemoryUsageChecker: Do not access uninitialized memory. File: /mnt/d/work/test_projects/sqlite_vm/mnt/storage/projects-for-analysis/sqlite/bld/sqlite3.c:79959:13, Trace: File: /mnt/d/work/test_projects/sqlite_vm/mnt/storage/projects-for-analysis/sqlite/bld/sqlite3.c:79869:3 Problem found. NullPtrDereferenceCheker: Null dereference File: /mnt/d/work/test_projects/sqlite_vm/mnt/storage/projects-for-analysis/sqlite/bld/sqlite3.c:79768:5, Trace: File: /mnt/d/work/test_projects/sqlite_vm/mnt/storage/projects-for-analysis/sqlite/bld/sqlite3.c:80353:18 File: /mnt/d/work/test_projects/sqlite_vm/mnt/storage/projects-for-analysis/sqlite/bld/sqlite3.c:80324:28 Problem found. NullPtrDereferenceCheker: Null dereference File: /mnt/d/work/test_projects/sqlite_vm/mnt/storage/projects-for-analysis/sqlite/bld/sqlite3.c:80356:12, Trace: File: /mnt/d/work/test_projects/sqlite_vm/mnt/storage/projects-for-analysis/sqlite/bld/sqlite3.c:80326:29 Problem found: Strictly check integer operations to ensure no overflow, wrap or division by zero. File: /mnt/d/work/test_projects/sqlite_vm/mnt/storage/projects-for-analysis/sqlite/bld/sqlite3.c:28704:35, Trace: File: /mnt/d/work/test_projects/sqlite_vm/mnt/storage/projects-for-analysis/sqlite/bld/sqlite3.c:28701:11
 ```
-
 
 </details>
 
@@ -112,8 +102,6 @@ Problem found. NullPtrDereferenceCheker: Null dereference File: /mnt/d/work/test
 Result will be presented in cooddy_result.csv, which is located in the current working directory by default or in location passed to argument results-path. This file contains list of problems, found in scope.
 
 By calling following example of analyses
-
-
 
 ```bash
 /mnt/d/work/Cooddy/build/release/cooddy --scope=/mnt/d/work/kvdb_test --results-path=/mnt/d --reporter=csv
@@ -137,18 +125,17 @@ Result will be presented in cooddy_result.csv, which is located in the current w
 
 By calling following example of analyses
 
-
-
 ```bash
 /mnt/d/work/Cooddy/build/release/cooddy --scope=/mnt/d/work/test --reporter=csv-html
 ```
 
 ### In Excel the content of result will be following:
+
 ![](imgs/How_to_analyze_result/image2021-6-29_16-15-46.png)
 
 When clicking to file with trace with name report-f8a8ec.html you can see description of error trace.
 
-Here you can review source code step by step to determine the source of the some specific error, with description on each step.
+Here you can review source code step by step to determine the source of some specific error, with description on each step.
 
 ![](imgs/How_to_analyze_result/image2023-1-12_12-52-55.png)
 
@@ -165,8 +152,6 @@ Here you can review source code step by step to determine the source of the some
 Result will be presented in cooddy_result.html, which is located in the current working directory by default or in location passed to argument results-path. This file contains list of problems, found in scope.
 
 By calling following example of analyses
-
-
 
 ```bash
 /mnt/d/work/Cooddy/build/release/cooddy --scope=/mnt/d/work/test --reporter=html

@@ -1,13 +1,12 @@
 {
   "kind": "MEM.BUF.INDEX.BOUNDS",
+  "description": "{*}",
   "problems": [
     {
-      "description": "Overrunning array \"arr\" of 123 elements by accessing it with index \"a\" equal to 123",
       "line": 18,
       "pos": 5
     },
     {
-      "description": "Overrunning array \"arr\" of 123 elements by accessing it with index \"b\" equal to 123",
       "line": 21,
       "pos": 5
     }

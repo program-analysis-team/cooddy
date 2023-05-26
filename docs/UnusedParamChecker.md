@@ -1,11 +1,10 @@
 ## Description
-Checker detects parameters that are declared in function but don't used in expressions. 
+
+Checker detects parameters that are declared in function but don't used in expressions.
 
 ## Examples
+
 **Confirmed examples**
-
-
-
 
 ```cpp
 int test(int a)
@@ -14,17 +13,9 @@ int test(int a)
 }
 ```
 
-
-  
-
-
-
 **Non-confirmed example**
 
-
-
-
-```
+```cpp
 struct B {
     int par;
 };

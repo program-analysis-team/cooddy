@@ -290,9 +290,6 @@ z3::expr& ExecutionContext::CastToBV(z3::expr& expr)
 {
     if (expr.is_bool()) {
         expr = z3::ite(expr, CreateIntegerExpr(1), CreateIntegerExpr(0));
-    } else if (expr.is_seq()) {
-        // to distinct string literal from nullptr
-        expr = CreateIntegerExpr(1);  // LCOV_EXCL_LINE
     }
     return expr;
 }
@@ -301,8 +298,6 @@ z3::expr& ExecutionContext::CastToBool(z3::expr& expr)
 {
     if (expr.is_int()) {
         expr = (expr != CreateIntegerExpr(0));
-    } else if (expr.is_seq()) {
-        expr = myTrueExpr;  // LCOV_EXCL_LINE
     }
     return expr;
 }

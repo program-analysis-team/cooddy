@@ -1,27 +1,27 @@
 {
   "description": "Sensitive data leak",
   "kind": "TAINT.SDE",
+  "line": 3,
+  "pos": 28,
+  "positive": true,
   "trace": [
     {
-      "file": "simple_exposure2.cpp",
-      "line": 8,
+      "file": "simple_exposure8.cpp",
+      "line": 7,
       "col": 5,
       "desc": "Sensitive data source"
     },
     {
-      "file": "simple_exposure2.cpp",
-      "line": 15,
+      "file": "simple_exposure8.cpp",
+      "line": 9,
       "col": 9,
       "desc": "Sensitive data passed as the 1st argument"
     },
     {
-      "file": "simple_exposure2.cpp",
-      "line": 4,
+      "file": "simple_exposure8.cpp",
+      "line": 3,
       "col": 28,
       "desc": "Sensitive data leak"
     }
-  ],
-  "line": 4,
-  "pos": 28,
-  "positive": true
+  ]
 }

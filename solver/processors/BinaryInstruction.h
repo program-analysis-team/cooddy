@@ -157,7 +157,7 @@ class BinaryInstruction : public InstructionProcessor {
         return a ^ b;
     }
     z3::expr GetAssigningRhe(ExecutionContext& context, BinaryExpression::Operation op, const z3::expr& lhe,
-                             z3::expr& rhe, SymbolId& symbolId)
+                             const z3::expr& rhe, SymbolId& symbolId)
     {
         switch (op) {
             case BinaryExpression::Operation::ASSIGN:
@@ -177,11 +177,11 @@ class BinaryInstruction : public InstructionProcessor {
             case BinaryExpression::Operation::SHR_ASSIGN:
                 return CreateShiftExpr(context, lhe, rhe, false);
             case BinaryExpression::Operation::AND_ASSIGN:
-                return lhe.is_bool() ? lhe & context->CastToBool(rhe) : CreateAndExpr(context, lhe, rhe);
+                return CreateAndExpr(context, lhe, rhe);
             case BinaryExpression::Operation::XOR_ASSIGN:
-                return lhe.is_bool() ? lhe ^ context->CastToBool(rhe) : CreateExpr<Xor>(context, lhe, rhe);
+                return CreateExpr<Xor>(context, lhe, rhe);
             case BinaryExpression::Operation::OR_ASSIGN:
-                return lhe.is_bool() ? lhe | context->CastToBool(rhe) : CreateExpr<Or>(context, lhe, rhe);
+                return CreateExpr<Or>(context, lhe, rhe);
 
                 // LCOV_EXCL_START
             default:
@@ -191,8 +191,8 @@ class BinaryInstruction : public InstructionProcessor {
     }
 
     // COODDY_SUPPRESS
-    z3::expr ExecuteOp(ExecutionContext& context, BinaryExpression::Operation op, const z3::expr& lhe, z3::expr& rhe,
-                       SymbolId& symbolId)
+    z3::expr ExecuteOp(ExecutionContext& context, BinaryExpression::Operation op, const z3::expr& lhe,
+                       const z3::expr& rhe, SymbolId& symbolId)
     {
         switch (op) {
             case BinaryExpression::Operation::EQ:
@@ -212,11 +212,11 @@ class BinaryInstruction : public InstructionProcessor {
             case BinaryExpression::Operation::L_OR:
                 return lhe || rhe;
             case BinaryExpression::Operation::AND:
-                return lhe.is_bool() ? lhe & context->CastToBool(rhe) : CreateAndExpr(context, lhe, rhe);
+                return CreateAndExpr(context, lhe, rhe);
             case BinaryExpression::Operation::XOR:
-                return lhe.is_bool() ? lhe ^ context->CastToBool(rhe) : CreateExpr<Xor>(context, lhe, rhe);
+                return CreateExpr<Xor>(context, lhe, rhe);
             case BinaryExpression::Operation::OR:
-                return lhe.is_bool() ? lhe | context->CastToBool(rhe) : CreateExpr<Or>(context, lhe, rhe);
+                return CreateExpr<Or>(context, lhe, rhe);
             case BinaryExpression::Operation::ADD:
                 return lhe + rhe;
             case BinaryExpression::Operation::SUB:
@@ -246,7 +246,7 @@ class BinaryInstruction : public InstructionProcessor {
         if (op == BinaryExpression::Operation::L_AND || op == BinaryExpression::Operation::L_OR) {
             context->CastToBool(lhe);
             context->CastToBool(rhe);
-        } else if (!(op == BinaryExpression::Operation::ADD && lhe.is_seq() && rhe.is_seq())) {
+        } else {
             context->CastToBV(lhe);
             context->CastToBV(rhe);
         }

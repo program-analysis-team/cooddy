@@ -1,0 +1,73 @@
+{
+"start_time": "2023-05-24T14:46:04.491Z", 
+"end_time": "2023-05-24T14:46:04.554Z", 
+"start_timestamp": 1684939564, 
+"end_timestamp": 1684939564, 
+"profile": "default", 
+"command_line": "--scope=sources --reporter=json", 
+"git_commit": "c3144b06cf1dfce3f60327e88dd57b666246879f", 
+"git_version": "v1_96", 
+"project_git_summary": "ref: refs/heads/HCAT-2832_Extract_HTML_reporter_to_a_separate_product_part_5 1836a11ea7a7c93c2d04edc5a26bb2cf75828386\n", 
+"problems": [
+{
+"file": "example.h", 
+"line": 4, 
+"offset": 20, 
+"length": 1, 
+"problem_class": {
+"name": "DBZ", 
+"severity": "ERROR", 
+"profile": "CWE", 
+"inspection_name": "DivisionByZeroChecker"}
+, 
+"highlighted_element": "", 
+"description": "Division by zero", 
+"language": "c/c++", 
+"source": "div", 
+"reason": "", 
+"unique_id": "edb712ec444b1e92c97fcbfb60b8a048", 
+"trace": [
+{
+"file": "example.cpp", 
+"line": 5, 
+"col": 19, 
+"end_line": 5, 
+"end_col": 20, 
+"length": 1, 
+"desc": "Possible zero passed as the 2nd argument", 
+"snippet_path": "", 
+"parentEventId": 21, 
+"id": 0, 
+"kind": ""}
+, 
+{
+"file": "example.h", 
+"line": 4, 
+"col": 20, 
+"end_line": 4, 
+"end_col": 21, 
+"length": 1, 
+"desc": "Division by zero", 
+"snippet_path": "", 
+"parentEventId": 21, 
+"id": 0, 
+"kind": ""}
+]
+, 
+"html_trace": "", 
+"solver_duration": 1, 
+"function": "div", 
+"sink_function": "", 
+"code_snippet": ""}
+]
+, 
+"code_snippets": {
+}
+, 
+"configurations": {
+}
+, 
+"taint_man_url": "", 
+"compilation_issues": [
+]
+}

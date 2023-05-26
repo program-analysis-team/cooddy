@@ -1,13 +1,12 @@
 {
-  "kind":  "MEM.BUF.INDEX.BOUNDS",
+  "kind": "MEM.BUF.INDEX.BOUNDS",
+  "description": "{*}",
   "problems": [
     {
-      "description": "Overrunning array \"arr\" of 10 elements by accessing it with index \"idx\" equal to 10",
       "line": 8,
       "pos": 5
     },
     {
-      "description": "Underrunning array \"arr\" of 10 elements by accessing it with index \"*c\" equal to -1",
       "line": 9,
       "pos": 5
     }

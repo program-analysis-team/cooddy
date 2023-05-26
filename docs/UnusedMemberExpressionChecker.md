@@ -1,11 +1,10 @@
 ## Description
-Checker detects class/struct members that are not used in expressions. 
+
+Checker detects class/struct members that are not used in expressions.
 
 ## Examples
+
 **Confirmed examples**
-
-
-
 
 ```cpp
 struct A {
@@ -24,15 +23,7 @@ int main()
 }
 ```
 
-
-  
-
-
-
 **Non-confirmed example**
-
-
-
 
 ```cpp
 typedef struct READ4resok {
@@ -51,10 +42,12 @@ int main()
 ```
 
 ## Related and Contradictory Checkers
+
 [UnusedVariablesChecker](UnusedVariableChecker.md)
 
 ## Related guideline \ CWE
 -
 
 ## How it may be adjusted
+
 This checker uses following annotations: *Write*.

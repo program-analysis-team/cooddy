@@ -44,13 +44,25 @@ public:
     {
         auto node = state.GetNode();
         if (node != nullptr && node->GetType().IsSensitiveData()) {
-            state.Annotate(mySensitiveDataSourceKind);
+            if (auto ref = Node::Cast<RefExpression>(node); ref != nullptr) {
+                state.Annotate(mySensitiveDataSourceKind, ref->GetDeclaration()->GetRange());
+            } else {
+                state.Annotate(mySensitiveDataSourceKind);
+            }
         }
     }
 
     bool OnSourceExecuted(const SourceExecInfo& sourceInfo) override
     {
         sourceInfo.context.AddUntrustedSourceByKind(sourceInfo.exprId, UntrustedSource::SourceKind::SENSITIVE_DATA);
+        return true;
+    }
+    bool OnReportProblem(ProblemInfo& problemInfo) override
+    {
+        SourceRange sr = problemInfo.trace.front().annotation.GetUserData<SourceRange>();
+        if (sr.IsValid()) {
+            problemInfo.trace.front().range = sr;
+        }
         return true;
     }
 };

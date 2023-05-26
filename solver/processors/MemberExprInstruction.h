@@ -14,9 +14,10 @@ class MemberExprInstruction : public InstructionProcessor {
     static constexpr uint32_t FLEX_ARRAY_MAX_NUM = 3;
     static constexpr uint32_t FLEX_ARRAY_MAX_SIZE = 28;
 
-    struct SizeInfo {
-        uint32_t size;
-        bool isFlexArray;
+    struct MemberInfo {
+        uint32_t fieldIndex : 30;
+        uint32_t isFlexArray : 1;
+        uint32_t addSizeToContext : 1;
     };
 
     static bool IsLastFieldInRecordOrUnion(const FieldDecl& field)
@@ -37,55 +38,50 @@ class MemberExprInstruction : public InstructionProcessor {
         context.Compile(member->GetBase());
 
         auto fieldNode = Node::Cast<FieldDecl>(member->GetValue());
-        context.Add<uint32_t>(fieldNode != nullptr ? fieldNode->GetIndex() + 1 : 0U);
+        MemberInfo info{fieldNode != nullptr ? fieldNode->GetIndex() + 1 : 0U, 0, 0};
+        uint32_t fieldSize = fieldNode != nullptr ? fieldNode->GetSizeOfType() : 0;
 
-        // add field size to context if a field is a static array or an object
-        if (fieldNode != nullptr) {
-            auto type = fieldNode->GetType();
-            if (type.IsConstantArray() && !type.IsPointer()) {
-                uint32_t fieldSize = fieldNode->GetSizeOfType();
-                if (fieldSize != 0) {
-                    bool isFlexArray = IsLastFieldInRecordOrUnion(*fieldNode) &&
-                                       (fieldNode->GetNumOfElementsInArray() < FLEX_ARRAY_MAX_NUM ||
-                                        fieldNode->GetSizeOfType() < FLEX_ARRAY_MAX_SIZE);
-                    context.Add<bool>(true);
-                    context.Add<SizeInfo>(SizeInfo{!isFlexArray ? fieldSize : fieldNode->GetOffset(), isFlexArray});
-                    return;
-                }
+        if (fieldSize != 0) {
+            // add field size to context if a field is a static array or an object
+            if (auto type = fieldNode->GetType(); type.IsConstantArray() && !type.IsPointer()) {
+                info.addSizeToContext = 1;
+                info.isFlexArray = IsLastFieldInRecordOrUnion(*fieldNode) &&
+                                   (fieldNode->GetNumOfElementsInArray() < FLEX_ARRAY_MAX_NUM ||
+                                    fieldNode->GetSizeOfType() < FLEX_ARRAY_MAX_SIZE);
             }
         }
-        context.Add<bool>(false);
+        context.Add<MemberInfo>(info);
+        if (info.addSizeToContext) {
+            context.Add<uint32_t>(!info.isFlexArray ? fieldSize : fieldNode->GetOffset());
+        }
     }
 
     z3::expr Execute(ExecutionContext& context, SymbolId& symbolId) override
     {
         auto expr = context.Execute(&symbolId);
-        auto fieldIndex = context.Get<uint32_t>();
+        auto info = context.Get<MemberInfo>();
 
-        auto addSizeToContext = context.Get<bool>();
-        if (fieldIndex == 0) {
+        if (info.fieldIndex == 0) {
             return context->CreateSymbolExpr(symbolId);
         }
-
         if (!expr.is_const()) {
             if (auto cachedSymbolPtr = context->GetSymbolBySolverId(expr.id(), symbolId); cachedSymbolPtr != nullptr) {
                 symbolId = *cachedSymbolPtr;
             }
         }
-
         auto objSymbolId = symbolId;
-        auto result = context->GetSubSymbol(symbolId, VirtualOffset(VirtualOffset::Kind::INDEX, fieldIndex - 1));
+        auto result = context->GetSubSymbol(symbolId, VirtualOffset(VirtualOffset::Kind::INDEX, info.fieldIndex - 1));
 
-        if (addSizeToContext) {
-            auto sizeInfo = context.Get<SizeInfo>();
-            if (sizeInfo.isFlexArray) {
+        if (info.addSizeToContext) {
+            auto fieldSize = context.Get<uint32_t>();
+            if (info.isFlexArray) {
                 auto objSizeInfo = context->FindSizeExpr(context->GetSymbol(objSymbolId));
                 if (objSizeInfo == nullptr) {
                     return result;
                 }
-                context->SetSymbolSize(result, objSizeInfo->sizeExpr - context->CreateIntegerExpr(sizeInfo.size / 8));
+                context->SetSymbolSize(result, objSizeInfo->sizeExpr - context->CreateIntegerExpr(fieldSize / 8));
             } else {
-                context->SetSymbolSize(result, context->CreateIntegerExpr(sizeInfo.size));
+                context->SetSymbolSize(result, context->CreateIntegerExpr(fieldSize));
             }
         }
         return result;

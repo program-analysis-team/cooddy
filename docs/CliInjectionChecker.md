@@ -1,4 +1,5 @@
 ## Description
+
 Untrusted data, such as user input, command-line argument, or file contents is passed to a function launching a process or executing commands in a shell (such as std::system).
 
 Vulnerability
@@ -8,8 +9,8 @@ Because untrusted data can be manipulated, a potential attacker may modify the p
 Furthermore, this problem is compounded when the program is executed with elevated privileges. In this case, the attacker can do anything from stealing read-protected data like passwords and SSH keys to taking full control over a remote machine.
 
 ## Examples
-```
 
+```cpp
 #include <cstdlib>
 
 #include <iostream>
@@ -27,9 +28,11 @@ int main(int argc, char** argv)
 One could exploit such code by sending `argv[1]` like `file.cpp && scp %userprofile%/Documents ...`, or other malicious payload.
 
 ## Related Guideline \ CWE
+
 [CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')](https://cwe.mitre.org/data/definitions/78.md)
 
 ## List of command-line interface functions checked by default
+
 * _execl
 * _execle
 * _execlp

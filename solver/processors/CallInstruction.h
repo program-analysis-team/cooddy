@@ -55,8 +55,9 @@ protected:
         CompileCallee(*callExpr, context);
 
         auto& args = callExpr->GetArguments();
-        context.Add<uint8_t>(args.size());
-        for (auto i = 0; i < args.size(); ++i) {
+        uint16_t argsCount = args.size();
+        context.Add<uint16_t>(argsCount);
+        for (auto i = 0; i < argsCount; ++i) {
             context.Compile(args[i]);
             context.Add(FunctionBehaviorImpl::MakeArgType(callExpr->GetArgumentType(i), args[i]));
         }
@@ -74,7 +75,7 @@ protected:
             ExecuteCallee(context, callExpr, symbolId);
         }
 
-        auto argsCount = context.Get<uint8_t>();
+        auto argsCount = context.Get<uint16_t>();
 
         if (callType != CallType::NONE && callType != CallType::INDIRECT) {
             auto result = ExecuteByType(context, callType, symbolId);

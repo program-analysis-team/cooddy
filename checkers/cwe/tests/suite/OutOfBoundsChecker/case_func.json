@@ -1,18 +1,16 @@
 {
   "kind": "MEM.BUF.INDEX.BOUNDS",
+  "description": "{*}",
   "problems": [
     {
-      "description": "Underrunning array \"arr\" of 14 elements by accessing it with index \"index\" equal to -1",
       "line": 12,
       "pos": 5
     },
     {
-      "description": "Overrunning array \"arr\" of 14 elements by accessing it with index \"index\" equal to 14",
       "line": 14,
       "pos": 5
     },
     {
-      "description": "Underrunning array \"arr\" of 14 elements by accessing it with index \"index\" equal to -1",
       "line": 10,
       "pos": 5
     }

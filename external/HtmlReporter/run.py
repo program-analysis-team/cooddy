@@ -80,7 +80,7 @@ def constructArgParser():
     parser = argparse.ArgumentParser(
         description='Create HTML report from problems list in json or html format and source code')
     parser.add_argument('--report', type=str, required=True, help='Json with problems list')
-    parser.add_argument('--sources_path', type=str, required=False, help='Path to source code root folder', default="")
+    parser.add_argument('--sources-path', type=str, required=False, help='Path to source code root folder', default="")
     parser.add_argument('--result', type=str, required=False, help='Output report file or directory',
                         default='./cooddy_result.html')
     return parser
@@ -238,7 +238,7 @@ def joinJsons(jsons):
 if __name__ == "__main__":
     args = constructArgParser().parse_args()
     reportData = getJsons(args.report, args.sources_path)
-    if os.path.isfile(args.result):
+    if args.result.endswith(".html"):
         report = joinJsons(reportData)
         text = getTemplate(len(report["problems"]) < 2)
         text = packJson(text, report)
