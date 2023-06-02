@@ -1,7 +1,7 @@
 /// Copyright (C) 2020-2023 Huawei Technologies Co., Ltd.
 ///
 /// This file is part of Cooddy, distributed under the GNU GPL version 3 with a Linking Exception.
-/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.txt.
+/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.md
 //
 // Declaration of a frontend parser interface.
 //
@@ -102,18 +102,24 @@ public:
     // LCOV_EXCL_STOP
     struct ParserStatistics {
         struct CompilationIssue {
+            std::string tu;
             std::string file;
             std::string message;
             std::string severity;
             uint32_t line;
             uint32_t column;
 
-            DECLARE_FIELDS("file", file, "message", message, "line", line, "column", column, "severity", severity);
+            DECLARE_FIELDS("tu", tu, "file", file, "message", message, "line", line, "column", column, "severity",
+                           severity);
         };
 
-        std::unordered_map<std::string, std::vector<CompilationIssue>> compilationIssues;
+        std::vector<CompilationIssue> compilationIssues;
         uint32_t maxFatalErrorCount = 0;
-        std::atomic<uint64_t> fatalErrorCount = 0;
+        std::atomic<uint64_t> totalParsedCount = 0;
+        std::atomic<uint64_t> succeedCount = 0;
+        std::atomic<uint64_t> skippedCount = 0;
+        std::atomic<uint64_t> failedCount = 0;
+        std::atomic<uint64_t> partiallyParsedCount = 0;
         std::atomic<uint64_t> failedCFGCount = 0;
         std::set<std::string> unknownOptionsSet;
         std::mutex mutex;

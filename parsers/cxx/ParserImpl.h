@@ -1,7 +1,7 @@
 /// Copyright (C) 2020-2023 Huawei Technologies Co., Ltd.
 ///
 /// This file is part of Cooddy, distributed under the GNU GPL version 3 with a Linking Exception.
-/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.txt.
+/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.md
 //
 // Declaration of the cxx frontend parser based on CLang.
 //
@@ -28,7 +28,7 @@ class ParserImpl : public HCXX::Parser {
     std::unordered_map<std::string, std::unique_ptr<PreambleData>> myPreambles;
     std::mutex myMutex;
 
-    void InitGCCOptions(clang::CompilerInvocation* ci, const std::string& compilerVersion);
+    void InitGCCOptions(clang::CompilerInvocation* ci, HCXX::CompilersInfo::CompilerInfo& info);
 
     void InitMSVCOptions(clang::CompilerInvocation* ci);
 
@@ -38,8 +38,6 @@ class ParserImpl : public HCXX::Parser {
     std::string ComputeTargetTriple(HCXX::CompilerOptions& options);
 
     std::string ProcessGccToolchainPath(HCXX::CompilerOptions& options, const string& triple);
-
-    void AddLanguageOption(HCXX::CompilerOptions& options, HCXX::CompilersInfo::CompilerInfo& curCompilerInfo);
 
 public:
     explicit ParserImpl(const HCXX::CompilerOptions& globalOptions);

@@ -177,7 +177,8 @@ def removeGrid(text):
                       '<script src="Deps/tabulator.min.js"></script>',
                       '<script src="Deps/jszip.min.js"></script>',
                       '<link rel="stylesheet" href="Deps/tabulator-simple.min.css">',
-                      '<script src="tabulatorInit.js"></script>']
+                      '<script src="tabulatorInit.js"></script>',
+                      '<script src="compilationIssuesInit.js"></script>']
     for f in removableFiles:
         pos = text.find(f)
         text = text[:pos] + text[pos + len(removableFiles):]

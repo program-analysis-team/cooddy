@@ -1,7 +1,7 @@
 /// Copyright (C) 2020-2023 Huawei Technologies Co., Ltd.
 ///
 /// This file is part of Cooddy, distributed under the GNU GPL version 3 with a Linking Exception.
-/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.txt.
+/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.md
 #include <Analyzer.h>
 #include <CompilerOptionsList.h>
 #include <Parser.h>
@@ -376,7 +376,7 @@ TEST_F(WorkspaceTest, CFileWithCppCodeTest)
         }
     }
     ASSERT_FALSE(myTestErrorCheckConsumer.HasParseError());
-    ASSERT_EQ(foundNPD, 3);
+    ASSERT_EQ(foundNPD, 4);
 }
 
 TEST_F(WorkspaceTest, AnalyzeFolderWithCompileOptionTest)
@@ -426,3 +426,17 @@ TEST_F(WorkspaceTest, UncScopePathTest)
     TestAnalyze(workspace, problemsList);
 }
 #endif  // _WIN32
+
+TEST_F(WorkspaceTest, CompileOptionsReplacements)
+{
+    auto path = commonWorkspaceTestPath / "workspace_12";
+    WorkspaceOptions workspaceOptions;
+    workspaceOptions.compileOptionReplacements = {
+        {"\"wrong_compiler\"", "gcc -x c++"}, {"wrong_include", "include"}, {"'<wrong_define>'", "<header.h>"}};
+    Workspace workspace(path.string(), {"OutOfBoundsChecker"}, workspaceOptions);
+
+    HCXX::ProblemsList problemsList(workspace);
+    TestAnalyze(workspace, problemsList);
+
+    ASSERT_FALSE(myTestErrorCheckConsumer.HasParseError());
+}

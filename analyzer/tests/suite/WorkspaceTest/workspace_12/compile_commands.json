@@ -1,0 +1,11 @@
+[
+  {
+    "directory": ".",
+    "arguments": [
+      "wrong_compiler",
+      "-I./wrong_include",
+      "-DINCLUDE='<wrong_define>'"
+    ],
+    "file": "foo.c"
+  }
+]

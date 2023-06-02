@@ -1,7 +1,7 @@
 /// Copyright (C) 2020-2023 Huawei Technologies Co., Ltd.
 ///
 /// This file is part of Cooddy, distributed under the GNU GPL version 3 with a Linking Exception.
-/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.txt.
+/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.md
 var table;
 var filter = {s: true, u:true, p:true, c:true, UN:true, TP:true, FP:true, QS:true, NF:true, IV:true};
 var filterCheckers = new Set();
@@ -18,7 +18,7 @@ async function allProgress(proms, progress_cb) {
     let d = 0;
     progress_cb(0);
     for (const p of proms) {
-        p.then(()=> {    
+        p.then(()=> {
             d ++;
             progress_cb( d );
         });
@@ -108,7 +108,7 @@ function tabulatorInit() {
         return menu;
     };
     function GetColorByType(label) {
-        return color = label == "UN" ? "#000" : 
+        return color = label == "UN" ? "#000" :
                         label == "TP" ? "#080" :
                         label == "FP" ? "#f00" :
                         label == "NF" ? "#880" :
@@ -148,11 +148,11 @@ function tabulatorInit() {
         sortOrderReverse:true,
         reactiveData:true,
         data: cooddyResults.problems,
-        autoResize: true, // prevent auto resizing of table
+        autoResize: true,
         //autoColumns:true,
         resizableColumnFit: true,
         resizableRows: false,
-        height: window.innerHeight - 60,
+        height: window.innerHeight - 90,
         selectable: 1,
         selectablePersistence: false,
         layout: "fitColumns",
@@ -162,7 +162,6 @@ function tabulatorInit() {
         groupStartOpen: true,
         // tooltipsHeader:true,
         index:"unique_id",
-        // responsiveLayout:"hide",
         // virtualDom:false, //disable virtual DOM rendering
         columns: [
             {title: "Conclusion", field: "conclusion", visible: rhsServers.length > 0, editor:"list", responsive:0, minWidth:50, width:50, widthGrow:1, download:true,
@@ -192,7 +191,7 @@ function tabulatorInit() {
                         el.style.backgroundColor = "yellow";
                         el.style.margin = "5";
                         el.innerHTML = r;
-                        return el; 
+                        return el;
                     }
                     return "Unknown status";
                 },
@@ -236,7 +235,7 @@ function tabulatorInit() {
                         el.style.backgroundColor = "yellow";
                         el.style.margin = "5";
                         el.innerHTML = r;
-                        return el; 
+                        return el;
                     }
                     return cell.getData().file;
                 },
@@ -358,7 +357,7 @@ function tabulatorInit() {
         loadReport(row.getData());
     });
 
-    
+
     let lf = getGlobalOption(projectId + "_filter", "");
     if(lf) {
         filter = JSON.parse(lf);
@@ -368,7 +367,7 @@ function tabulatorInit() {
     for(let p of cooddyResults.problems) {
         filterCheckers.add(p.problem_class.inspection_name);
         if(filter[p.problem_class.inspection_name] === undefined) {
-            filter[p.problem_class.inspection_name] = true;  
+            filter[p.problem_class.inspection_name] = true;
         }
     }
     document.getElementById("filter_u").addEventListener("click", function (e) { toggleFilter("u"); });
@@ -401,7 +400,7 @@ function tabulatorInit() {
     document.getElementById("download-json").addEventListener("click", function () {
         saveAs( new Blob([JSON.stringify(cooddyResults)], { type: 'text/json'}), "cooddy_result.json");
     });
-    
+
     table.on("tableBuilt", function () {
         let filterCheckersMenuElement = document.getElementById("filterByChecker");
         for(const c of filterCheckers) {
@@ -462,14 +461,14 @@ function focusCurrentRow() {
     } catch {}
 }
 function updateGroupStats() {
-   groupStats = {} 
+   groupStats = {}
    for(let p of cooddyResults.problems) {
        let cur = groupStats;
        for(let gr of currentGrouping) {
            if(!cur[getDescendantProp(p,gr)]) cur[getDescendantProp(p,gr)] = {};
            cur = cur[getDescendantProp(p,gr)]
            if(!cur.count) cur.count = 0;
-           if(sorterType=="sort_IT" || 
+           if(sorterType=="sort_IT" ||
              (sorterType=="sort_UN" && (!p.conclusion || p.conclusion == "UN")) ||
              (sorterType=="sort_FP" && p.conclusion == "FP") ||
              (sorterType=="sort_TP" && p.conclusion == "TP") ||
@@ -521,7 +520,7 @@ function GroupBy(par, showCurrentRow = true, updateFilter = true) {
         UpdateFilterStats();
 }
 function updateStats() {
-    updateGroupStats();    
+    updateGroupStats();
 
     table.setSort(currentGrouping.map(g=>{return {column:g, dir:"desc"}}));
     focusCurrentRow();
@@ -548,7 +547,7 @@ function matchAny(data, filterParams) {
     if(data.reason == "Public function" && !filterParams.filter.p) return false;
     if(data.reason == "Annotated by macro" && !filterParams.filter.s) return false;
     if(data.reason == "Annotated by config" && !filterParams.filter.c) return false;
-    
+
     let checker = data.problem_class.inspection_name;
     if(filter[checker] === false) return false;
 
@@ -556,7 +555,7 @@ function matchAny(data, filterParams) {
 }
 function updateFilterSelections() {
     setGlobalOption(projectId + "_filter", JSON.stringify(filter));
-    
+
     Object.keys(filter).forEach(function(key, index) {
         updateFilterSelection(key, "filter_" + key);
     });
@@ -565,7 +564,7 @@ function updateFilterSelections() {
         if(!filter[key] && document.getElementById("filter_" + key))
             classAdd("filter", "filter-applied");
     });
-        
+
     const input = document.getElementById("fSearch");
     table.setFilter(matchAny, { value: input.value, filter: filter });
     ShowCurrentRow();
@@ -594,7 +593,7 @@ function UpdateFilterStats() {
     let filterStats = {s:0, u:0, p:0, c:0, UN:0, TP:0, FP:0, QS:0, NF:0, IV:0};
     for(const c of filterCheckers)
         filterStats[c] = 0;
-        
+
     for(let p of cooddyResults.problems) {
         if(p.status == "Gone")
             continue;
@@ -610,7 +609,7 @@ function UpdateFilterStats() {
     }
     Object.keys(filter).forEach(function(key, index) {
         if(document.getElementById("filter_" + key))
-            document.getElementById("filter_" + key).innerHTML = GetName(key) + "<span style='color:gray;font-weight:normal;'>: " + filterStats[key] + "</span>"; 
+            document.getElementById("filter_" + key).innerHTML = GetName(key) + "<span style='color:gray;font-weight:normal;'>: " + filterStats[key] + "</span>";
     });
 }
 
@@ -623,7 +622,7 @@ function createGridMenu() {
         <span class="close" id="closeModal">&times;</span>
         <div>
             <div id="modalContent">
-                
+
             </div>
             <div class="startBtn" id="startBtn">Start</div>
         </div>
@@ -696,7 +695,7 @@ function createGridMenu() {
         classAdd("checker_source_group", "invisible");
     }
     ge("sidebar").style["max-width"] = window.innerWidth - 30;
-    
+
     if(cooddyResults.problems.length > 1) {
         var content = document.getElementById("downloadBtnContent");
         var d = document.createElement("div");
@@ -746,7 +745,7 @@ function createGridMenu() {
             function zipSourceCode() {
                 var zip = new JSZip();
                 let files = {};
-                
+
                 let chunks = {}
                 for(let k in cooddyResults.code_snippets) {
                     let fn = k.split(":")[0];

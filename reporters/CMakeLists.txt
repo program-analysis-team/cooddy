@@ -8,6 +8,7 @@ file(GLOB REPORTERS_SOURCES CONFIGURE_DEPENDS
         )
 
 add_subdirectory(SampleReporter/src)
+add_subdirectory(SarifReporter/src)
 
 add_library(Reporters STATIC ${REPORTERS_SOURCES})
 

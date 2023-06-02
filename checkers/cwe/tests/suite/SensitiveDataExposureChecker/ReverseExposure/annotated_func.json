@@ -3,5 +3,25 @@
   "kind": "TAINT.SDE",
   "line": 4,
   "pos": 28,
-  "positive": true
+  "positive": true,
+  "trace": [
+    {
+      "file": "annotated_func.cpp",
+      "line": 9,
+      "col": 11,
+      "desc": "Sensitive data source, function annotated by config"
+    },
+    {
+      "file": "annotated_func.cpp",
+      "line": 10,
+      "col": 9,
+      "desc": "Sensitive data passed as the 1st argument"
+    },
+    {
+      "file": "annotated_func.cpp",
+      "line": 4,
+      "col": 28,
+      "desc": "Sensitive data leak"
+    }
+  ]
 }

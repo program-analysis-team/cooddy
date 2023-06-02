@@ -309,3 +309,6 @@ BOUNDARY_CONDITION_DESC;Condition implies that the operand can be up to %1%;
 STRING_LENGTH_DESC;String size equal to %1%;
 ACCESS_SOURCE_DESC;equal to %1%;
 INDEX_BOUNDS;%1% array "%2%" of %3% elements by accessing it with index "%4%" equal to %5%;
+SENSITIVE_ANNOTATED_BY_CONFIG;Sensitive data source, function annotated by config;
+SENSITIVE_ANNOTATED_RECORD;Sensitive data source, record declaration annotated by macro;
+SENSITIVE_ANNOTATED_BY_MACRO;Sensitive data source, annotated by macro;

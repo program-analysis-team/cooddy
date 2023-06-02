@@ -1,7 +1,7 @@
 /// Copyright (C) 2020-2023 Huawei Technologies Co., Ltd.
 ///
 /// This file is part of Cooddy, distributed under the GNU GPL version 3 with a Linking Exception.
-/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.txt.
+/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.md
 //
 // Declaration of the cxx analyzer.
 //
@@ -23,14 +23,6 @@
 
 class AnalyzerImpl : public HCXX::Analyzer {
 public:
-    struct UnitsStat {
-        std::atomic<uint64_t> totalCount = 0;
-        std::atomic<uint64_t> parseFailedCount = 0;
-        std::atomic<uint64_t> compileSucceededCount = 0;
-        std::atomic<uint64_t> parseTime = 0;
-        std::atomic<uint64_t> analysisTime = 0;
-    };
-
     explicit AnalyzerImpl(HCXX::Parser& parser, HCXX::Workspace& workspace);
     ~AnalyzerImpl();
 
@@ -154,7 +146,8 @@ private:
     std::vector<std::unique_ptr<HCXX::Checker>> myCheckers;
     HCXX::ThreadPool myTreadPool;
     std::unique_ptr<DataFlowAnalyzer> myDfaAnalyzer;
-    UnitsStat myUnitsStat;
+    std::atomic<uint64_t> myParseTime = 0;
+    std::atomic<uint64_t> myAnalysisTime = 0;
 };
 
 #endif  // HCXXANALYZER_ANALYZERIMPL_H

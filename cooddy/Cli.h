@@ -1,7 +1,7 @@
 /// Copyright (C) 2020-2023 Huawei Technologies Co., Ltd.
 ///
 /// This file is part of Cooddy, distributed under the GNU GPL version 3 with a Linking Exception.
-/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.txt.
+/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.md
 #ifndef COODDY_ANALYZER_TOOL_CLI_H_
 #define COODDY_ANALYZER_TOOL_CLI_H_
 
@@ -45,6 +45,8 @@ inline cxxopts::Options ConstructOptions()
     options.add_options()
     ("scope", "path to file, folder, compile_commands.json or ast-file to scan", cxxopts::value<std::string>())
     ("compile-options", "<-flag1>,<-flag2>,...,<-flagN>", cxxopts::value<vector<string>>()->default_value(""))
+    ("compile-options-replacements", "<pattern1=replacement1>,...,<patternN=replacementN>",
+        cxxopts::value<vector<string>>()->default_value(""))
     ("gen-annotations", "control for which functions annotations should be generated:\n"
                         "  none - generation of annotation is turned off;\n"
                         "  all  - all functions;\n"
@@ -59,7 +61,7 @@ inline cxxopts::Options ConstructOptions()
         cxxopts::value<std::vector<std::string>>()->default_value("all"))
     ("compiler", "path to compiler executable", cxxopts::value<std::string>()->default_value(""))
     ("reporter",
-        "name of the one of built-in reporter: <out|json|json-html|json-code|csv|csv-html> or combination of reporters with comma separator. Also name os custom reporter is possible: in smaller case to represent dynamic library included in th project. For example: \"--reporter=sample\" to represent libSampleReporter.dll.",
+        "name of the one of built-in reporter: <out|json|json-html|json-code|csv|csv-html|sarif> or combination of reporters with comma separator. Also name os custom reporter is possible: in smaller case to represent dynamic library included in th project. For example: \"--reporter=sample\" to represent libSampleReporter.dll.",
         cxxopts::value<vector<string>>()->default_value("out"))
     ("gen-callchain", "generate call graph paths for the specified entry point",
         cxxopts::value<std::string>()->default_value(""))
@@ -147,6 +149,17 @@ inline std::unordered_set<std::string> InitCheckersList(const std::vector<std::s
     return result;
 }
 
+inline auto InitReplacementsList(const std::vector<std::string>& replacements)
+{
+    CompilerOptionsList::Replacements result;
+    for (auto& replacement : replacements) {
+        if (auto p = replacement.find('='); p != std::string::npos) {
+            result.emplace_back(std::make_pair(replacement.substr(0, p), replacement.substr(p + 1)));
+        }
+    }
+    return result;
+}
+
 inline void SetLogLevel(const string& level)
 {
     HCXX::LogLevel logLevel = HCXX::LogLevel::INFO;
@@ -208,12 +221,10 @@ inline void SaveParserErrorLog(HCXX::Parser& parser, const std::string& parseErr
     static constexpr uint32_t linesOfContext = 5;
     std::ofstream os(logPath);
     HCXX::CsvUtils::WriteRow(os, {"Translation unit", "File", "Line", "Column", "Severity", "Message", "Source code"});
-    for (auto& [tu, issues] : issues) {
-        for (auto& issue : issues) {
-            HCXX::CsvUtils::WriteRow(
-                os, {tu, issue.file, std::to_string(issue.line), std::to_string(issue.column), issue.severity,
-                     issue.message, GetSourceTextLine(issue.file, issue.line, linesOfContext)});
-        }
+    for (auto& issue : issues) {
+        HCXX::CsvUtils::WriteRow(
+            os, {issue.tu, issue.file, std::to_string(issue.line), std::to_string(issue.column), issue.severity,
+                 issue.message, GetSourceTextLine(issue.file, issue.line, linesOfContext)});
     }
 }
 
@@ -266,6 +277,9 @@ inline int RunAnalyses(cxxopts::ParseResult& parsedArgs)
     if (!servers.empty() && servers[0] != "default") {
         workspaceOptions.settings.rhsServers = servers;
     }
+    workspaceOptions.compileOptionReplacements =
+        InitReplacementsList(parsedArgs["compile-options-replacements"].as<std::vector<std::string>>());
+
     auto checkers = InitCheckersList(parsedArgs["checkers"].as<std::vector<std::string>>());
     HCXX::Workspace workspace(analyzeScope.string(), checkers, workspaceOptions, profile);
 

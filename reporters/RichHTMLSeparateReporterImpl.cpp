@@ -1,7 +1,7 @@
 /// Copyright (C) 2020-2023 Huawei Technologies Co., Ltd.
 ///
 /// This file is part of Cooddy, distributed under the GNU GPL version 3 with a Linking Exception.
-/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.txt.
+/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.md
 #include "reporters/RichHtmlReporter.h"
 namespace HCXX {
 class RichHTMLSeparateReporterImpl : public RichHtmlReporter, public RichHTMLSeparateReporter {
@@ -19,7 +19,7 @@ public:
              {"<script src=\"Deps/FileSaver.min.js\"></script>\n", "<script src=\"Deps/tabulator.min.js\"></script>\n",
               "<script src=\"Deps/jszip.min.js\"></script>\n",
               "<link rel=\"stylesheet\" href=\"Deps/tabulator-simple.min.css\">\n",
-              "<script src=\"tabulatorInit.js\"></script>\n"}) {
+              "<script src=\"tabulatorInit.js\"></script>\n", "<script src=\"compilationIssuesInit.js\"></script>\n"}) {
             if (std::size_t pos = templateStrTail.find(excl); pos != std::string::npos) {
                 templateStrTail.replace(pos, excl.length(), "");
             }

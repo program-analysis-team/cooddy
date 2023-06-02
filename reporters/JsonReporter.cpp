@@ -1,12 +1,14 @@
 /// Copyright (C) 2020-2023 Huawei Technologies Co., Ltd.
 ///
 /// This file is part of Cooddy, distributed under the GNU GPL version 3 with a Linking Exception.
-/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.txt.
+/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.md
 
 #include "reporters/JsonReporter.h"
 
 #include <ctime>
 #include <iomanip>
+
+#include "utils/Utc.h"
 
 namespace HCXX {
 std::string FindGit(const std::string& root)
@@ -46,7 +48,7 @@ JsonReporter::JsonReporter(const Workspace& workspace) : Reporter(workspace, ".j
     descriptor.commandLine = workspace.GetOptions().commandLine;
     descriptor.gitCommit = GIT_COMMIT;
     descriptor.gitVersion = GIT_VERSION;
-    descriptor.startTime = GetCurrentTime();
+    descriptor.startTime = to_string(utc_clock::now());
     descriptor.startTimeStamp = std::time(0);
     descriptor.projectGitSummary = FindGit(GetWorkspace().GetProjectRoot());
 }
@@ -62,7 +64,7 @@ void JsonReporter::Flush()
         return;
     }
     flushed = true;
-    descriptor.endTime = GetCurrentTime();
+    descriptor.endTime = to_string(utc_clock::now());
     descriptor.endTimeStamp = std::time(0);
     CopyCompilationIssues();
     if (myFileStream.is_open()) {
@@ -80,24 +82,9 @@ void JsonReporter::CopyCompilationIssues()
     if (myParser == nullptr) {
         return;
     }
-    for (auto& [tu, issues] : myParser->statistics.compilationIssues) {
-        descriptor.compilationIssues.emplace_back(CompilationIssue{tu});
-        for (auto& issue : issues) {
-            descriptor.compilationIssues.back().issues.emplace_back(issue);
-        }
+    for (auto& issue : myParser->statistics.compilationIssues) {
+        descriptor.compilationIssues.emplace_back(issue);
     }
-}
-
-std::string JsonReporter::GetCurrentTime()
-{
-    auto currentTime = std::chrono::system_clock::now();
-    std::time_t t = std::chrono::system_clock::to_time_t(currentTime);
-
-    std::stringstream result;
-    result << std::put_time(std::gmtime(&t), "%Y-%m-%dT%H:%M:%S.");
-    result << std::chrono::duration_cast<std::chrono::milliseconds>(currentTime.time_since_epoch()).count() % 1000;
-    result << "Z";
-    return result.str();
 }
 
 ProblemTrace JsonReporter::ConvertProblemTrace(const TracePath& problemTrace)

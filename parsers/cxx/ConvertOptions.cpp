@@ -1,7 +1,7 @@
 /// Copyright (C) 2020-2023 Huawei Technologies Co., Ltd.
 ///
 /// This file is part of Cooddy, distributed under the GNU GPL version 3 with a Linking Exception.
-/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.txt.
+/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.md
 #include <set>
 
 #include "ParserImpl.h"
@@ -98,6 +98,10 @@ const std::unordered_set<std::string> g_EXCLUDED_OPTIONS = {"--compatible-with-v
                                                             "-funwind-tables",
                                                             "-fvariable-expansion-in-unroller",
                                                             "-fverbose-asm",
+                                                            "-m16",
+                                                            "-m32",
+                                                            "-m64",
+                                                            "-mx32",
                                                             "-marm",
                                                             "-mbig-endian",
                                                             "-mbss-plt",
@@ -143,17 +147,11 @@ const std::set<std::string> g_EXCLUDED_OPTIONS_STARTS_WITH = {"--param",
                                                               "-MF",
                                                               "-O",
                                                               "-W",
-                                                              "-falign-functions",
-                                                              "-falign-jumps",
-                                                              "-falign-labels",
-                                                              "-falign-loops",
+                                                              "-falign",
                                                               "-finline-limit",
                                                               "-fmax-errors",
                                                               "-fplugin",
-                                                              "-fplugin-arg-hcfi_plugin-call_asm",
-                                                              "-fplugin-arg-hcfi_plugin-check",
-                                                              "-fplugin-arg-hcfi_plugin-loggerfn",
-                                                              "-fplugin-arg-hcfi_plugin-permissive",
+                                                              "-fsanitize",
                                                               "-fvisibility",
                                                               "-g",
                                                               "-l",

@@ -1,7 +1,7 @@
 /// Copyright (C) 2020-2023 Huawei Technologies Co., Ltd.
 ///
 /// This file is part of Cooddy, distributed under the GNU GPL version 3 with a Linking Exception.
-/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.txt.
+/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.md
 //
 // Class, Union, Struct.
 //
@@ -31,17 +31,18 @@ public:
     DECLARE_KIND(NamedNode<Node>, Node::Kind::RECORD_DECL);
 
     DECLARE_SERIALIZE(RecordDecl, myFields << myRecordType << myUniqueId << myIsFirstDeclaration << myIsImplicit
-                                           << mySizeInBits << myCommentBlocks);
+                                           << mySizeInBits << myCommentBlocks << myIsSensitive);
 
     RecordDecl(Node* qualifier, std::string&& name, Fields&& fields, RecordType recordType, bool isFirstDeclaration,
-               bool isImplicit, uint64_t sizeInBits, std::vector<SourceRange>&& commentBlocks)
+               bool isImplicit, uint64_t sizeInBits, std::vector<SourceRange>&& commentBlocks, bool isSensitive = false)
         : Base(qualifier, std::move(name)),
           myFields(std::move(fields)),
           myRecordType(recordType),
           myIsFirstDeclaration(isFirstDeclaration),
           myIsImplicit(isImplicit),
           mySizeInBits(sizeInBits),
-          myCommentBlocks(std::move(commentBlocks))
+          myCommentBlocks(std::move(commentBlocks)),
+          myIsSensitive(isSensitive)
     {}
 
     const Fields& GetFields() const
@@ -51,6 +52,10 @@ public:
 
     void SetFields(Fields&& fields);
 
+    bool IsSensitive() const
+    {
+        return myIsSensitive;
+    }
     bool IsUnion() const
     {
         return myRecordType == RecordType::UNION;
@@ -191,6 +196,7 @@ private:
     bool myIsImplicit = false;
     uint64_t mySizeInBits = 0;
     std::vector<SourceRange> myCommentBlocks;
+    bool myIsSensitive;
 };
 
 class CxxRecordDecl : public RecordDecl {

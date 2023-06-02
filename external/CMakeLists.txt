@@ -17,7 +17,7 @@ elseif (WIN32)
 elseif (COODDY_LINKING_TYPE MATCHES STATIC)
     target_link_libraries(Deps -static gcc stdc++ -pthread stdc++fs -Wl,--whole-archive -lpthread -Wl,--no-whole-archive)
 else ()
-    target_link_libraries(Deps -Wl,-Bstatic stdc++ stdc++fs -Wl,-Bdynamic pthread dl)
+    target_link_libraries(Deps -Wl,-Bstatic stdc++ stdc++fs -Wl,-Bdynamic pthread dl -Wl,-rpath=$ORIGIN)
 endif ()
 
 if (WIN32)

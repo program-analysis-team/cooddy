@@ -1,7 +1,7 @@
 /// Copyright (C) 2020-2023 Huawei Technologies Co., Ltd.
 ///
 /// This file is part of Cooddy, distributed under the GNU GPL version 3 with a Linking Exception.
-/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.txt.
+/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.md
 //
 // Class Workspace provides interfaces for access to project specific options:
 // compile commands, exclusions, checkers' options, functions' resources
@@ -11,6 +11,7 @@
 #define COODDY_ANALYZER_INCLUDE_WORKSPACE_H_
 
 #include <Checker.h>
+#include <CompilerOptionsList.h>
 #include <dfa/Annotation.h>
 #include <utils/DataStream.h>
 #include <workspace/ExclusionManager.h>
@@ -48,6 +49,7 @@ struct WorkspaceOptions {
     std::string commandLine;
     std::string profile;
     CustomSettings settings;
+    CompilerOptionsList::Replacements compileOptionReplacements;
 };
 
 class Workspace {

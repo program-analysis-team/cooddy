@@ -1,10 +1,11 @@
 /// Copyright (C) 2020-2023 Huawei Technologies Co., Ltd.
 ///
 /// This file is part of Cooddy, distributed under the GNU GPL version 3 with a Linking Exception.
-/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.txt.
+/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.md
 #include "reporters/RichHtmlReporter.h"
 
 #include <deps/miniz.h>
+#include <utils/Utc.h>
 
 #include <filesystem>
 #include <string>
@@ -200,7 +201,7 @@ void RichHtmlReporter::EmbedExpansion(const TraceNode& it, CodeSnippet& snippet,
 void RichHtmlReporter::UpdateDescriptor()
 {
     descriptor.taintManUrl = GetWorkspace().GetOptions().settings.taintManUrl;
-    descriptor.endTime = GetCurrentTime();
+    descriptor.endTime = to_string(utc_clock::now());
     descriptor.endTimeStamp = std::time(0);
 }
 void RichHtmlReporter::Flush()

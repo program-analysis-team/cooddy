@@ -1,7 +1,7 @@
 /// Copyright (C) 2020-2023 Huawei Technologies Co., Ltd.
 ///
 /// This file is part of Cooddy, distributed under the GNU GPL version 3 with a Linking Exception.
-/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.txt.
+/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.md
 #include <CodeDescriptionManager.h>
 #include <TranslationUnit.h>
 #include <ast/VarDecl.h>
@@ -11,6 +11,7 @@
 
 #include "ast/CallExpression.h"
 #include "ast/CxxMemberCallExpression.h"
+#include "ast/CxxRecordDecl.h"
 #include "ast/EnumConstantDecl.h"
 
 namespace HCXX {
@@ -54,6 +55,10 @@ void CodeDescriptionManager::InitDescriptionRanges(TranslationUnit& tu)
                                                             CodeDescription::CodeDescriptionType::NONE});
             }
         }
+        auto recordDecl = HCXX::Node::Cast<RecordDecl>(node);
+        if (recordDecl != nullptr) {
+            myRecordRanges.emplace_back(recordDecl->GetRange());
+        }
     }
 
     for (auto [name, macro] : tu.GetMacros()) {
@@ -65,6 +70,7 @@ void CodeDescriptionManager::InitDescriptionRanges(TranslationUnit& tu)
     }
     std::stable_sort(myDescriptions.begin(), myDescriptions.end());
     std::stable_sort(myMacroRanges.begin(), myMacroRanges.end());
+    std::stable_sort(myRecordRanges.begin(), myRecordRanges.end());
 }
 
 bool CodeDescriptionManager::IsMacroExpansionRange(SourceRange sourceRange) const
@@ -100,4 +106,17 @@ const std::vector<CodeDescriptionManager::CodeDescription> CodeDescriptionManage
     }
     return result;
 }
+
+SourceRange CodeDescriptionManager::GetRecordDeclRangeByMember(SourceRange sourceRange) const
+{
+    auto b = std::lower_bound(myRecordRanges.begin(), myRecordRanges.end(), sourceRange,
+                              [](const SourceRange& i, const SourceRange& value) {
+                                  return i.begin > value.begin || (i.begin == value.begin && i.end < value.end);
+                              });
+    if (b == myRecordRanges.end() || b->end <= sourceRange.end) {
+        return {};
+    }
+    return *b;
+}
+
 };  // namespace HCXX

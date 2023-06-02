@@ -1,7 +1,7 @@
 /// Copyright (C) 2020-2023 Huawei Technologies Co., Ltd.
 ///
 /// This file is part of Cooddy, distributed under the GNU GPL version 3 with a Linking Exception.
-/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.txt.
+/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.md
 //
 // Implementation of the cxx analyzer.
 //
@@ -72,11 +72,11 @@ void AnalyzerImpl::LogStatistics()
     stat.ResetAnalysisTime();
 
     CheckerStat clangStat;
-    clangStat.analysisTime += myUnitsStat.parseTime;
+    clangStat.analysisTime += myParseTime;
     stat.AddCheckerStat("#CLangParser", clangStat);
 
     CheckerStat astStat;
-    astStat.analysisTime += myUnitsStat.analysisTime;
+    astStat.analysisTime += myAnalysisTime;
     stat.AddCheckerStat("#AstEngine", astStat);
 
     CheckerStat dfaStat;
@@ -85,7 +85,7 @@ void AnalyzerImpl::LogStatistics()
     stat.AddCheckerStat("#DfaEngine", dfaStat);
 
     stat.LogStatistics(myTreadPool.GetRunTime(), myDfaAnalyzer->undefinedFunctionsCount, myParser.statistics,
-                       myUnitsStat, myWorkspace.GetOptions().settings.resultManUrl);
+                       myWorkspace.GetOptions().settings.resultManUrl);
 }
 
 void AnalyzerImpl::AnalyzeImpl(const CompilerOptionsList& unitsOptions, std::shared_ptr<ProblemsHolder> holder,
@@ -145,7 +145,6 @@ AnalyzerImpl::AnalyzeContext::AnalyzeContext(AnalyzerImpl* analyzer, const Compi
     if (myConsumer != nullptr && (myConsumer->GetParseFlags() & Parser::DUMP_AST)) {
         myDumpPackage = TUnitsPackage::CreateEmptyASTContainer(AST_ARCHIVE_FILE);
     }
-    myAnalyzer->myUnitsStat.totalCount += myUnits.size();
     if (myMetaStream.Count() != 0) {
         LoadMetaInfo(myMetaStream);
     }
@@ -282,18 +281,11 @@ void AnalyzerImpl::AnalyzeContext::AnalyzeUnit(TranslationUnitPtr& unit)
     if (!GetTUContext(*unit).isLoaded) {
         Timer timer;
         bool parseResult = ParseAST(*unit, true);
-        timer.Flush(myAnalyzer->myUnitsStat.parseTime);
+        timer.Flush(myAnalyzer->myParseTime);
         if (parseResult) {
-            if (!unit->HasParseErrors()) {
-                ++myAnalyzer->myUnitsStat.compileSucceededCount;
-            } else {
-                unit->HasParseErrors();
-            }
             RunAnalysis(unit);
-        } else {
-            ++myAnalyzer->myUnitsStat.parseFailedCount;
         }
-        timer.Flush(myAnalyzer->myUnitsStat.analysisTime);
+        timer.Flush(myAnalyzer->myAnalysisTime);
 
         if (myDumpPackage == nullptr) {
             if (myUnits.size() == 1) {

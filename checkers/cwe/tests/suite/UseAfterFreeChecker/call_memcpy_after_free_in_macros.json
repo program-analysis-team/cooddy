@@ -1,0 +1,23 @@
+{
+  "description": "Use after free",
+  "file_path": "call_memcpy_after_free_in_macros.cpp",
+  "kind": "MEM.USE.FREE",
+  "line": 16,
+  "pos": 40,
+  "trace": [
+    {
+      "file": "call_memcpy_after_free_in_macros.cpp",
+      "line": 16,
+      "col": 40,
+      "desc": "Use after free source"
+    },
+    {
+      "file": "call_memcpy_after_free_in_macros.cpp",
+      "line": 16,
+      "col": 40,
+      "desc": "Use after free"
+    }
+  ],
+  "positive": true,
+  "sink_function": "memcpy"
+}

@@ -1,7 +1,7 @@
 /// Copyright (C) 2020-2023 Huawei Technologies Co., Ltd.
 ///
 /// This file is part of Cooddy, distributed under the GNU GPL version 3 with a Linking Exception.
-/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.txt.
+/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.md
 
 #ifndef COODDY_ANALYZER_INCLUDE_JSONREPORTER_H_
 #define COODDY_ANALYZER_INCLUDE_JSONREPORTER_H_
@@ -148,13 +148,6 @@ public:
         }
     };
 
-    struct CompilationIssue {
-        std::string tu;
-        std::vector<Parser::ParserStatistics::CompilationIssue> issues;
-
-        DECLARE_FIELDS("tu", tu, "issues", issues)
-    };
-
     struct ReportDescriptor {
         std::string profile;
         std::string commandLine;
@@ -168,7 +161,7 @@ public:
         std::vector<ProblemDescriptor> problems;
         std::unordered_map<std::string, std::string> configurations;
         std::unordered_map<string, CodeSnippet> codeSnippets;
-        std::vector<CompilationIssue> compilationIssues;
+        std::vector<Parser::ParserStatistics::CompilationIssue> compilationIssues;
         std::string taintManUrl;
 
         template <class X>
@@ -185,8 +178,6 @@ public:
     };
 
     std::string ConvertProblemSeverity(Problem::Severity severity);
-
-    std::string GetCurrentTime();
 
     void RegisterProblemImpl(const Problem& problem) override;
 

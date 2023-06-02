@@ -1,3 +1,14 @@
+# Licensing
+The code in this repository is distributed under a very permissive variation of the GPLv3 license: GPLv3 (*not* GPLv3 or later), with a modification called Coddy Special Linking Exception (CSLE).
+
+In layman's terms, the CSLE allows you to develop external addons for Cooddy, such as new checkers, reporters, etc., as long as these addons can by used by an unmodified version of Cooddy. However, if you need to modify the Cooddy engine, either on its own or as a necessary part of your checker development, the full terms of GPLv3 apply.
+
+### Table of Contents
+* [GNU General Public License, version 3](#gnu-general-public-license-version-3)
+* [Cooddy Special Linking Exception](#cooddy-special-linking-exception)
+
+## GNU General Public License, version 3
+```
                     GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 
@@ -672,9 +683,10 @@ may consider it more useful to permit linking proprietary applications with
 the library.  If this is what you want to do, use the GNU Lesser General
 Public License instead of this License.  But first, please read
 <https://www.gnu.org/licenses/why-not-lgpl.html>.
+```
 
-------------------------------------------------------------------------------
-
+## Cooddy Special Linking Exception
+```
                       COODDY SPECIAL LINKING EXCEPTION
 
 Using the source code within this project to create object code by using
@@ -697,3 +709,4 @@ criteria:
 If you modify this project, you may extend this exception to your version of
 the project, but you are not obligated to do so. If you do not wish to do so,
 delete this exception statement from your version.
+```

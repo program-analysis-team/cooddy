@@ -1,0 +1,5 @@
+{
+  "description": "Main declaration",
+  "testcase_directory": "skipped_asm",
+  "positive": false
+}

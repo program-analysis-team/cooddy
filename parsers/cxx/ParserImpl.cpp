@@ -1,7 +1,7 @@
 /// Copyright (C) 2020-2023 Huawei Technologies Co., Ltd.
 ///
 /// This file is part of Cooddy, distributed under the GNU GPL version 3 with a Linking Exception.
-/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.txt.
+/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.md
 //
 // Implementation of the cxx frontend parser based on CLang.
 //
@@ -55,11 +55,8 @@ std::string ParserImpl::GetMangledNameWithoutAbi(std::string_view mangledName) c
     return {mangledName.begin(), mangledName.end()};
 }
 
-void ParserImpl::InitGCCOptions(clang::CompilerInvocation* ci, const std::string& compilerVersion)
+void ParserImpl::InitGCCOptions(clang::CompilerInvocation* ci, HCXX::CompilersInfo::CompilerInfo& info)
 {
-    ci->getPreprocessorOpts().addMacroDef("__GNUC__=" + compilerVersion);
-    ci->getPreprocessorOpts().addMacroDef("__GNUG__=" + compilerVersion);
-
     // ignore intrinsic headers (CLang doesn't support GCC intrinsics)
     ci->getPreprocessorOpts().addMacroDef("_X86INTRIN_H_INCLUDED");
     ci->getPreprocessorOpts().addMacroDef("_XMMINTRIN_H_INCLUDED");
@@ -67,14 +64,21 @@ void ParserImpl::InitGCCOptions(clang::CompilerInvocation* ci, const std::string
     ci->getPreprocessorOpts().addMacroDef("_TMMINTRIN_H_INCLUDED");
     ci->getPreprocessorOpts().addMacroDef("_SMMINTRIN_H_INCLUDED");
 
-    // add GCC build-in defines for atomics
-    static const char* atomicTypes[] = {"BOOL",  "POINTER", "CHAR",     "SHORT",    "INT",  "LONG",
-                                        "LLONG", "WCHAR_T", "CHAR16_T", "CHAR32_T", nullptr};
-    std::string atomicDef = "__GCC_ATOMIC_";
-    for (auto type = atomicTypes; *type != nullptr; ++type) {
-        ci->getPreprocessorOpts().addMacroDef(atomicDef + *type + "_LOCK_FREE=1");
+    ci->getPreprocessorOpts().addMacroUndef("__clang__");
+    ci->getPreprocessorOpts().addMacroUndef("__SSE2__");
+
+    for (auto& define : info.defines) {
+        ci->getPreprocessorOpts().addMacroDef(define);
     }
-    ci->getPreprocessorOpts().addMacroDef("__GCC_ATOMIC_TEST_AND_SET_TRUEVAL=1");
+
+    if (!ci->getLangOpts()->CPlusPlus) {
+        ci->getPreprocessorOpts().addMacroDef("_Float32=float");
+        ci->getPreprocessorOpts().addMacroDef("_Float32x=float");
+        ci->getPreprocessorOpts().addMacroDef("_Float64=double");
+        ci->getPreprocessorOpts().addMacroDef("_Float64x=double");
+        ci->getPreprocessorOpts().addMacroDef("_Float128=__float128");
+        ci->getPreprocessorOpts().addMacroDef("_Atomic=");
+    }
     ci->getLangOpts()->DeclSpecKeyword = 1;
     ci->getPreprocessorOpts().addMacroDef("__null=0");
     ci->getPreprocessorOpts().addMacroDef("__rdtsc=__rdtsc_xxx");
@@ -152,9 +156,9 @@ std::string ParserImpl::ComputeTargetTriple(HCXX::CompilerOptions& options)
         triple = "x86_64-w64-windows-gnu";
 #endif
     }
-    if (options.RemoveOption("-m16") || options.RemoveOption("-m32")) {
+    if (options.HasOption("-m16") || options.HasOption("-m32")) {
         triple = llvm::Triple(llvm::Twine(triple)).get32BitArchVariant().str();
-    } else if (options.RemoveOption("-mx32") || options.RemoveOption("-m64")) {
+    } else if (options.HasOption("-mx32") || options.HasOption("-m64")) {
         triple = llvm::Triple(llvm::Twine(triple)).get64BitArchVariant().str();
     }
     if (HCXX::StrUtils::StartsWith(triple, "armeb")) {
@@ -186,13 +190,6 @@ std::string ParserImpl::ProcessGccToolchainPath(HCXX::CompilerOptions& options, 
     return gccToolChainPath;
 }
 
-void ParserImpl::AddLanguageOption(HCXX::CompilerOptions& options, HCXX::CompilersInfo::CompilerInfo& curCompilerInfo)
-{
-    if (curCompilerInfo.isCpp && options.GetOptionValue("-x").empty()) {
-        options.options.insert(options.options.begin(), {"-x", "c++"});
-    }
-}
-
 std::shared_ptr<clang::CompilerInvocation> ParserImpl::CreateCompilerInvocation(HCXX::TranslationUnit& unit,
                                                                                 clang::DiagnosticsEngine& diags)
 {
@@ -211,16 +208,14 @@ std::shared_ptr<clang::CompilerInvocation> ParserImpl::CreateCompilerInvocation(
 
     ConvertOptions(options);
 
-    AddLanguageOption(options, curCompilerInfo);
-
     std::vector<const char*> clangArr;
     auto& optionsArr = options.options;
     clangArr.reserve(optionsArr.size());
     for (const auto& op : optionsArr) {
         clangArr.push_back(op.c_str());
     }
-    // TODO remove this workaround for analyzing NAS protocol
-    clangArr.push_back("-Wno-c++11-narrowing");
+    clangArr.push_back("-Wno-everything");
+    clangArr.push_back("-fdelayed-template-parsing");
 
     clang::ArrayRef<const char*> argsArr(clangArr.data(), clangArr.size());
 
@@ -236,7 +231,7 @@ std::shared_ptr<clang::CompilerInvocation> ParserImpl::CreateCompilerInvocation(
     }
 
     // for now we use gcc only
-    InitGCCOptions(ci.get(), curCompilerInfo.version);
+    InitGCCOptions(ci.get(), curCompilerInfo);
 
     if (!toolchainPath.empty()) {
         ci->getHeaderSearchOpts().Sysroot.clear();
@@ -288,16 +283,26 @@ std::unique_ptr<clang::ASTUnit> ParserImpl::CreateASTUnit(HCXX::TranslationUnit&
 
 bool ParserImpl::ParseAST(HCXX::TranslationUnit& unit, Consumer& consumer, Context* context)
 {
-    if (HCXX::StrUtils::EndsWith(unit.GetMainFileName(), ".S")) {
-        HCXX::Log(HCXX::LogLevel::WARNING) << "File was excluded from the analysis: " << unit.GetMainFileName() << "\n";
-        return false;
+    for (auto& excl : {".S", ".s", "CMakeCCompilerId.c", "CMakeCXXCompilerId.cpp"}) {
+        if (HCXX::StrUtils::EndsWith(unit.GetMainFileName(), excl)) {
+            ++statistics.skippedCount;
+            return false;
+        }
     }
+    ++statistics.totalParsedCount;
     auto astUnit = CreateASTUnit(unit, consumer, context);
     if (astUnit == nullptr) {
         // LCOV_EXCL_START
+        ++statistics.failedCount;
         HCXX::Log(HCXX::LogLevel::ERROR) << "Can't parse AST: " << unit.GetMainFileName() << std::endl;
         return false;
         // LCOV_EXCL_STOP
+    }
+
+    if (unit.GetParseErrors().empty()) {
+        ++statistics.succeedCount;
+    } else {
+        ++statistics.partiallyParsedCount;
     }
 
     HCXX::Log(HCXX::LogLevel::INFO) << "AST has been parsed: " << unit.GetMainFileName() << std::endl;

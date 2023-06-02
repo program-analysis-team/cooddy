@@ -1,7 +1,7 @@
 /// Copyright (C) 2020-2023 Huawei Technologies Co., Ltd.
 ///
 /// This file is part of Cooddy, distributed under the GNU GPL version 3 with a Linking Exception.
-/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.txt.
+/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.md
 #include "utils/EnvironmentUtils.h"
 
 #include <codecvt>
@@ -125,7 +125,7 @@ fs::path GetSelfExecutablePathViaWAI()
 {
     int length = wai_getExecutablePath(nullptr, 0, nullptr);
     if (length > 0) {
-        std::string result(length + 1, '\0');
+        std::string result(length, '\0');
         wai_getExecutablePath(result.data(), length, nullptr);
         return fs::canonical(result);
     }

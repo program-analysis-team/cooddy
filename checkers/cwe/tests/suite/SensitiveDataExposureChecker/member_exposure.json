@@ -3,5 +3,25 @@
   "kind": "TAINT.SDE",
   "line": 6,
   "pos": 28,
-  "positive": true
+  "positive": true,
+  "trace": [
+    {
+      "file": "member_exposure.cpp",
+      "line": 3,
+      "col": 5,
+      "desc": "Sensitive data source, annotated by macro"
+    },
+    {
+      "file": "member_exposure.cpp",
+      "line": 10,
+      "col": 9,
+      "desc": "Sensitive data passed as the 1st argument"
+    },
+    {
+      "file": "member_exposure.cpp",
+      "line": 6,
+      "col": 28,
+      "desc": "Sensitive data leak"
+    }
+  ]
 }

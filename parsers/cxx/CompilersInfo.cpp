@@ -1,10 +1,11 @@
 /// Copyright (C) 2020-2023 Huawei Technologies Co., Ltd.
 ///
 /// This file is part of Cooddy, distributed under the GNU GPL version 3 with a Linking Exception.
-/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.txt.
+/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.md
 #include "CompilersInfo.h"
 
 #include <utils/LocaleUtils.h>
+#include <utils/StrUtils.h>
 
 #ifndef _MSC_VER
 #include <unistd.h>
@@ -23,9 +24,7 @@
 
 namespace HCXX {
 
-CompilersInfo::CompilersInfo()
-    : myDefaultCCompilerName(GetBinaryPath("cc")), myDefaultCxxCompilerName(GetBinaryPath("c++"))
-{}
+CompilersInfo::CompilersInfo() : myDefaultCCompilerName(GetBinaryPath("cc")) {}
 
 std::string CompilersInfo::GetBinaryPath(const std::string& binaryName) const
 {
@@ -35,32 +34,38 @@ std::string CompilersInfo::GetBinaryPath(const std::string& binaryName) const
 
 bool CompilersInfo::IsCorrectCompilerBinary(const std::string& binary)
 {
+    if (binary.empty()) {
+        return false;
+    }
     auto absolutePath = GetBinaryPath(binary);
     return !absolutePath.empty() && std::filesystem::exists(absolutePath) &&
            !std::filesystem::is_directory(absolutePath);
 }
 
-bool CompilersInfo::IsCPPCompiler(const std::string& compiler) const
+bool CompilersInfo::ShouldAddCompilerMacro(const std::string& define)
 {
-    return std::filesystem::path(compiler).filename().string().find("++") != std::string::npos;
+    static std::array<const char*, 8> stdDefines{"__clang__", "__linux__",     "__GNU",      "_GNU_SOURCE",
+                                                 "__SIZE",    "__GCC_ATOMIC_", "__INT_FAST", "__UINT_FAST"};
+    for (auto& it : stdDefines) {
+        if (HCXX::StrUtils::StartsWith(define, it)) {
+            return true;
+        }
+    }
+    return false;
 }
 
 CompilersInfo::CompilerInfo CompilersInfo::CollectNewCompilerInfo(const std::string& compiler,
-                                                                  const std::string& sysRoot)
+                                                                  std::string&& extraOptions)
 {
     std::filesystem::path curPath = std::filesystem::current_path();
     std::filesystem::path compilerInfoPath = curPath;
 
     std::stringstream ss;
     ss << std::this_thread::get_id() << "_" << std::time(nullptr) << "_" << getpid();
-
     compilerInfoPath.append("compiler_" + ss.str() + ".info");
 
-    std::string extraOptions = IsCPPCompiler(compiler) ? "-x c++" : "-x c";
-    if (!sysRoot.empty()) {
-        extraOptions += " --sysroot=" + sysRoot;
-    }
-    std::string cmdCompilerExec = "echo | \"" + GetBinaryPath(compiler) + "\" -v -E -Wp,-v " + extraOptions + " - 2>";
+    std::string cmdCompilerExec =
+        "echo | \"" + GetBinaryPath(compiler) + "\" -v -E -dM -Wp,-v " + extraOptions + " - 2>";
     cmdCompilerExec += "\"" + compilerInfoPath.string() + "\"  1>&2";
 
     int result = std::system(cmdCompilerExec.c_str());
@@ -71,74 +76,71 @@ CompilersInfo::CompilerInfo CompilersInfo::CollectNewCompilerInfo(const std::str
     }
 
     std::ifstream optionsStream(compilerInfoPath);
-    std::vector<std::string> compilerIncludes;
-    std::string compilerVersion;
-    std::string target;
+    CompilerInfo info;
     bool foundIncludes = false;
     for (std::string sLine; std::getline(optionsStream, sLine);) {
         if (sLine == "End of search list.") {
-            break;
+            foundIncludes = false;
+        }
+        if (StrUtils::StartsWith(sLine, "#define")) {
+            auto define = sLine.substr(8);
+            if (HCXX::StrUtils::StartsWith(define, "__GNUC__ 1")) {
+                define = "__GNUC__ 10";  // clang supports features up to 10 gnu version
+            }
+            if (auto p = define.find(' '); p != std::string::npos) {
+                define[p] = '=';
+            }
+            if (ShouldAddCompilerMacro(define)) {
+                info.defines.emplace_back(define);
+            }
         }
         if (foundIncludes) {
             while (!sLine.empty() && sLine.front() == ' ') {
                 sLine.erase(sLine.begin());
             }
-            compilerIncludes.emplace_back(sLine);
+            info.includes.emplace_back(sLine);
         } else if (sLine.find("#include <...>") != std::string::npos) {
             foundIncludes = true;
-        } else if (auto pos = sLine.find("version "); pos != std::string::npos) {
-            auto n = std::string("version ").size();
-            compilerVersion = sLine.substr(pos + n, sLine.find(".", pos + n) - pos - n);
         } else if (StrUtils::StartsWith(sLine, "Target: ")) {
-            target = sLine.substr(std::strlen("Target: "));
+            info.triple = sLine.substr(std::strlen("Target: "));
         }
     }
     optionsStream.close();
     std::remove(compilerInfoPath.string().c_str());
-
-    if (!foundIncludes) {
-        // LCOV_EXCL_START
-        HCXX::Log(HCXX::LogLevel::ERROR) << "Buildin compiler includes not found" << std::endl;
-        // LCOV_EXCL_STOP
-    }
-
-    return CompilerInfo{std::move(compilerIncludes), std::move(compilerVersion), std::move(target),
-                        IsCPPCompiler(compiler)};
+    return info;
 }
 
-std::string CompilersInfo::GetCompilerBinary(const CompilerOptions& compilerOptions)
-{
-    if (compilerOptions.compiler.empty() || !IsCorrectCompilerBinary(compilerOptions.compiler)) {
-        const char* envPath = std::getenv("CXX_COMPILER_PATH");
-        std::string compilerPath = envPath != nullptr ? envPath : "";
-        if (!compilerPath.empty() && IsCorrectCompilerBinary(compilerPath)) {
-            return compilerPath;  // LCOV_EXCL_LINE
-        }
-
-        if (!compilerOptions.GetFilePath().empty() && !std::filesystem::is_directory(compilerOptions.GetFilePath()) &&
-            (std::filesystem::path(compilerOptions.GetFilePath()).extension() == ".c" ||
-             !IsCorrectCompilerBinary(myDefaultCxxCompilerName))) {
-            return myDefaultCCompilerName;
-
-        } else {
-            return myDefaultCxxCompilerName;
-        }
-    }
-    return compilerOptions.compiler;  // LCOV_EXCL_LINE
-}
-
-CompilersInfo::CompilerInfo& CompilersInfo::GetCompilerInfo(const CompilerOptions& compilerOptions)
+CompilersInfo::CompilerInfo& CompilersInfo::GetCompilerInfo(CompilerOptions& compilerOptions)
 {
     std::string compilerPath = compilerOptions.compiler;
-    if (compilerPath.empty() || !IsCorrectCompilerBinary(compilerPath)) {
-        compilerPath = GetCompilerBinary(compilerOptions);
+    if (!IsCorrectCompilerBinary(compilerPath)) {
+        compilerPath = myDefaultCCompilerName;
     }
-    auto sysRoot = compilerOptions.GetOptionValue("--sysroot");
-
+    auto stdOpt = compilerOptions.GetOptionValue("-std");
+    auto langOpt = compilerOptions.HasOption("-xc")     ? "c"
+                   : compilerOptions.HasOption("-xc++") ? "c++"
+                                                        : compilerOptions.GetOptionValue("-x");
+    if (langOpt.empty()) {
+        langOpt = compilerOptions.compiler.find("++") != std::string::npos || stdOpt.find("++") != std::string::npos ||
+                          !HCXX::StrUtils::EndsWith(compilerOptions.GetFilePath(), ".c")
+                      ? "c++"
+                      : "c";
+        compilerOptions.options.insert(compilerOptions.options.end(), {"-x", langOpt});
+    }
+    std::string extraOptions(" -x " + langOpt);
+    if (auto sysRoot = compilerOptions.GetOptionValue("--sysroot"); !sysRoot.empty()) {
+        extraOptions += " --sysroot=" + sysRoot;
+    }
+    if (!stdOpt.empty()) {
+        extraOptions += " -std=" + stdOpt;
+    }
+    if (compilerOptions.HasOption("-m32")) {
+        extraOptions += " -m32";
+    }
     std::lock_guard<std::mutex> lock(myMutex);
-    auto it = myCompilers.emplace(compilerPath + sysRoot, CompilerInfo());
+    auto it = myCompilers.emplace(compilerPath + extraOptions, CompilerInfo());
     if (it.second) {
-        it.first->second = CollectNewCompilerInfo(compilerPath, sysRoot);
+        it.first->second = CollectNewCompilerInfo(compilerPath, std::move(extraOptions));
     }
     return it.first->second;
 }

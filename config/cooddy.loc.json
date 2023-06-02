@@ -447,5 +447,14 @@
   },
   "INCOMPATIBLE.PTR_DESCRIPTION": {
     "EN": "Incompatible cast of pointer may cause out-of-bounds memory access"
+  },
+  "SENSITIVE_ANNOTATED_BY_CONFIG": {
+    "EN": "Sensitive data source, function annotated by config"
+  },
+  "SENSITIVE_ANNOTATED_RECORD": {
+    "EN": "Sensitive data source, record declaration annotated by macro"
+  },
+  "SENSITIVE_ANNOTATED_BY_MACRO": {
+    "EN": "Sensitive data source, annotated by macro"
   }
 }

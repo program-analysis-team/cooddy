@@ -1,7 +1,7 @@
 /// Copyright (C) 2020-2023 Huawei Technologies Co., Ltd.
 ///
 /// This file is part of Cooddy, distributed under the GNU GPL version 3 with a Linking Exception.
-/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.txt.
+/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.md
 #include <Analyzer.h>
 #include <EntryFuncConsumer.h>
 #include <Parser.h>
@@ -1015,7 +1015,7 @@ TEST_F(AnalyzerToolTest, ParseErrorLogTest)
     TestErrorCheckConsumer testConsumer;
     analyzer->Analyze(workspace.GetCompilerOptions(), problemsList, testConsumer);
     ASSERT_FALSE(parser->statistics.compilationIssues.empty());
-    ASSERT_EQ((*parser->statistics.compilationIssues.begin()).second.size(), 2);
+    ASSERT_EQ(parser->statistics.compilationIssues.size(), 2);
     ASSERT_TRUE(testConsumer.HasToolError());
     SaveParserErrorLog(*parser, parseLog);
     ASSERT_FALSE(result.IsEmpty());
@@ -1039,7 +1039,7 @@ TEST_F(AnalyzerToolTest, ParseErrorLogTest2)
     analyzer->Analyze(workspace.GetCompilerOptions(), problemsList, testConsumer);
     ASSERT_TRUE(testConsumer.HasToolError());
     ASSERT_FALSE(parser->statistics.compilationIssues.empty());
-    ASSERT_EQ((*parser->statistics.compilationIssues.begin()).second.size(), 2);
+    ASSERT_EQ(parser->statistics.compilationIssues.size(), 2);
     SaveParserErrorLog(*parser, dirPath.string());
     ASSERT_FALSE(result.IsEmpty());
 }

@@ -1,7 +1,7 @@
 /// Copyright (C) 2020-2023 Huawei Technologies Co., Ltd.
 ///
 /// This file is part of Cooddy, distributed under the GNU GPL version 3 with a Linking Exception.
-/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.txt.
+/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.md
 //
 // Implementation of the AST visitor.
 // Converts CLang AST-representation to Cooddy representation.
@@ -199,9 +199,8 @@ bool CanDefineSizeForType(const clang::Type& clangType, clang::TagDecl* tagDecl)
            !clangType.isSpecificBuiltinType(clang::BuiltinType::BoundMember) &&
            !clangType.isSpecificBuiltinType(clang::BuiltinType::Overload);
 }
-Type ASTVisitor::ConvertType(const clang::QualType& qualType, const clang::AttrVec& attrs)
+void ASTVisitor::ParseTypeAttrs(Type& type, const clang::AttrVec& attrs)
 {
-    auto type = ConvertType(qualType);
     for (auto& attr : attrs) {
         if (attr->getKind() == clang::attr::Kind::Annotate &&
             static_cast<clang::AnnotateAttr*>(attr)->getAnnotation() == "__cooddy_security_sde") {
@@ -209,6 +208,11 @@ Type ASTVisitor::ConvertType(const clang::QualType& qualType, const clang::AttrV
             break;
         }
     }
+}
+Type ASTVisitor::ConvertType(const clang::QualType& qualType, const clang::AttrVec& attrs)
+{
+    auto type = ConvertType(qualType);
+    ParseTypeAttrs(type, attrs);
     return type;
 }
 Type ASTVisitor::ConvertType(const clang::QualType& qualType)
@@ -439,9 +443,9 @@ struct NodeTypesMapper;
 DECLARE_STMT_CONVERTER(MemberExpr, MemberExpression)
 {
     ParentForCallExprBuilder builder(*visitor, *node, clangNode->getBase());
-    new (node) MemberExpression(visitor->ConvertType(clangNode->getType(), clangNode->getMemberDecl()->getAttrs()),
-                                clangNode->getMemberDecl()->getNameAsString(), builder.Create(),
-                                visitor->GetNode(clangNode->getMemberDecl()), clangNode->isArrow());
+    auto decl = clangNode->getMemberDecl();
+    new (node) MemberExpression(visitor->ConvertType(clangNode->getType(), decl->getAttrs()), decl->getNameAsString(),
+                                builder.Create(), visitor->GetNode(decl), clangNode->isArrow());
 }
 
 template <typename TClangNodeType>
@@ -592,7 +596,6 @@ DECLARE_DECL_CONVERTER(Field, FieldDecl)
 
     uint32_t fieldIndex = clangNode->getFieldIndex();
     const clang::RecordDecl* parent = clangNode->getParent();
-
     Type type = visitor->ConvertType(clangNode->getType(), clangNode->getAttrs());
     auto align = 0;
     if (clangNode->isBitField()) {
@@ -1536,10 +1539,12 @@ RecordDecl ConvertRecord(ASTVisitor& visitor, const clang::RecordDecl& clangNode
 
     Type type;
     if (clangNode.getTypeForDecl() != nullptr) {
-        type = visitor.ConvertType(clangNode.getTypeForDecl()->getCanonicalTypeInternal());
+        type = visitor.ConvertType(clangNode.getTypeForDecl()->getCanonicalTypeInternal(), clangNode.getAttrs());
     }
+
     return RecordDecl(GetQualifier(visitor, clangNode), clangNode.getNameAsString(), std::move(fields), recordType,
-                      clangNode.isFirstDecl(), clangNode.isImplicit(), type.GetSizeInBits(), std::move(commentBlocks));
+                      clangNode.isFirstDecl(), clangNode.isImplicit(), type.GetSizeInBits(), std::move(commentBlocks),
+                      type.IsSensitiveData());
 }
 
 DECLARE_DECL_CONVERTER(Record, RecordDecl)

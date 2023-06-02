@@ -1,13 +1,13 @@
 /// Copyright (C) 2020-2023 Huawei Technologies Co., Ltd.
 ///
 /// This file is part of Cooddy, distributed under the GNU GPL version 3 with a Linking Exception.
-/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.txt.
+/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.md
 createBody();
 var conclusionCB = ge("conclusionCB");
 var rhsServer = undefined;
 var binary_string = ge("cooddyResults").text;
 var cooddyResults = {};
-if(binary_string.startsWith('e')) 
+if(binary_string.startsWith('e'))
     cooddyResults = JSON.parse(decode(binary_string));
 else
     cooddyResults = JSON.parse(binary_string);
@@ -35,13 +35,20 @@ var fileName = fullPathFileName.replace('\\','/').split('/').last();
 cooddyResults.problems.forEach(p => p.linkForCSVExport = '=HYPERLINK("' + fullPathFileName + '.html?currentId=' + p.unique_id + '")');
 
 var lastLoadedProblem;
-qsa(".menuItem", s => 
+qsa(".menuItem", s =>
     s.onclick = e => {
         qsa(".menuItem", s => s.classList.remove('menuItemActive'));
         qsa(".tab", s => s.classList.remove('tabActive'));
         e.currentTarget.classList.add('menuItemActive');
         e.currentTarget.attributes["data-internalid"].value.split(" ").forEach(e=> classAdd(e, 'tabActive'));
         setUrlParam('view', e.currentTarget.id, "codeSnippetTab");
+        if (e.currentTarget.id !== "codeSnippetTab" && e.currentTarget.id !== "sarifTab") {
+            classAdd("sidebar", "invisible");
+            classAdd("resizer", "invisible");
+        } else if (cooddyResults.problems.length > 1) {
+            classRemove("sidebar", "invisible");
+            classRemove("resizer", "invisible");
+        }
         loadReport(lastLoadedProblem);
     })
 var fileNameId = fileName.slice(0, 32);
@@ -91,7 +98,7 @@ function conclusionChanged(problem) {
             problem.conclusions.splice(1, problem.conclusions.length - 8);
         }
         problem.conclusions.push(newStatus);
-    } else 
+    } else
         problem.conclusions = [newStatus];
     SendChanges(problem);
     if(typeof Tabulator != "undefined")
@@ -103,20 +110,25 @@ ge("conclusionCB").onchange = function() {
     conclusionChanged(lastLoadedProblem);
 }
 
+if (cooddyResults.compilation_issues.length !== 0 && typeof Tabulator !== 'undefined') {
+    classRemove('cooddyCompilationIssuesTab', 'invisible');
+    compilationIssuesTabulatorInit();
+}
+
 if(cooddyResults.git_commit || cooddyResults.configurations) {
     classRemove("cooddySettingsTab", "invisible");
     let desc = ce('div');
     desc.className = "codeHeader";
     let descContent = "";
-    if(cooddyResults.command_line) 
+    if(cooddyResults.command_line)
         descContent += '<span>Command line: ' + cooddyResults.command_line + '</span>\n';
     if(cooddyResults.prev_command_line)
         descContent += '<span style>Previous command line: ' + cooddyResults.prev_command_line + '</span>\n';
-    if(cooddyResults.git_version) 
+    if(cooddyResults.git_version)
         descContent += '<span>Cooddy version: ' + cooddyResults.git_version + ' from commit ' + cooddyResults.git_commit + '</span>\n';
-    if(cooddyResults.start_time) 
+    if(cooddyResults.start_time)
         descContent += '<span>Start time: ' + cooddyResults.start_time + '</span>\n';
-    if(cooddyResults.end_time) 
+    if(cooddyResults.end_time)
         descContent += '<span>End time: ' + cooddyResults.end_time + '</span>\n';
     if(cooddyResults.project_git_summary)
         descContent += '<span>Project git head: ' + cooddyResults.project_git_summary + '</span>\n';
@@ -217,10 +229,10 @@ function loadReport(problem) {
                 }
                 descContent += '</td></tr>';
             }
-            descContent += '</table></div>';  
+            descContent += '</table></div>';
         }
         let trace = problem.filteredTrace;
-        
+
         for(let i = 0; i < trace.length; i++) {
             let t = trace[i];
             if(t.filteredParentEvent == -1 || t.filteredParentEvent == undefined)
@@ -258,10 +270,10 @@ if(typeof Tabulator != "undefined" && problemIdParam == undefined) {
     classAdd("filterBtn", "invisible");
     classAdd("groupBtn", "invisible");
     classAdd("fSearch", "invisible");
-    
+
     let grid = ge("dataGrid");
     grid.classList.add("gridStyle");
-    grid.style.height = window.innerHeight - 60;
+    grid.style.height = window.innerHeight - 90;
     let d = "";
     let first = true;
     let i = 0;
@@ -292,7 +304,7 @@ ge("traceExpandCollapse").onclick = e => {
         if((s.textContent == '+' && traceExpanded) || (s.textContent == '-' && !traceExpanded))
             s.click();
     });
-    
+
 };
 function SendChanges(problem) {
     let p  =fetch(rhsServer+'?problem_id=' + problem.unique_id, {method:'POST',headers: new Headers({'Content-Type': 'application/json'}),body: JSON.stringify(problem.conclusions)})
@@ -323,7 +335,7 @@ if(cooddyResults.reporter == "secb") {
     opt.value = "NF";
     opt.innerHTML = "Not found";
     conclusionCB.appendChild(opt);
-    
+
     classAdd("filterSourceRow", "invisible");
     classAdd("filterSourceRow2", "invisible");
     classAdd("filterSourceHeader", "invisible");
@@ -364,12 +376,12 @@ let ids = cooddyResults.problems.map(p=>"'"+p.unique_id+"'").join(',');
 
 async function fetchWithTimeout(resource, options = {}) {
   const { timeout = 2000 } = options;
-  
+
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), timeout);
   const response = await fetch(resource, {
     ...options,
-    signal: controller.signal  
+    signal: controller.signal
   });
   clearTimeout(id);
   return response;
@@ -410,7 +422,7 @@ if(rhsServers.length > 0) {
                 if(p.conclusions.length > 0) {
                     p.conclusion = p.conclusions.last().status;
                     p.comment = p.conclusions[0].comment;
-                } else 
+                } else
                     p.conclusion = undefined;
                 if(p.conclusions.length == 0 || !p.conclusions[0].comment) {
                     p.conclusions = [{comment:"", created:Date.now()}].concat(p.conclusions);
@@ -429,92 +441,99 @@ function createBody() {
     d.classList.add("table");
     d.classList.add("stop-scrolling");
     d.innerHTML = `
-	<div class="table stop-scrolling">
-		<div class="leftContainer" id="sidebar"><div id="dataGrid"></div></div>
-		<div class="resizer" id="resizer"></div>
-		<div class="rightContainerParent">
-            <div class="rightContainer" id="rightContainer">
-                <div class="menu">
-                    <div class="menuItem invisible" data-internalid="cooddySettings" id="cooddySettingsTab">Settings</div>
-                    <div class="menuItem" data-internalid="codeSnippet resizer2 rightSidebar" id="codeSnippetTab">&#9656 Report</div>
-                    <div class="menuItem" data-internalid="sarif" id="sarifTab">Sarif</div>
-                    <div class="menuItem" data-internalid="about" id="aboutTab">?</div>
-                    <div class="connectionProblem invisible">Cannot connect to RHS</div>
-                    <div id="debugInfo"></div>
-                </div>
-                <div class="tab tabStyled" id="codeSnippet" >
-                    <div class="reportHeader">
-                        <div class="headerPane" id="headerPane">
+    <div class="mainContainer stop-scrolling">
+        <div class="menu mainMenu">
+            <div class="menuItem" data-internalid="codeSnippet resizer2 rightSidebar" id="codeSnippetTab">&#9656 Report</div>
+            <div class="menuItem" data-internalid="sarif" id="sarifTab">Sarif</div>
+            <div class="menuItem invisible" data-internalid="cooddyCompilationIssues" id="cooddyCompilationIssuesTab">Compilation Issues</div>
+            <div class="menuItem invisible" data-internalid="cooddySettings" id="cooddySettingsTab">Settings</div>
+            <div class="menuItem" data-internalid="about" id="aboutTab">?</div>
+            <div class="connectionProblem invisible">Cannot connect to RHS</div>
+            <div id="debugInfo"></div>
+        </div>
+        <div class="table stop-scrolling">
+            <div class="leftContainer" id="sidebar"><div id="dataGrid"></div></div>
+            <div class="resizer" id="resizer"></div>
+            <div class="rightContainerParent">
+                <div class="rightContainer" id="rightContainer">
+                    <div class="tab tabStyled" id="cooddyCompilationIssues" >
+                        <div class="compilationIssuesContainer" id="cooddyCompilationIssuesContainer">
+                            <div id="compilationIssuesData"></div>
                         </div>
                     </div>
-                    <div class="table" id="codeSnippetContainer">
-                        <div class="codeSnippet">
-                            <pre class="language-clike" id="preContainer"></pre>
+                    <div class="tab tabStyled" id="codeSnippet" >
+                        <div class="reportHeader">
+                            <div class="headerPane" id="headerPane">
+                            </div>
                         </div>
+                        <div class="table" id="codeSnippetContainer">
+                            <div class="codeSnippet">
+                                <pre class="language-clike" id="preContainer"></pre>
+                            </div>
 
+                        </div>
+                    </div>
+                    <div class="tab tabStyled" id="cooddySettings" >
+                        <div class="reportHeader" id="cooddySettingsHeader">
+                        </div>
+                        <div class="codeSnippet" id="cooddySettingsContainer">
+                            <pre class="language-clike" id="preSettingsContainer"><code id="settingsContainer"></code></pre>
+                        </div>
+                    </div>
+                    <div class="tab tabStyled" id="sarif" >
+                        <div class="reportHeader" id="sarifHeader">
+                        </div>
+                        <div class="codeSnippet" id="sarifContainer">
+                            <pre class="language-clike" id="preSarifContainer"><code id="sarifCodeContainer"></code></pre>
+                        </div>
+                    </div>
+                    <div class="tab tabStyled" id="about" >
+                        <div class="reportHeader" id="aboutHeader">
+                        </div>
+                        <div class="codeSnippet" id="aboutContainer">
+                            <pre class="language-text" id="preAboutContainer">
+    Copyright (C) 2020-2023 Huawei Technologies Co., Ltd.<br>
+    <br>
+    This file is part of Cooddy, distributed under the GNU GPL version 3 with a Linking Exception.<br>
+    For full terms see&nbsp;<a href="https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.md">license</a>.<br>
+    <br>
+    Includes the following libraries:<br>
+    <br>
+    FileSaver.js Copyright (C) 2016 Eli Grey. Released under the MIT&nbsp;<a href="https://github.com/eligrey/FileSaver.js/blob/master/LICENSE.md">license</a>.<br>
+    JSZip Copyright (C) 2009-2016 Stuart Knightley <stuart [at] stuartk.com> Dual licenced under the MIT license or GPLv3. See&nbsp;<a href="https://raw.github.com/Stuk/jszip/main/LICENSE.markdown">license</a>.<br>
+    JSZip uses the library pako released under the MIT&nbsp;<a href="https://github.com/nodeca/pako/blob/master/LICENSE">license</a>.<br>
+    Prism.js Copyright (C) 2012 Lea Verou released under the MIT&nbsp;<a href="https://github.com/PrismJS/prism/blob/master/LICENSE">license</a>.<br>
+    Tabulator.js Copyright (C) 2015-2023 Oli Folkerd. Released under the MIT&nbsp;<a href="https://tabulator.info/docs/5.4/license">license</a>.<br>
+    tiny-inflate Copyright (C) 2015-present Devon Govett. Released under the MIT&nbsp;<a href="https://github.com/foliojs/tiny-inflate/blob/master/LICENSE">license</a>.<br>
+                            </pre>
+                        </div>
                     </div>
                 </div>
-
-                <div class="tab tabStyled" id="cooddySettings" >
-                    <div class="reportHeader" id="cooddySettingsHeader">
+                <div class="tab resizer" id="resizer2"></div>
+                <div class="tab rightSidebar" id="rightSidebar">
+                    <div class="menu">
+                        <div class="menuItem2" id="traceExpandCollapse" title="Expand/Collapse all items in trace tree">&#8650</div>
+                        <div class="menuItem2 hideBranches" id="hideBranches">Branches</div>
+                        <div class="menuItem2 allEvents" id="allEvents">Calls</div>
                     </div>
-                    <div class="codeSnippet" id="cooddySettingsContainer">
-                        <pre class="language-clike" id="preSettingsContainer"><code id="settingsContainer"></code></pre>
+                    <div class="graphContainer" id="codeGraphContainer">
+                        <div id="preCodeGraphContainer"></div>
                     </div>
-                </div>
-                <div class="tab tabStyled" id="sarif" >
-                    <div class="reportHeader" id="sarifHeader">
+                    <div class="commentsPane invisible" id="commentsPane">
+                        <div class="headerCommentsPane">
+                            <div class="commentsHeader">Conclusion:</div>
+                            <select name="conclusion" id="conclusionCB" class="conclusionComboBox">
+                                <option value="TP">True positive</option>
+                                <option value="FP">False positive</option>
+                                <option value="QS">Questionable</option>
+                                <option value="UN">Undefined</option>
+                            </select>
+                        </div>
+                        <textarea id="comments" name="comments" maxlength="1024" placeholder="Leave a comment here."></textarea>
                     </div>
-                    <div class="codeSnippet" id="sarifContainer">
-                        <pre class="language-clike" id="preSarifContainer"><code id="sarifCodeContainer"></code></pre>
-                    </div>
-                </div>
-                <div class="tab tabStyled" id="about" >
-                    <div class="reportHeader" id="aboutHeader">
-                    </div>
-                    <div class="codeSnippet" id="aboutContainer">
-                        <pre class="language-text" id="preAboutContainer">
-Copyright (C) 2020-2023 Huawei Technologies Co., Ltd.<br>
-<br>
-This file is part of Cooddy, distributed under the GNU GPL version 3 with a Linking Exception.<br>
-For full terms see&nbsp;<a href="https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.txt">license</a>.<br>
-<br>
-Includes the following libraries:<br>
-<br>
-FileSaver.js Copyright (C) 2016 Eli Grey. Released under the MIT&nbsp;<a href="https://github.com/eligrey/FileSaver.js/blob/master/LICENSE.md">license</a>.<br>
-JSZip Copyright (C) 2009-2016 Stuart Knightley <stuart [at] stuartk.com> Dual licenced under the MIT license or GPLv3. See&nbsp;<a href="https://raw.github.com/Stuk/jszip/main/LICENSE.markdown">license</a>.<br>
-JSZip uses the library pako released under the MIT&nbsp;<a href="https://github.com/nodeca/pako/blob/master/LICENSE">license</a>.<br>
-Prism.js Copyright (C) 2012 Lea Verou released under the MIT&nbsp;<a href="https://github.com/PrismJS/prism/blob/master/LICENSE">license</a>.<br>
-Tabulator.js Copyright (C) 2015-2023 Oli Folkerd. Released under the MIT&nbsp;<a href="https://tabulator.info/docs/5.4/license">license</a>.<br>
-tiny-inflate Copyright (C) 2015-present Devon Govett. Released under the MIT&nbsp;<a href="https://github.com/foliojs/tiny-inflate/blob/master/LICENSE">license</a>.<br>
-                        </pre>
-                    </div>
-                </div>
-            </div>
-            <div class="tab resizer" id="resizer2"></div>
-            <div class="tab rightSidebar" id="rightSidebar">
-                <div class="menu">
-                    <div class="menuItem2" id="traceExpandCollapse" title="Expand/Collapse all items in trace tree">&#8650</div>
-                    <div class="menuItem2 hideBranches" id="hideBranches">Branches</div>
-                    <div class="menuItem2 allEvents" id="allEvents">Calls</div>
-                </div>
-                <div class="graphContainer" id="codeGraphContainer">
-                    <div id="preCodeGraphContainer"></div>
-                </div>
-                <div class="commentsPane invisible" id="commentsPane">
-                    <div class="headerCommentsPane">
-                        <div class="commentsHeader">Conclusion:</div>
-                        <select name="conclusion" id="conclusionCB" class="conclusionComboBox">
-                            <option value="TP">True positive</option>
-                            <option value="FP">False positive</option>
-                            <option value="QS">Questionable</option>
-                            <option value="UN">Undefined</option>
-                        </select> 
-                    </div>                        
-                    <textarea id="comments" name="comments" maxlength="1024" placeholder="Leave a comment here."></textarea>
                 </div>
             </div>
         </div>
-	</div>`;
+    </div>`;
     content.insertBefore(d, content.firstChild);
 }

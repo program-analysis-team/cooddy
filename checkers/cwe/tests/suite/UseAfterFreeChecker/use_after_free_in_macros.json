@@ -1,0 +1,22 @@
+{
+  "description": "Use after free",
+  "file_path": "use_after_free_in_macros.cpp",
+  "kind": "MEM.USE.FREE",
+  "line": 13,
+  "pos": 40,
+  "trace": [
+    {
+      "file": "use_after_free_in_macros.cpp",
+      "line": 13,
+      "col": 40,
+      "desc": "Use after free source"
+    },
+    {
+      "file": "use_after_free_in_macros.cpp",
+      "line": 13,
+      "col": 40,
+      "desc": "Use after free"
+    }
+  ],
+  "positive": true
+}

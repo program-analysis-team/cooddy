@@ -1,7 +1,7 @@
 /// Copyright (C) 2020-2023 Huawei Technologies Co., Ltd.
 ///
 /// This file is part of Cooddy, distributed under the GNU GPL version 3 with a Linking Exception.
-/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.txt.
+/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.md
 #include <cstddef>
 #include <string_view>
 #include <vector>
@@ -67,6 +67,15 @@ TEST_F(StrUtilsTest, LocaleTest)
     ASSERT_EQ(GetStringLocale("TEST_STRING"), "中文文本");
     ASSERT_EQ(GetStringLocale("NULL_POINTER"), "Null pointer");
     ASSERT_TRUE(LoadLocale("EN"));
+}
+
+TEST_F(StrUtilsTest, JoinBasic)
+{
+    using namespace std;
+    string actual = Join({"1", "2", "3"}, ", ");
+    string expected = "1, 2, 3";
+
+    ASSERT_EQ(expected, actual);
 }
 
 TEST_F(StrUtilsTest, SplitBasic)

@@ -280,7 +280,7 @@ Check following documentation for more info on [Troubleshooting](docs/Troublesho
 
 ## License
 
-Distributed under the GPL-3.0 license with linking exception. See `LICENSE.txt` for more information.
+Distributed under the GPL-3.0 license with linking exception. See `LICENSE.md` for more information.
 
 ## Contribution
 

@@ -1,7 +1,7 @@
 /// Copyright (C) 2020-2023 Huawei Technologies Co., Ltd.
 ///
 /// This file is part of Cooddy, distributed under the GNU GPL version 3 with a Linking Exception.
-/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.txt.
+/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.md
 //
 // class DiagnosticConsumer implements logging of Clang compile errors and
 // set PPCallbacks to clang::Preprocessor
@@ -16,7 +16,7 @@
 class DiagnosticConsumer : public clang::DiagnosticConsumer {
 public:
     explicit DiagnosticConsumer(HCXX::TranslationUnit* unit, HCXX::Parser::ParserStatistics* stat = nullptr)
-        : myUnit(unit), myErrorLevel(HCXX::LogLevel::TRACE), myParserStatistics(stat)
+        : myUnit(unit), myParserStatistics(stat)
     {}
     ~DiagnosticConsumer() = default;
 
@@ -26,12 +26,12 @@ public:
     }
 
 private:
+    using ClangString = clang::SmallString<100>;
     static constexpr uint32_t MAX_LOG_ERROR_COUNT = 20;
 
     std::vector<std::unique_ptr<CommentCallback>> myCmntCallbacks;
     HCXX::TranslationUnit* myUnit;
     HCXX::Parser::ParserStatistics* myParserStatistics;
-    HCXX::LogLevel myErrorLevel;
     uint32_t myFatalErrorCount = 0;
 
     void BeginSourceFile(const clang::LangOptions& langOpts, const clang::Preprocessor* preprocessor) override
@@ -48,6 +48,43 @@ private:
         }
     }
 
+    bool IsSkippedMessage(ClangString& message)
+    {
+        static const std::array<const char*, 8> excludedMessages = {
+            "variable-sized object may not be initialized",
+            "'decltype(auto)' cannot be combined with other type specifiers",
+            "initializing wide char array with incompatible wide string literal",
+            "in capture list does not name a variable",
+            "must be initialized by a constant expression",
+            "reference to local binding",
+            "no type named 'align_val_t' in namespace 'std'",
+            "unknown register name"};
+
+        for (auto& it : excludedMessages) {
+            if (message.find(it) != std::string::npos) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    bool IsUnknownArgumentMessage(ClangString& message)
+    {
+        static const char unknownArg[] = "unknown argument";
+
+        auto pos = message.find(unknownArg);
+        if (pos == std::string::npos) {
+            return false;
+        }
+        if (auto open = message.find("'", pos + sizeof(unknownArg)); open != std::string::npos) {
+            auto close = message.find("'", open + 1);
+            std::unique_lock<std::mutex> lock(myParserStatistics->mutex);
+            myParserStatistics->unknownOptionsSet.emplace(message.substr(open + 1, close - open - 1));
+        }
+        HCXX::Log(HCXX::LogLevel::WARNING) << "CLang: " << message.c_str() << std::endl;
+        return true;
+    }
+
     void HandleDiagnostic(clang::DiagnosticsEngine::Level diagLevel, const clang::Diagnostic& info) override
     {
         HCXX::LogLevel logLevel = HCXX::LogLevel::OFF;
@@ -58,49 +95,36 @@ private:
         } else {
             return;
         }
-        clang::SmallString<100> messageStr;
-        info.FormatDiagnostic(messageStr);
+        ClangString message;
+        info.FormatDiagnostic(message);
 
         clang::PresumedLoc presumedLoc;
         if (info.getLocation().isValid() && info.hasSourceManager()) {
             presumedLoc = info.getSourceManager().getPresumedLoc(info.getLocation());
         }
-        if (presumedLoc.isValid()) {
-            if (myUnit->GetParseErrors().size() < MAX_LOG_ERROR_COUNT) {
-                HCXX::Parser::ParserStatistics::CompilationIssue issue{
-                    presumedLoc.getFilename(), messageStr.c_str(),
-                    logLevel == HCXX::LogLevel::FATAL ? "FATAL" : "ERROR", presumedLoc.getLine(),
-                    presumedLoc.getColumn()};
-                {
-                    std::unique_lock<std::mutex> lock(myParserStatistics->mutex);
-                    myParserStatistics->compilationIssues[myUnit->GetMainFileName()].emplace_back(issue);
-                }
-                HCXX::Log(logLevel) << "File: " << presumedLoc.getFilename() << ", "
-                                    << "Line: " << presumedLoc.getLine() << ", "
-                                    << "Pos: " << presumedLoc.getColumn() << ", " << messageStr.c_str() << std::endl;
-            }
-            if (myUnit) {
-                myUnit->AddParseError(HCXX::ConvertLocation(info.getSourceManager(), info.getLocation()));
-            }
-        } else {
-            if (auto pos = messageStr.find("unknown argument"); pos != std::string::npos) {
-                if (auto open = messageStr.find("'", pos + 16); open != std::string::npos) {
-                    auto close = messageStr.find("'", open + 1);
-                    std::unique_lock<std::mutex> lock(myParserStatistics->mutex);
-                    myParserStatistics->unknownOptionsSet.emplace(messageStr.substr(open + 1, close - open - 1));
-                }
-                logLevel = HCXX::LogLevel::WARNING;
-            }
-            HCXX::Log(logLevel) << "CLang message: " << messageStr.c_str() << std::endl;
+        if (IsSkippedMessage(message) || !presumedLoc.isValid() && IsUnknownArgumentMessage(message)) {
+            return;
         }
 
-        if (myErrorLevel > logLevel) {
-            myErrorLevel = logLevel;
-            if (myErrorLevel == HCXX::LogLevel::FATAL && myParserStatistics != nullptr) {
-                ++myParserStatistics->fatalErrorCount;
-            }
-        }
+        HCXX::Parser::ParserStatistics::CompilationIssue issue{
+            myUnit->GetMainFileName(),
+            presumedLoc.isValid() ? presumedLoc.getFilename() : "<unknown>",
+            message.c_str(),
+            logLevel == HCXX::LogLevel::FATAL ? "FATAL" : "ERROR",
+            presumedLoc.isValid() ? presumedLoc.getLine() : 0,
+            presumedLoc.isValid() ? presumedLoc.getColumn() : 0};
 
+        if (myUnit->GetParseErrors().size() < MAX_LOG_ERROR_COUNT) {
+            HCXX::Log(logLevel) << "File: " << issue.file << ", "
+                                << "Line: " << issue.line << ", "
+                                << "Pos: " << issue.column << ", " << issue.message << std::endl;
+
+            std::unique_lock<std::mutex> lock(myParserStatistics->mutex);
+            myParserStatistics->compilationIssues.emplace_back(issue);
+        }
+        if (myUnit) {
+            myUnit->AddParseError(HCXX::ConvertLocation(info.getSourceManager(), info.getLocation()));
+        }
         if (logLevel == HCXX::LogLevel::FATAL && ++myFatalErrorCount <= myParserStatistics->maxFatalErrorCount) {
             // COODDY_SUPPRESS HastBasedChecker
             const_cast<clang::DiagnosticsEngine*>(info.getDiags())->Reset();

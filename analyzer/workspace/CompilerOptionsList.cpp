@@ -1,7 +1,7 @@
 /// Copyright (C) 2020-2023 Huawei Technologies Co., Ltd.
 ///
 /// This file is part of Cooddy, distributed under the GNU GPL version 3 with a Linking Exception.
-/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.txt.
+/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.md
 #include <CompilerOptionsList.h>
 #include <utils/EnvironmentUtils.h>
 #include <utils/LocaleUtils.h>
@@ -208,7 +208,23 @@ std::vector<CompileCommand> LoadCompileDB(const std::filesystem::path& dbPath)
     return LoadSecBCompileDB(dbPath);
 }
 
-bool CompilerOptionsList::ParseScopeFile(std::filesystem::path scopePath)
+static void ApplyCommandLineReplacements(std::string& command, const CompilerOptionsList::Replacements& replacements)
+{
+    if (replacements.empty()) {
+        return;
+    }
+    for (size_t p = 0; p < command.size(); ++p) {
+        for (auto& [pattern, replacement] : replacements) {
+            if (command.compare(p, pattern.size(), pattern) == 0) {
+                command.replace(p, pattern.size(), replacement);
+                p += replacement.size() - 1;
+                break;
+            }
+        }
+    }
+}
+
+bool CompilerOptionsList::ParseScopeFile(std::filesystem::path scopePath, const Replacements& replacements)
 {
     if (std::filesystem::is_directory(scopePath)) {
         scopePath.append(COMPILE_COMMAND_DB);
@@ -228,6 +244,7 @@ bool CompilerOptionsList::ParseScopeFile(std::filesystem::path scopePath)
             cmdDir.append(it.directory);
         }
 
+        ApplyCommandLineReplacements(it.command, replacements);
         ParseCommandLine(cmdDir.string(), options, it.command);
         if (options.options.empty()) {
             HCXX::Log(HCXX::LogLevel::ERROR) << "Options list is empty" << std::endl;

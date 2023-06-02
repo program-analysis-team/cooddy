@@ -1,7 +1,7 @@
 /// Copyright (C) 2020-2023 Huawei Technologies Co., Ltd.
 ///
 /// This file is part of Cooddy, distributed under the GNU GPL version 3 with a Linking Exception.
-/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.txt.
+/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.md
 var qsa = (selector, func) => document.querySelectorAll(selector).forEach(func)
 var ge = el => document.getElementById(el);
 var ce = el => document.createElement(el);
@@ -24,7 +24,7 @@ function setUrlParam(param, value, defaultValue = "default") {
         var searchParams = new URLSearchParams(window.location.search);
         if(value && value != defaultValue)
             searchParams.set(param, value);
-        else 
+        else
             searchParams.delete(param);
         let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + searchParams.toString();
         window.history.pushState({path:newurl},'',newurl);
@@ -77,8 +77,11 @@ function SetupResizer() {
     let w = getGlobalOption("sidebarWidth", '400px');
     if(w.endsWith('px')) w = w.slice(0, -2);
     w = w > window.innerWidth - 30 ? '400px' : (w+'px');
-    
     sidebar.style.flexBasis = w;
+
+    const compilationIssues = ge("cooddyCompilationIssuesContainer");
+    compilationIssues.style.flexBasis = (window.innerWidth - 30) + 'px';
+
     document.querySelector("#resizer").addEventListener("mousedown", (event) => {
         function resize(e) {
             if(e.x > window.innerWidth - 10)

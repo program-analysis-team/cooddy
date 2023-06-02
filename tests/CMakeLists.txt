@@ -14,6 +14,7 @@ file(GLOB COODDY_TEST_SOURCES CONFIGURE_DEPENDS
         ../cooddy/tests/src/*.*
         ../utils/tests/*.*
         ../reporters/SampleReporter/tests/src/*.*
+        ../reporters/SarifReporter/tests/src/*.*
         )
 
 file(GLOB CHECKERS LIST_DIRECTORIES true ../checkers/*)
@@ -25,7 +26,7 @@ endforeach ()
 
 add_executable(cooddyTest ${COODDY_TEST_SOURCES})
 
-target_link_libraries(cooddyTest Reporters SampleReporter gtest gtest_main Analyzer)
+target_link_libraries(cooddyTest Reporters SampleReporter SarifReporter gtest gtest_main Analyzer)
 
 add_custom_target(copy_test_config ALL COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/config ${BUILD_DIR}/.cooddy)
 add_dependencies(cooddyTest copy_test_config)

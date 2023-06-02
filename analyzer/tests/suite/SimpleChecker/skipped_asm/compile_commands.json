@@ -1,0 +1,7 @@
+[
+  {
+    "directory": ".",
+    "command": "gcc",
+    "file": "test.S"
+  }
+]

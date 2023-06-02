@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://github.com/program-analysis-team/HTMLReporter
 	branch = master
-	commit = 3dd0878f284126ab9ba19f6e83233a30c2bc0379
-	parent = 76ca04913ae5c48b67fdb4d9816166ff83a7cbeb
+	commit = 0478151629cb197eb74470341648767bd3c5a447
+	parent = fa69d63f1eecee5dec3b8b9f87bebe406a66722e
 	method = merge
 	cmdver = 0.4.6

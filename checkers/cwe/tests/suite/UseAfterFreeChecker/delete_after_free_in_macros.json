@@ -1,0 +1,23 @@
+{
+  "description": "Double free",
+  "file_path": "double_free_in_macros.cpp",
+  "kind": "MEM.DOUBLE.FREE",
+  "line": 13,
+  "pos": 40,
+  "trace": [
+    {
+      "file": "double_free_in_macros.cpp",
+      "line": 13,
+      "col": 40,
+      "desc": "Free"
+    },
+    {
+      "file": "double_free_in_macros.cpp",
+      "line": 13,
+      "col": 40,
+      "desc": "Double free"
+    }
+  ],
+  "positive": true,
+  "sink_function": "free"
+}

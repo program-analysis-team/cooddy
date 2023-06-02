@@ -1,7 +1,7 @@
 /// Copyright (C) 2020-2023 Huawei Technologies Co., Ltd.
 ///
 /// This file is part of Cooddy, distributed under the GNU GPL version 3 with a Linking Exception.
-/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.txt.
+/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.md
 #ifndef COODDY_ANALYZER_INCLUDE_COMPILEROPTIONSLIST_H_
 #define COODDY_ANALYZER_INCLUDE_COMPILEROPTIONSLIST_H_
 
@@ -15,7 +15,9 @@ namespace HCXX {
 
 class CompilerOptionsList {
 public:
-    bool ParseScopeFile(std::filesystem::path scopePath);
+    using Replacements = std::vector<std::pair<std::string, std::string>>;
+
+    bool ParseScopeFile(std::filesystem::path scopePath, const Replacements& replacements);
 
     void AddOptions(const CompilerOptions& options)
     {

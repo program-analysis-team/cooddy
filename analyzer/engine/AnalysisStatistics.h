@@ -1,7 +1,7 @@
 /// Copyright (C) 2020-2023 Huawei Technologies Co., Ltd.
 ///
 /// This file is part of Cooddy, distributed under the GNU GPL version 3 with a Linking Exception.
-/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.txt.
+/// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.md
 #ifndef COODDY_ANALYZER_SOURCE_ENGINE_ANALYSISSTATISTICS_H_
 #define COODDY_ANALYZER_SOURCE_ENGINE_ANALYSISSTATISTICS_H_
 
@@ -43,7 +43,7 @@ public:
     }
 
     void LogStatistics(uint64_t runTime, uint64_t undefFuncCounter, HCXX::Parser::ParserStatistics& parserStatistics,
-                       AnalyzerImpl::UnitsStat& unitsStat, std::string_view manUrl, uint32_t topCount = 10)
+                       std::string_view manUrl, uint32_t topCount = 10)
     {
         Log(LogLevel::INFO) << "Total analysis time: " << std::fixed << std::setprecision(2) << std::setw(6)
                             << Timer::Seconds(runTime) << std::endl;
@@ -62,13 +62,11 @@ public:
         std::stringstream stat;
         stat << std::endl
              << std::setw(120) << std::setfill('*') << '*' << std::endl
-             << std::setfill(' ') << "Analysis statistic:"
-             << "\n\t\t* " << std::setw(30) << std::left << "Total files number"
-             << ": " << std::fixed << std::setw(6) << std::right << unitsStat.totalCount << "\n\t\t* " << std::setw(30)
-             << std::left << "Succeeded to compile"
-             << ": " << std::fixed << std::setw(6) << std::right << unitsStat.compileSucceededCount << std::endl;
-        PrintStatIfNotNull(stat, unitsStat.parseFailedCount, "Failed to parse");
-        PrintStatIfNotNull(stat, parserStatistics.fatalErrorCount, "Fatal errors");
+             << std::setfill(' ') << "Analysis statistic:\n";
+        PrintStatIfNotNull(stat, parserStatistics.totalParsedCount, "Total files number");
+        PrintStatIfNotNull(stat, parserStatistics.succeedCount, "Succeeded to compile");
+        PrintStatIfNotNull(stat, parserStatistics.failedCount, "Failed to parse");
+        PrintStatIfNotNull(stat, parserStatistics.partiallyParsedCount, "Partially parsed");
         PrintStatIfNotNull(stat, undefFuncCounter, "Undefined func num");
         PrintStatIfNotNull(stat, parserStatistics.failedCFGCount, "CFG failure Count");
         PrintStatIfNotNull(stat, GetTotalStat().timeoutsCount, "Total z3 timeouts num");

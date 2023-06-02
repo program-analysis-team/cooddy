@@ -6,7 +6,7 @@
       "file": "simple_exposure3.cpp",
       "line": 6,
       "col": 5,
-      "desc": "Sensitive data source"
+      "desc": "Sensitive data source, annotated by macro"
     },
     {
       "file": "simple_exposure3.cpp",
