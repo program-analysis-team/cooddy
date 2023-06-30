@@ -1,0 +1,7 @@
+{
+  "description": "Possible integer truncation from 32 bits to 16 bits type size.",
+  "kind": "INT.TRUNC",
+  "positive": true,
+  "line": 15,
+  "pos": 25
+}

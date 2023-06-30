@@ -300,8 +300,14 @@
   "IncompatiblePointerTypeChecker": {
     "EN": "Incompatible cast of pointer %1% may cause out-of-bounds memory access"
   },
+  "CAST.TO.SMALLER.PTR": {
+    "EN": "Cast of pointer %1% to a smaller type may cause an issues"
+  },
   "IntegerOverflowChecker": {
     "EN": "Possible integer overflow or wraparound."
+  },
+  "INT.TRUNC": {
+    "EN": "Possible integer truncation from %1% bits to %2% bits type size."
   },
   "LoopLimitTaintChecker": {
     "EN": "Unrestricted unstructed data can go to loop limit condition."
@@ -456,5 +462,14 @@
   },
   "SENSITIVE_ANNOTATED_BY_MACRO": {
     "EN": "Sensitive data source, annotated by macro"
+  },
+  "NullAfterFreeChecker": {
+    "EN": "Assign null to the variable after free"
+  },
+  "VARIABLE_ANNOTATED_BY_MACRO": {
+    "EN": "Variable %1% is annotated by macro as sensitive data source"
+  },
+  "ANNOTATED_BY_MACRO_REASON": {
+    "EN": "Annotated by macro as sensitive data source"
   }
 }

@@ -13,6 +13,8 @@ void OutReporter::Init(Parser& parser, const std::string& resultPath, uint32_t i
 {
     if (!resultPath.empty() && resultPath != std::filesystem::current_path().string()) {
         Reporter::Init(parser, resultPath, initFlags);
+    } else {
+        myParser = &parser;
     }
 }
 

@@ -42,6 +42,7 @@
 #include <ast/EnumConstantDecl.h>
 #include <ast/EnumDecl.h>
 #include <ast/FieldDecl.h>
+#include <ast/FloatLiteralExpression.h>
 #include <ast/FunctionDecl.h>
 #include <ast/GotoStatement.h>
 #include <ast/IfStatement.h>
@@ -723,35 +724,18 @@ DECLARE_DECL_CONVERTER(ParmVar, ParamVarDecl)
                      ConvertTypeName(clangNode->getType()), arraySizeExpr);
 }
 
-template <class TClangType>
-LiteralExpression ConvertLiteralExpression(ASTVisitor& visitor, const TClangType& clangNode,
-                                           LiteralExpression::LiteralType literalType)
-{
-    auto& langOptions = visitor.GetContext().getLangOpts();
-    auto& sourceManager = visitor.GetContext().getSourceManager();
-    auto tokenStartLocation = sourceManager.getSpellingLoc(clangNode.getLocation());
-    auto tokenEndLocation = clang::Lexer::getLocForEndOfToken(tokenStartLocation, 0, sourceManager, langOptions);
-    auto spellingRange = SourceRange{tokenStartLocation.getRawEncoding(), tokenEndLocation.getRawEncoding()};
-    auto charRange = clang::CharSourceRange::getCharRange({tokenStartLocation, tokenEndLocation});
-    auto sourceText = clang::Lexer::getSourceText(charRange, sourceManager, langOptions);
-
-    return LiteralExpression(spellingRange, literalType, sourceText.str(), visitor.ConvertType(clangNode.getType()));
-}
-
 DECLARE_STMT_CONVERTER(IntegerLiteral, IntLiteralExpression)
 {
     llvm::APInt apInt = clangNode->getValue();
     uint64_t value = apInt.getLimitedValue();
 
-    new (node) IntLiteralExpression(
-        ConvertLiteralExpression(*visitor, *clangNode, LiteralExpression::LiteralType::INTEGER), value);
+    new (node) IntLiteralExpression(visitor->ConvertType(clangNode->getType()), value);
 }
 
 DECLARE_STMT_CONVERTER(CharacterLiteral, CharLiteralExpression)
 {
-    new (node) CharLiteralExpression(
-        ConvertLiteralExpression(*visitor, *clangNode, LiteralExpression::LiteralType::CHAR), clangNode->getValue(),
-        static_cast<CharLiteralExpression::CharKind>(clangNode->getKind()));
+    new (node) CharLiteralExpression(visitor->ConvertType(clangNode->getType()), clangNode->getValue(),
+                                     static_cast<CharLiteralExpression::CharKind>(clangNode->getKind()));
 }
 
 DECLARE_STMT_CONVERTER(StringLiteral, StringLiteralExpression)
@@ -764,24 +748,20 @@ DECLARE_STMT_CONVERTER(StringLiteral, StringLiteralExpression)
                                            : std::move("?"));
 }
 
-DECLARE_STMT_CONVERTER(FloatingLiteral, LiteralExpression)
+DECLARE_STMT_CONVERTER(FloatingLiteral, FloatLiteralExpression)
 {
-    LiteralExpression::LiteralType literalType = &(clangNode->getSemantics()) == &llvm::APFloat::IEEEdouble()
-                                                     ? LiteralExpression::LiteralType::DOUBLE
-                                                     : LiteralExpression::LiteralType::FLOAT;
-    new (node) LiteralExpression(ConvertLiteralExpression(*visitor, *clangNode, literalType));
+    new (node)
+        FloatLiteralExpression(visitor->ConvertType(clangNode->getType()), clangNode->getValueAsApproximateDouble());
 }
 
 DECLARE_STMT_CONVERTER(CXXNullPtrLiteralExpr, LiteralExpression)
 {
-    new (node)
-        LiteralExpression(ConvertLiteralExpression(*visitor, *clangNode, LiteralExpression::LiteralType::NULLPTR));
+    new (node) LiteralExpression(visitor->ConvertType(clangNode->getType()));
 }
 
 DECLARE_STMT_CONVERTER(CXXBoolLiteralExpr, BoolLiteralExpression)
 {
-    new (node) BoolLiteralExpression(
-        ConvertLiteralExpression(*visitor, *clangNode, LiteralExpression::LiteralType::BOOL), clangNode->getValue());
+    new (node) BoolLiteralExpression(visitor->ConvertType(clangNode->getType()), clangNode->getValue());
 }
 
 CallExpression ConvertCallExpression(ASTVisitor& visitor, const clang::CallExpr& call)
@@ -1457,9 +1437,9 @@ DECLARE_STMT_CONVERTER(CXXBindTemporaryExpr, TemporaryExpression)
     new (node) TemporaryExpression(visitor->GetNode(clangNode->getSubExpr()));
 }
 
-DECLARE_STMT_CONVERTER(CXXFunctionalCastExpr, TemporaryExpression)
+DECLARE_STMT_CONVERTER(CXXFunctionalCastExpr, CastExpression)
 {
-    new (node) TemporaryExpression(visitor->GetNode(clangNode->getSubExpr()));
+    ConvertCastExpr(*visitor, *clangNode, CastExpression::TypeKind::FUNCTIONAL_CAST, node);
 }
 
 DECLARE_STMT_CONVERTER(ConstantExpr, TemporaryExpression)

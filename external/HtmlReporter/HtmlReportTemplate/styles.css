@@ -101,12 +101,34 @@ background-color:#fdf6e3;
 }
 .compilationIssuesContainer {
 background-color:white;
-display:flex;
+flex:1;
 flex-direction:column;
+flex-basis:inherit;
+overflow:scroll;
+}
+#compilationIssues {
+flex:1;
+flex-direction:row;
+}
+#compilationIssuesCategories {
+margin:0;
 }
 #compilationIssuesData {
+margin:0;
+}
+#compilationIssuesSidebar {
+height:100%;
+position:relative;
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+#compilationIssuesSnippet {
 margin:0 !important;
-overflow:scroll !important;
+padding:0 0 0 50px !important;
+width:100%;
+overflow:hidden;
+position:absolute;
 }
 .graphContainer {
 max-height:100vh;

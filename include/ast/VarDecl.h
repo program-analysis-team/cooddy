@@ -137,6 +137,12 @@ public:
         return Base::GetAttribute(attrName);
     }
 
+    void Clear() override
+    {
+        myDeclQualifier = nullptr;
+        myDeclName = nullptr;
+    }
+
     void TraverseChildren(TraverseCallback callback) const override
     {
         CALL_CALLBACK(myArraySizeExpr, callback);

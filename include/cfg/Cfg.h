@@ -70,8 +70,6 @@ private:
 
     void AddCatchEdges();
 
-    void AddNodeMemorySize(const Node& node);
-
     using GlobalsMap = std::map<uint32_t, const Node*>;
     std::vector<HCXX::CfgElement> ProcessElementsOfBlock(CfgBlock& block, uint32_t blockPos, bool isEntryBlock,
                                                          GlobalsMap& globals);

@@ -31,12 +31,12 @@ bool TraceContext::Report(DataFlowAnalyzer& analyzer)
     BuildTrace(myCallGraph[UNDEF_EXEC_ID], -1);
 
     if (!myTrace.empty()) {
-        ReportProblem(analyzer, mySinkPath);
+        ReportProblem(analyzer);
     }
     return true;
 }
 
-void TraceContext::ReportProblem(DataFlowAnalyzer& analyzer, CheckPathContext::PathPtr& sinkPath)
+void TraceContext::ReportProblem(DataFlowAnalyzer& analyzer)
 {
     auto& checkerName = mySuspPath->checker->GetName();
 
@@ -69,12 +69,15 @@ void TraceContext::ReportProblem(DataFlowAnalyzer& analyzer, CheckPathContext::P
 
     problem.functionName = funcCtx->GetFQN();
 
-    if (sinkPath != nullptr && sinkPath->sinkFunction != nullptr) {
-        problem.sinkFunction = sinkPath->sinkFunction->GetFQN();
+    if (mySinkPath != nullptr && mySinkPath->function != nullptr) {
+        problem.sinkFunction = mySinkPath->function->GetFQN();
+    }
+    if (myLastCallWithSource == nullptr && mySourcePath != nullptr) {
+        myLastCallWithSource = mySourcePath->function;
     }
     FillSourceInfoAndSeverity(problem);
 
-    FillDescriptions(problem, sinkPath != nullptr ? sinkPath->annotation.GetKind() : 0);
+    FillDescriptions(problem, mySinkPath != nullptr ? mySinkPath->annotation.GetKind() : 0);
 
     myContext.myHolder.RegisterProblem(*mySuspPath->checker, *problem.trace.back().tu, problem.trace.back().range,
                                        std::move(problem));
@@ -122,9 +125,6 @@ void TraceContext::AddPath(CheckPathContext::PathPtr& path)
     AddEvent(path->execId, std::move(event), [&](CallNode& node) {
         if (path->parent != nullptr) {
             path->parent->execId = node.execId;  // adjust parent execId for the case with do/while loop
-            if (myTrace.empty()) {
-                myLastCallWithSource = node.funcCtx;
-            }
         }
     });
     AddPath(path->parent);
@@ -416,9 +416,6 @@ void TraceContext::AddReturns()
             TraceNode event(nullptr, {}, desc, {},
                             it.weakAssumption ? TraceNode::Kind::WEAKASSUMPTION : TraceNode::Kind::ASSUMPTION, {});
             AddEvent(node.execId, std::move(event), callback);
-            if (!it.weakAssumption) {
-                myLastCallWithSource = node.funcCtx;
-            }
         };
         AddEvent(it.execId,
                  {nullptr,
@@ -436,13 +433,16 @@ void TraceContext::BuildTrace(CallNode& callNode, int parentId)
     for (auto& [execId, event] : callNode.events) {
         event.id = myLastEventId++;
         auto callee = execId != UNDEF_EXEC_ID ? &myCallGraph[execId] : nullptr;
-        bool reverse =
-            event.annotation.GetKind() == mySuspPath->sourceKind && event.kind != TraceNode::Kind::ASSUMPTION;
+        bool source = event.annotation.GetKind() == mySuspPath->sourceKind;
+        bool reverse = source && event.kind != TraceNode::Kind::ASSUMPTION;
         bool addEvent = execId <= mySinkExecId && !(myTrace.empty() && event.kind != TraceNode::Kind::DEFAULT);
         if (callee != nullptr && reverse) {
             BuildTrace(*callee, addEvent ? event.id : parentId);
         }
         if (addEvent) {
+            if (source && myLastCallWithSource == nullptr && parentId != -1) {
+                myLastCallWithSource = callNode.funcCtx;
+            }
             event.parentId = parentId;
             myTrace.emplace_back(event);
         }

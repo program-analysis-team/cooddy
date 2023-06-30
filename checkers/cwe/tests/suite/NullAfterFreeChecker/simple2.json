@@ -1,0 +1,5 @@
+{
+  "description": "Assign null to the variable after free",
+  "kind": "USE.AFTER.FREE.SET.NULL",
+  "positive": false
+}

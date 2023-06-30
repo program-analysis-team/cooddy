@@ -5,7 +5,6 @@
 #ifndef COODDY_TRANSLATIONUNIT_H
 #define COODDY_TRANSLATIONUNIT_H
 
-#include <CodeDescriptionManager.h>
 #include <CompilerOptions.h>
 #include <ast/AstManager.h>
 #include <cfg/CfgManager.h>
@@ -65,22 +64,22 @@ struct Context {
 
 enum UnitLanguage { C, CPP, JAVA, MAX_LANG };
 
-class TranslationUnit : public Node,
+class TranslationUnit : public CompoundNode,
                         public MacroManager,
                         public CommentManager,
                         public AstManager,
                         public CfgManager,
-                        public SourceCodePrinterManager,
-                        public CodeDescriptionManager {
+                        public SourceCodePrinterManager {
 public:
     using FileEntriesMap = std::map<Location, FileEntry&>;
+    static std::atomic<uint64_t> memUsage;
 
     explicit TranslationUnit(const CompilerOptions& compilerOptions);
     TranslationUnit(const TranslationUnit&) = delete;
 
     ~TranslationUnit();
 
-    DECLARE_KIND(Node, Node::Kind::TRANSLATION_UNIT);
+    DECLARE_KIND(CompoundNode, Node::Kind::TRANSLATION_UNIT);
 
     virtual LocationInfo GetLocationInfo(const SourceRange& range) const;
 
@@ -205,7 +204,25 @@ public:
         return myCrossContext;
     }
 
+    EntryOffset GetEntryOffsetByLoc(Location loc) const;
+
+    Location GetLocByEntryOffset(EntryOffset offset) const;
+
+    SourceRange GetRecordDeclRangeByMember(SourceRange sourceRange) const;
+
+    struct CodeDescription {
+        SourceRange codeRange;         // source range where macro/vardecl is expanded
+        SourceRange descriptionRange;  // source range where macro/vardecl is declared
+        enum Type { RECORD, MACRO } type;
+    };
+    std::vector<CodeDescription> GetCodeDescriptions(SourceRange sourceRange) const;
+
 private:
+    void InitDeclarations();
+    Location AddMacroDeclaration(const std::vector<SourceRange>& macroDecls) override;
+    void CollectDescriptions(SourceRange sourceRange, std::vector<CodeDescription>& result, const LocToDeclArray& locs,
+                             CodeDescription::Type type) const;
+
     CompilerOptions myCompilerOptions;
     std::string myMainFileName;
     FileEntriesMap myFileEntries;
@@ -216,6 +233,7 @@ private:
     UnitLanguage myLanguage;
     DeclResolver* myResolver = nullptr;
     CrossTUContext* myCrossContext = nullptr;
+    LocToDeclArray myLocToRecord;
 };
 
 using TranslationUnitPtr = std::shared_ptr<TranslationUnit>;

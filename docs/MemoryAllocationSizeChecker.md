@@ -19,14 +19,14 @@ Not controlling memory allocation can result in a request for too much system me
 int EXTER_ATTACK foo1(size_t size)
 {
     void* ptr = nullptr;
-    ptr = malloc(size);  		// error here - size is untrusted and isn't checked before allocation 
+    ptr = malloc(size);  		// error here - size is untrusted and isn't checked before allocation
     free(ptr);
 }
 size_t bar();
 void foo2()
 {
     auto size = bar();
-    void* ptr = malloc(size);  // error here - size is untrusted and isn't checked before allocation 
+    void* ptr = malloc(size);  // error here - size is untrusted and isn't checked before allocation
     free(ptr);
 }
 int EXTER_ATTACK foo3(size_t size)

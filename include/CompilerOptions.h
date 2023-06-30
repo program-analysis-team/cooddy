@@ -76,6 +76,15 @@ struct CompilerOptions {
         }
         return result;
     }
+
+    uint64_t GetMemUsage() const
+    {
+        uint64_t result = sizeof(CompilerOptions) + options.capacity() * sizeof(std::string);
+        for (auto& it : options) {
+            result += it.capacity();
+        }
+        return result;
+    }
 };
 
 }  // namespace HCXX

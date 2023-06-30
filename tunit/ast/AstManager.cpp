@@ -12,6 +12,9 @@ using namespace std;
 
 namespace HCXX {
 
+std::atomic<uint64_t> AstManager::nodesCount = 0;
+std::atomic<uint64_t> AstManager::nodesSize = 0;
+
 using NodeCreatorsMap = std::unordered_map<Node::Kind, std::function<Node*()>>;
 
 NodeCreatorsMap& GetNodesCreatorsMap()
@@ -28,6 +31,7 @@ void RegisterNodeCreator(Node::Kind kind, std::function<Node*()> creator)
 AstManager::AstManager(Node* root) : myRoot(root)
 {
     myNodes.emplace_back(myRoot);
+    myParents.emplace_back(nullptr);
 }
 
 AstManager::~AstManager()
@@ -39,6 +43,8 @@ Node* AstManager::AllocateNode(uint32_t nodeSize)
 {
     Node* node = static_cast<Node*>(operator new(nodeSize));
     node->myRefCount = 1;
+    ++nodesCount;
+    nodesSize += nodeSize;
     return node;
 }
 
@@ -46,12 +52,14 @@ void AstManager::AddNode(Node& node, Node& parent, bool system, SourceRange rang
 {
     node.myTU = static_cast<TranslationUnit*>(myRoot);
     node.mySourceRange = range;
+    node.myIsSystem = system;
     if (!system) {
-        node.myParent = &parent;
-        node.myNext = parent.myChildren;
-        node.myIndexPos = myNodes.size() + 1;
-        parent.myChildren = &node;
+        node.myIndexPos = myNodes.size();
         myNodes.emplace_back(&node);
+        myParents.emplace_back(&parent);
+        if (auto compound = Node::Cast<CompoundNode>(&parent); compound != nullptr) {
+            compound->AddChild(&node);
+        }
     } else {
         mySystemNodes.emplace_back(&node);
     }
@@ -70,7 +78,7 @@ void AstManager::DumpTrUnitInfo() const
 const Node* AstManager::FindPrevOrParentNode(const Node& node) const
 {
     assert(myIndiciesInited);
-    Node* actualParent = node.myParent;
+    auto actualParent = node.GetParent();
 
     // LCOV_EXCL_START
     if (actualParent == nullptr) {
@@ -86,7 +94,7 @@ const Node* AstManager::FindPrevOrParentNode(const Node& node) const
     Node* minParent = nullptr;
     Location minParentEnd = std::numeric_limits<Location>::max();
 
-    for (int i = node.myIndexPos - 1; i > actualParent->myIndexPos; i--) {
+    for (int i = node.myIndexPos; i > actualParent->myIndexPos + 1; i--) {
         Node* candidate = myNodes[i - 1];
         const HCXX::SourceRange candidateRange = candidate->GetRange();
 
@@ -132,9 +140,12 @@ void AstManager::SortNodes()
     std::stable_sort(myNodes.begin(), myNodes.end(),
                      [](const Node* nodeA, const Node* nodeB) { return nodeA->GetRange() < nodeB->GetRange(); });
 
-    for (size_t i = 0; i < myNodes.size(); ++i) {
-        myNodes[i]->myIndexPos = i + 1;
+    std::vector<Node*> parents(myParents.size());
+    for (auto i = 0; i < myNodes.size(); ++i) {
+        parents[i] = myParents[myNodes[i]->myIndexPos];
+        myNodes[i]->myIndexPos = i;
     }
+    std::swap(parents, myParents);
     myIndiciesInited = true;
 }
 
@@ -172,10 +183,14 @@ void AstManager::Clear()
         node->Clear();
         node->Release();
     }
-    myRoot->Clear();
-    myRoot->Release();
+    for (auto& node : myNodes) {
+        node->Clear();
+        node->myIndexPos = 0;
+        node->Release();
+    }
     myNodes = std::vector<Node*>();
     mySystemNodes = std::vector<Node*>();
+    myParents = std::vector<Node*>();
 }
 
 void AstManager::Init()
@@ -204,6 +219,7 @@ void AstManager::DeserializeNode(IOStream& stream, Node*& node, uint32_t& curId,
     }
     node->myTU = static_cast<TranslationUnit*>(myRoot);
     node->myIndexPos = system ? 0 : curId - 1;
+    node->myIsSystem = system;
     node->myRefCount = 1;
     stream.AddIdMapping(curId, node);
 }
@@ -230,6 +246,7 @@ void AstManager::Serialize(IOStream& stream)
         }
     } else {
         myNodes.resize(stream.Get<uint32_t>());
+        myParents.resize(myNodes.size());
         for (auto& it : myNodes) {
             DeserializeNode(stream, it, ++curId, false);
         }

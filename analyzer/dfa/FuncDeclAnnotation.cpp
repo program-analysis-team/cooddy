@@ -30,13 +30,13 @@ private:
     {
         auto offset = state.GetMemoryOffset();
         if (state.GetParentAs<ReturnStatement>() != nullptr) {
-            Annotation a{myAliasKind, Annotation::ArgInfo(0), 0, offset, offset.GetRawValue()};
+            Annotation a{myAliasKind, Annotation::ArgInfo(0), 0, VirtualOffset(), offset.GetRawValue()};
             state.Annotate(a, *state.GetNode());
             return;
         }
         auto typedNode = state.GetNodeAs<TypedNode>();
         if (typedNode != nullptr && typedNode->GetDeclaration() != nullptr) {
-            Annotation a{myAliasKind, Annotation::ArgInfo(), 0, offset, offset.GetRawValue()};
+            Annotation a{myAliasKind, Annotation::ArgInfo(), 0, VirtualOffset(), offset.GetRawValue()};
             state.Annotate(a, *typedNode->GetDeclaration());
         }
     }
@@ -53,13 +53,13 @@ private:
         for (auto& alias : state.GetAnnotationSources(myAliasKind)) {
             for (int i = 0; i < Annotation::GetAnnotationsCount(); ++i) {
                 Annotation::Kind annotation = static_cast<Annotation::Kind>(i);
-                if (!state.HasAnnotation(annotation)) {
+                if (!state.HasAnnotation(annotation) || !Annotation::IsPropagatedByRetValue(annotation)) {
                     continue;
                 }
                 if (!Annotation::IsPropagatedByStaticVar(annotation) && IsStaticVarReference(*alias.second)) {
                     continue;
                 }
-                if (!Annotation::IsPropagatedByDecl(annotation) && alias.first.GetArgPos() == 0) {
+                if (alias.first.GetArgPos() == 0) {
                     // store annotations for return value in the function state)
                     auto function = state.GetFuncState().GetContext().GetFunction();
                     auto& functionState = state.GetFuncState().GetState(function);
@@ -68,12 +68,12 @@ private:
                     }
                 }
 
-                if (!Annotation::IsPropagatedByPointer(annotation) &&
+                if ((!Annotation::IsPropagatedByPointer(annotation) || Annotation::IsPropagatedByDecl(annotation)) &&
                     alias.second->IsKindOf(HCXX::Node::Kind::PARAM_VAR_DECL)) {
                     // store annotations propagated by pointer in the alias declaration states
                     auto& aliasState = state.GetFuncState().GetState(alias.second);
                     for (auto& it : state.GetAnnotationSources(annotation)) {
-                        aliasState.Annotate(Annotation(it.first, alias.first.GetMemoryOffset()), *it.second);
+                        aliasState.Annotate(Annotation(it.first, VirtualOffset(alias.first.GetUserData())), *it.second);
                     }
                 }
             }

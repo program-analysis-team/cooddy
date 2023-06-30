@@ -15,9 +15,11 @@ class MemberExprInstruction : public InstructionProcessor {
     static constexpr uint32_t FLEX_ARRAY_MAX_SIZE = 28;
 
     struct MemberInfo {
-        uint32_t fieldIndex : 30;
+        uint32_t fieldIndex : 28;
         uint32_t isFlexArray : 1;
         uint32_t addSizeToContext : 1;
+        uint32_t storeFieldName : 1;
+        uint32_t isArrow : 1;
     };
 
     static bool IsLastFieldInRecordOrUnion(const FieldDecl& field)
@@ -35,10 +37,8 @@ class MemberExprInstruction : public InstructionProcessor {
     void Compile(const Node& node, CompileContext& context) override
     {
         auto member = Node::Cast<MemberExpression>(&node);
-        context.Compile(member->GetBase());
-
         auto fieldNode = Node::Cast<FieldDecl>(member->GetValue());
-        MemberInfo info{fieldNode != nullptr ? fieldNode->GetIndex() + 1 : 0U, 0, 0};
+        MemberInfo info{fieldNode != nullptr ? fieldNode->GetIndex() + 1 : 0U, 0, 0, 0};
         uint32_t fieldSize = fieldNode != nullptr ? fieldNode->GetSizeOfType() : 0;
 
         if (fieldSize != 0) {
@@ -50,7 +50,15 @@ class MemberExprInstruction : public InstructionProcessor {
                                     fieldNode->GetSizeOfType() < FLEX_ARRAY_MAX_SIZE);
             }
         }
+        if (member->InMacro() && fieldNode != nullptr && fieldNode->GetDeclName() != nullptr) {
+            info.storeFieldName = 1;
+            info.isArrow = member->IsArrow();
+        }
         context.Add<MemberInfo>(info);
+        if (info.storeFieldName) {
+            context.Add<SourceRange>(fieldNode->GetDeclName()->GetRange());
+        }
+        context.Compile(member->GetBase());
         if (info.addSizeToContext) {
             context.Add<uint32_t>(!info.isFlexArray ? fieldSize : fieldNode->GetOffset());
         }
@@ -58,8 +66,11 @@ class MemberExprInstruction : public InstructionProcessor {
 
     z3::expr Execute(ExecutionContext& context, SymbolId& symbolId) override
     {
-        auto expr = context.Execute(&symbolId);
         auto info = context.Get<MemberInfo>();
+        if (info.storeFieldName) {
+            (void)context.Get<SourceRange>();
+        }
+        auto expr = context.Execute(&symbolId);
 
         if (info.fieldIndex == 0) {
             return context->CreateSymbolExpr(symbolId);
@@ -85,6 +96,20 @@ class MemberExprInstruction : public InstructionProcessor {
             }
         }
         return result;
+    }
+
+public:
+    std::string GetName(GetNameContext& nameContext) const override
+    {
+        auto instruction = nameContext.GetCurInstruction();
+        auto base = nameContext.GetName();
+        auto& set = nameContext.GetInstructionsSet();
+        std::string fieldName = "<field>";
+        auto memberInfo = set.Get<MemberInfo>(&instruction);
+        if (memberInfo.storeFieldName) {
+            fieldName = nameContext.GetSourceByRange(set.Get<SourceRange>(&instruction));
+        }
+        return base + (memberInfo.isArrow ? "->" : ".") + fieldName;
     }
 };
 

@@ -17,7 +17,6 @@ var hideBranches = getGlobalOption('hideBranches', "true") == "true";
 if(!hideBranches) classAdd("hideBranches", "menuItemActive");
 var traceExpanded = getGlobalOption('traceExpanded', "true") == "true";
 
-
 for(let p of cooddyResults.problems) {
     if(!p.source) p.source = "";
     if(!p.file) p.file = "nofilename";
@@ -45,9 +44,20 @@ qsa(".menuItem", s =>
         if (e.currentTarget.id !== "codeSnippetTab" && e.currentTarget.id !== "sarifTab") {
             classAdd("sidebar", "invisible");
             classAdd("resizer", "invisible");
+            if (e.currentTarget.id === "cooddyCompilationIssuesTab") {
+                classAdd("rightContainer","invisible");
+                classAdd("cooddyCompilationIssuesContainer","invisible");
+                ge("compilationIssuesSnippet").textContent='';
+                compilationIssuesCategories.setGroupStartOpen(false);
+                compilationIssuesCategories.setGroupBy();
+                compilationIssuesCategories.setGroupBy("reason");
+            } else {
+                classRemove("rightContainer", "invisible");
+            }
         } else if (cooddyResults.problems.length > 1) {
             classRemove("sidebar", "invisible");
             classRemove("resizer", "invisible");
+            classRemove("rightContainer", "invisible");
         }
         loadReport(lastLoadedProblem);
     })
@@ -111,10 +121,25 @@ ge("conclusionCB").onchange = function() {
 }
 
 if (cooddyResults.compilation_issues.length !== 0 && typeof Tabulator !== 'undefined') {
+    cooddyResults.compilation_issues.forEach(category => {
+        let id = 1;
+        category.errors.forEach(error => {
+            error.id = id;
+            id++;
+        });
+    });
     classRemove('cooddyCompilationIssuesTab', 'invisible');
-    compilationIssuesTabulatorInit();
+    compilationIssuesCategoriesInit();
 }
-
+function loadCompileIssue(issue) {
+    let compilationIssuesSnippet = ge("compilationIssuesSnippet");
+    compilationIssuesSnippet.textContent = '';
+    if(!issue||issue.file.length===0) appendCode("<span style='opacity:0.3'>No code<span/>","compilationIssuesSnippet"); else{
+        let issueCodeSnippet=cooddyResults.code_snippets[issue.codeSnippet];
+        appendCode("<span style='opacity:0.3'>"+issueCodeSnippet.file+"<span/><br>","compilationIssuesSnippet");
+        appendCode(issueCodeSnippet.code,"compilationIssuesSnippet");
+    }
+}
 if(cooddyResults.git_commit || cooddyResults.configurations) {
     classRemove("cooddySettingsTab", "invisible");
     let desc = ce('div');
@@ -445,22 +470,34 @@ function createBody() {
         <div class="menu mainMenu">
             <div class="menuItem" data-internalid="codeSnippet resizer2 rightSidebar" id="codeSnippetTab">&#9656 Report</div>
             <div class="menuItem" data-internalid="sarif" id="sarifTab">Sarif</div>
-            <div class="menuItem invisible" data-internalid="cooddyCompilationIssues" id="cooddyCompilationIssuesTab">Compilation Issues</div>
+            <div class="menuItem invisible" data-internalid="compilationIssues" id="cooddyCompilationIssuesTab">Compilation Issues</div>
             <div class="menuItem invisible" data-internalid="cooddySettings" id="cooddySettingsTab">Settings</div>
             <div class="menuItem" data-internalid="about" id="aboutTab">?</div>
             <div class="connectionProblem invisible">Cannot connect to RHS</div>
             <div id="debugInfo"></div>
         </div>
         <div class="table stop-scrolling">
-            <div class="leftContainer" id="sidebar"><div id="dataGrid"></div></div>
-            <div class="resizer" id="resizer"></div>
-            <div class="rightContainerParent">
-                <div class="rightContainer" id="rightContainer">
-                    <div class="tab tabStyled" id="cooddyCompilationIssues" >
-                        <div class="compilationIssuesContainer" id="cooddyCompilationIssuesContainer">
+            <div class="tab" id="compilationIssues">
+                <div id="compilationIssuesSidebar">
+                    <div id="compilationIssuesCategories"></div>
+                </div>
+                <div class="rightContainer" id="compilationIssuesRightContainer">
+                    <div class="reportHeader">
+                        <div class="compilationIssuesContainer invisible" id="cooddyCompilationIssuesContainer">
                             <div id="compilationIssuesData"></div>
                         </div>
                     </div>
+                    <div class="table codeSnippet">
+                        <pre class="language-clike" id="compilationIssuesSnippet"></pre>
+                    </div>
+                </div>
+            </div>
+            <div class="leftContainer" id="sidebar">
+                <div id="dataGrid"></div>
+            </div>
+            <div class="resizer" id="resizer"></div>
+            <div class="rightContainerParent" id="rightContainer">
+                <div class="rightContainer">
                     <div class="tab tabStyled" id="codeSnippet" >
                         <div class="reportHeader">
                             <div class="headerPane" id="headerPane">

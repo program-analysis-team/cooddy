@@ -9,9 +9,9 @@
 
 namespace HCXX {
 
-class CatchExpression : public HCXX::Node {
+class CatchExpression : public HCXX::CompoundNode {
 public:
-    DECLARE_KIND(Node, Node::Kind::CATCH_EXPRESSION);
+    DECLARE_KIND(CompoundNode, Node::Kind::CATCH_EXPRESSION);
     DECLARE_SERIALIZE(CatchExpression, nullptr);
 };
 

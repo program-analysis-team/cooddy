@@ -170,7 +170,7 @@ public:
             }
             if (!moveOnlyDeclAnnotations && rheState != nullptr) {
                 state.MoveAnnotation(annotation, *rheState, true);
-            } else {
+            } else if (!Annotation::IsPropagatedByRetValue(annotation)) {
                 state.MoveDeclAnnotation(annotation, rheState, true, false);
             }
         }

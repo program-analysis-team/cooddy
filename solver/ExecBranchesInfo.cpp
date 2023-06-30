@@ -9,7 +9,7 @@ void ExecBranchesInfo::EnterFunction(uint32_t entryBlock, uint16_t callId)
     if (myEntryPoint.IsUninitialized()) {
         myEntryPoint = {entryBlock, callId};
     }
-    myBlocks.emplace_back(std::vector<ExecutedBlock>(entryBlock + 1));
+    myBlocks.emplace_back(entryBlock + 1);
 }
 
 void ExecBranchesInfo::AddBranchBlock(z3::expr& joinCondition, const BasicBlock& src, z3::expr& terminator,

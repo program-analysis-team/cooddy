@@ -2,6 +2,7 @@
 ///
 /// This file is part of Cooddy, distributed under the GNU GPL version 3 with a Linking Exception.
 /// For full terms see https://github.com/program-analysis-team/cooddy/blob/master/LICENSE.md
+#include <CrossTUContext.h>
 #include <TranslationUnit.h>
 #include <utils/EnvironmentUtils.h>
 #include <utils/LocaleUtils.h>
@@ -14,12 +15,13 @@ using namespace std;
 
 namespace HCXX {
 
+std::atomic<uint64_t> TranslationUnit::memUsage = 0;
+
 TranslationUnit::TranslationUnit(const CompilerOptions& compilerOptions)
     : AstManager(this), myCompilerOptions(compilerOptions)
 {
     myTU = this;
     myRefCount = 1;
-    myIndexPos = INT_MAX;
     mySourceRange = {0, UINT_MAX};
     myMainFileName =
         !myCompilerOptions.options.empty() ? EnvironmentUtils::NormalizePath(myCompilerOptions[0]) : std::string();
@@ -35,8 +37,9 @@ TranslationUnit::~TranslationUnit()
 void TranslationUnit::InitIndices()
 {
     AstManager::Init();
-    CodeDescriptionManager::InitDescriptionRanges(*this);
+    MacroManager::Init();
     CfgManager::Init();
+    InitDeclarations();
     std::sort(myParseErrors.begin(), myParseErrors.end(), [](auto& e1, auto& e2) { return e1 < e2; });
 }
 
@@ -46,6 +49,7 @@ void TranslationUnit::ClearUnusedData()
     CommentManager::Clear();
     AstManager::Clear();
     CfgManager::Clear();
+    myChildren = std::vector<NodePtr<Node>>();
 }
 
 void TranslationUnit::AddFileEntry(Location fileLocation, FileEntry& entry)
@@ -224,6 +228,125 @@ bool TranslationUnit::IsIfdefInRange(const SourceRange& range) const
     std::string source = GetSourceInRange(range);
     source.erase(std::remove_if(source.begin(), source.end(), ::isspace), source.end());
     return source.find("#if") != std::string::npos;
+}
+
+EntryOffset TranslationUnit::GetEntryOffsetByLoc(Location loc) const
+{
+    auto it = myFileEntries.upper_bound(loc);
+    if (it-- != myFileEntries.begin()) {
+        return loc - it->first + it->second.entryOffset;
+    }
+    return 0;
+}
+
+Location TranslationUnit::GetLocByEntryOffset(EntryOffset offset) const
+{
+    for (auto& [loc, entry] : myFileEntries) {
+        if (offset >= entry.entryOffset && offset < entry.entryOffset + entry.fileSize) {
+            return loc + offset - entry.entryOffset;
+        }
+    }
+    return 0;  // LCOV_EXCL_LINE
+}
+
+Location TranslationUnit::AddMacroDeclaration(const std::vector<SourceRange>& macroDecls)
+{
+    if (myCrossContext == nullptr) {
+        return 0;
+    }
+    auto declLoc = macroDecls.front().begin;
+    auto declOffset = GetEntryOffsetByLoc(declLoc);
+    if (myCrossContext->FindDeclaration(declOffset) != nullptr) {
+        return declLoc;
+    }
+    CrossTUContext::Declaration decl{declOffset, macroDecls.front().end - declLoc, 1};
+    for (auto i = 1; i < macroDecls.size(); ++i) {
+        auto offset = GetEntryOffsetByLoc(macroDecls[i].begin);
+        decl.nestedDecls.emplace_back(offset, macroDecls[i].end - macroDecls[i].begin);
+    }
+    memUsage += sizeof(CrossTUContext::Declaration) + decl.nestedDecls.capacity() * sizeof(uint64_t);
+    myCrossContext->AddDeclaration(std::move(decl));
+    return declLoc;
+}
+
+void TranslationUnit::InitDeclarations()
+{
+    const FunctionDecl* curFunc = nullptr;
+    for (auto node : GetNodes()) {
+        if (auto func = Node::Cast<FunctionDecl>(node); func != nullptr && func->GetBody() != nullptr) {
+            curFunc = func;
+        }
+        if (curFunc != nullptr && node->GetRange().end < curFunc->GetRange().end) {
+            if (auto decl = node->GetType().GetPointedDeclaration(); decl != nullptr && decl->GetRange().IsValid()) {
+                auto varDecl = HCXX::Node::Cast<VarDecl>(node);
+                if (varDecl != nullptr || node->IsKindOf(Node::Kind::PARAM_VAR_DECL)) {
+                    myLocToRecord.emplace_back(node->GetRange().begin, decl->GetRange().begin);
+                }
+            }
+        }
+        if (myCrossContext != nullptr && node->IsKindOf(Node::Kind::RECORD_DECL)) {
+            auto range = node->GetRange();
+            if (myCrossContext->AddDeclaration(
+                    CrossTUContext::Declaration{GetEntryOffsetByLoc(range.begin), range.end - range.begin, 0})) {
+                memUsage += sizeof(CrossTUContext::Declaration);
+            }
+        }
+    }
+    std::stable_sort(myLocToRecord.begin(), myLocToRecord.end());
+    myLocToRecord.shrink_to_fit();
+
+    memUsage += myLocToRecord.capacity() * sizeof(std::pair<Location, Location>);
+    memUsage += GetExpansions().capacity() * sizeof(std::pair<Location, Location>);
+}
+
+void TranslationUnit::CollectDescriptions(SourceRange sourceRange, std::vector<CodeDescription>& result,
+                                          const LocToDeclArray& locs, CodeDescription::Type type) const
+{
+    auto entry = myFileEntries.upper_bound(sourceRange.begin);
+    if (entry-- == myFileEntries.begin()) {
+        return;
+    }
+    auto it = std::lower_bound(locs.begin(), locs.end(), std::make_pair(sourceRange.begin, 0U));
+    for (; it != locs.end() && it->first < sourceRange.end; ++it) {
+        auto entryOffset = GetEntryOffsetByLoc(it->second);
+        auto offsetInFile = it->first - entry->first;
+        auto decl = myCrossContext->FindDeclaration(entryOffset);
+        if (decl == nullptr || offsetInFile >= entry->second.fileSize) {
+            continue;
+        }
+        auto codeSize = 0;
+        auto source = entry->second.fileSource.c_str() + offsetInFile;
+        while (std::isalpha(source[codeSize]) || std::isdigit(source[codeSize]) || source[codeSize] == '_') {
+            codeSize++;
+        }
+        SourceRange codeRange{it->first, it->first + codeSize};
+        result.emplace_back(CodeDescription{codeRange, SourceRange{it->second, it->second + decl->declSize}, type});
+        for (auto [offset, size] : decl->nestedDecls) {
+            auto declBegin = GetLocByEntryOffset(offset);
+            result.emplace_back(CodeDescription{codeRange, SourceRange{declBegin, declBegin + size}, type});
+        }
+    }
+}
+
+std::vector<TranslationUnit::CodeDescription> TranslationUnit::GetCodeDescriptions(SourceRange sourceRange) const
+{
+    std::vector<TranslationUnit::CodeDescription> result;
+    CollectDescriptions(sourceRange, result, myLocToRecord, CodeDescription::RECORD);
+    CollectDescriptions(sourceRange, result, GetExpansions(), CodeDescription::MACRO);
+    return result;
+}
+
+SourceRange TranslationUnit::GetRecordDeclRangeByMember(SourceRange sourceRange) const
+{
+    auto entryOffset = GetEntryOffsetByLoc(sourceRange.begin);
+    if (entryOffset != 0) {
+        auto decl = myCrossContext->FindInclusiveDeclaration(entryOffset);
+        if (decl != nullptr && !decl->isMacro) {
+            auto recordBegin = sourceRange.begin - entryOffset + decl->declOffset;
+            return SourceRange{recordBegin, recordBegin + decl->declSize};
+        }
+    }
+    return SourceRange{};
 }
 
 }  // namespace HCXX

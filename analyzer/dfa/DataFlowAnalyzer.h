@@ -34,10 +34,10 @@ public:
 
     std::atomic<uint64_t> analysisTime = 0;
     std::atomic<uint64_t> executionTime = 0;
+    std::atomic<uint64_t> unitsCount = 0;
     std::atomic<uint64_t> functionsCount = 0;
     std::atomic<uint64_t> functionsMemorySize = 0;
     std::atomic<uint64_t> pendingFunctionsCount = 0;
-    std::atomic<uint64_t> pendingMemorySize = 0;
     std::atomic<uint64_t> undefinedFunctionsCount = 0;
 
     explicit DataFlowAnalyzer(Parser& parser, Workspace& workspace,
@@ -138,7 +138,7 @@ public:
 
     void Analyze(const FunctionContext& context, const HCXX::Cfg& cfg, HCXX::ProblemsHolder& holder);
 
-    void LogMemoryStatistics();
+    void LogAnalysisInfo();
 
     Workspace& GetWorkspace() const
     {

@@ -102,18 +102,11 @@ public:
     // LCOV_EXCL_STOP
     struct ParserStatistics {
         struct CompilationIssue {
-            std::string tu;
-            std::string file;
-            std::string message;
-            std::string severity;
-            uint32_t line;
-            uint32_t column;
-
-            DECLARE_FIELDS("tu", tu, "file", file, "message", message, "line", line, "column", column, "severity",
-                           severity);
+            std::string reason;
+            std::vector<std::string> errors;
         };
 
-        std::vector<CompilationIssue> compilationIssues;
+        std::unordered_map<const TranslationUnit*, CompilationIssue> compilationIssues;
         uint32_t maxFatalErrorCount = 0;
         std::atomic<uint64_t> totalParsedCount = 0;
         std::atomic<uint64_t> succeedCount = 0;

@@ -1,0 +1,7 @@
+{
+  "kind": "NULL.DEREF",
+  "description": "Dereferencing of \"(malloc())\" which can be null",
+  "line": 7,
+  "pos": 14,
+  "positive": true
+}

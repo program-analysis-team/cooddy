@@ -24,7 +24,9 @@ void MacroManager::AddMacroExpansion(const char* macroName, SourceRange range,
                                      std::vector<std::vector<std::string>>&& args)
 {
     if (macroName != nullptr) {
-        myMacros[macroName].macroExpansions.emplace_back(range, std::move(args));
+        auto& macro = myMacros[macroName];
+        macro.macroExpansions.emplace_back(range, std::move(args));
+        myExpansionsMap[range.begin].emplace_back(macro.declSourceRange);
     }
 }
 
@@ -50,9 +52,28 @@ std::vector<const MacroExpansion*> MacroManager::GetMacroExpansionsInRange(const
     return result;
 }
 
+bool MacroManager::IsMacroExpansionRange(SourceRange sourceRange) const
+{
+    if (!sourceRange.IsValid()) {
+        return false;
+    }
+    auto it = std::lower_bound(myExpansions.begin(), myExpansions.end(), std::make_pair(sourceRange.begin, 0U));
+    return it != myExpansions.end() && it->first == sourceRange.begin;
+}
+
+void MacroManager::Init()
+{
+    for(auto& [loc, decls] : myExpansionsMap) {
+        myExpansions.emplace_back(loc, AddMacroDeclaration(decls));
+    }
+    std::sort(myExpansions.begin(), myExpansions.end());
+    myExpansions.shrink_to_fit();
+}
+
 void MacroManager::Clear()
 {
-    myMacros = std::unordered_map<std::string, Macro>();
+    myMacros = decltype(myMacros)();
+    myExpansionsMap = decltype(myExpansionsMap)();
 }
 
 };  // namespace HCXX

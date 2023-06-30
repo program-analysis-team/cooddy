@@ -34,7 +34,7 @@ std::string FindGit(const std::string& root)
                 } catch (...) {
                 }
             }
-            Log(LogLevel::WARNING) << "Git found: " << str << "\n";
+            Log(LogLevel::INFO) << "Git found: " << str << "\n";
             return str;
         }
     } catch (...) {
@@ -66,7 +66,6 @@ void JsonReporter::Flush()
     flushed = true;
     descriptor.endTime = to_string(utc_clock::now());
     descriptor.endTimeStamp = std::time(0);
-    CopyCompilationIssues();
     if (myFileStream.is_open()) {
         myFileStream.close();
     }
@@ -75,16 +74,7 @@ void JsonReporter::Flush()
     myFileStream << jsoncpp::to_string(descriptor, "\n");
     myFileStream.flush();
     myFileStream.close();
-}
-
-void JsonReporter::CopyCompilationIssues()
-{
-    if (myParser == nullptr) {
-        return;
-    }
-    for (auto& issue : myParser->statistics.compilationIssues) {
-        descriptor.compilationIssues.emplace_back(issue);
-    }
+    Reporter::Flush();
 }
 
 ProblemTrace JsonReporter::ConvertProblemTrace(const TracePath& problemTrace)
@@ -142,9 +132,8 @@ void JsonReporter::RegisterProblemImpl(const Problem& problem)
                               problem.functionName,
                               problem.sinkFunction};
 
-    const FileEntry* fileEntry = FileEntriesCache::GetInstance().GetFileEntry(problem.filename);
-    if (fileEntry != nullptr && (myInitFlags & CODE_IN_REPORT)) {
-        desc.codeSnippet = Reporter::CreateCodeSnippet(fileEntry, desc.line);
+    if (myInitFlags & CODE_IN_REPORT) {
+        desc.codeSnippet = Reporter::CreateCodeSnippet(problem.filename, desc.line);
     }
     problems.push_back(desc);
 }

@@ -1,0 +1,15 @@
+{
+  "kind": "NULL.DEREF",
+  "description": "Dereferencing of \"(bbbPtr->aaaPtr->AAA::Foo())\" which can be null",
+  "positive": true,
+  "problems": [
+    {
+      "line": 24,
+      "pos": 5
+    },
+    {
+      "line": 30,
+      "pos": 5
+    }
+  ]
+}

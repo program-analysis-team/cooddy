@@ -130,12 +130,10 @@ Checker::Config Workspace::GetConfiguration(std::string_view checkerName)
     return nullptr;
 }
 
-void Workspace::SetConfiguration(std::string_view checkerName, std::string_view data)
+void Workspace::SetConfiguration(const std::string_view checkerName, std::string_view data)
 {
-    Profile::CheckerCfg config;
-    config.settings.inplaceJson = data;
-    config.profileName = myProfile->name;
-    myProfile->SetCheckerCfg(std::string(checkerName), config);
+    auto checkerNameString = std::string{checkerName};
+    myProfile->SetCheckerCfg(checkerNameString, data);
 }
 
 void Workspace::GetInspectionsProfile(std::string_view profileName)

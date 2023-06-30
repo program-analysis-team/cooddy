@@ -237,6 +237,13 @@ public:
 
     std::optional<Annotation> GetLeafAnnotation(Annotation::Kind kind);
 
+    void RegisterProblem(ProblemsHolder& holder, Checker& checker, const Node& node, Problem&& problem = {})
+    {
+        auto funcDecl = GetFuncState().GetContext().GetFunction();
+        problem.scopeRange = funcDecl != nullptr ? funcDecl->GetRange() : SourceRange();
+        holder.RegisterProblem(checker, node, std::move(problem));
+    }
+
     void DumpStateAnnotations();
 
 private:

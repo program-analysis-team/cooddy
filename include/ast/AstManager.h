@@ -15,13 +15,10 @@
 namespace HCXX {
 
 class AstManager {
-    Node* myRoot = nullptr;
-    std::vector<Node*> myNodes;
-    std::vector<Node*> mySystemNodes;
-    // COODDY_SUPPRESS UnusedMemberExpressionChecker (usage_in_assert_fp.cpp test-case)
-    bool myIndiciesInited = false;
-
 public:
+    static std::atomic<uint64_t> nodesCount;
+    static std::atomic<uint64_t> nodesSize;
+
     bool IsInited() const
     {
         return myIndiciesInited;
@@ -50,6 +47,11 @@ public:
     std::vector<const Node*> GetNodesInRange(const SourceRange& range,
                                              const std::function<bool(const Node*)>& op = nullptr) const;
 
+    Node*& GetParentByIndex(uint32_t idx)
+    {
+        return myParents[idx];
+    }
+
 protected:
     explicit AstManager(Node* root);
     ~AstManager();
@@ -63,6 +65,14 @@ protected:
     void Serialize(IOStream& stream);
 
     void DeserializeNode(IOStream& stream, Node*& node, uint32_t& curId, bool system);
+
+private:
+    Node* myRoot = nullptr;
+    std::vector<Node*> myNodes;
+    std::vector<Node*> mySystemNodes;
+    std::vector<Node*> myParents;
+    // COODDY_SUPPRESS UnusedMemberExpressionChecker (usage_in_assert_fp.cpp test-case)
+    bool myIndiciesInited = false;
 };
 
 };  // namespace HCXX

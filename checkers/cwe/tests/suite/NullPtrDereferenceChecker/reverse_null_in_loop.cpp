@@ -24,4 +24,3 @@ int foo3(A* head)
     for (node = head->next, temp = node->next; node != nullptr; node = temp, temp = node->next) { //TP
     }
 }
-

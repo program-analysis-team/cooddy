@@ -210,7 +210,8 @@ DfaState& DfaState::GetSubState(VirtualOffset memOffset)
         auto idxDesc = offset.ExtractSubOffset();
         auto& initList = initListExpr->GetInitList();
 
-        if (idxDesc.first == VirtualOffset::Kind::INDEX && idxDesc.second < initList.size()) {
+        if ((idxDesc.first == VirtualOffset::Kind::INDEX || idxDesc.first == VirtualOffset::Kind::DEREF) &&
+            idxDesc.second < initList.size()) {
             auto& initState = myFuncState.GetState(initList[idxDesc.second]);
             return initState.GetSubState(offset);
         }

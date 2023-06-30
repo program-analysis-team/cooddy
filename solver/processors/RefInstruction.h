@@ -69,6 +69,11 @@ public:
         }
         return *result;
     }
+
+    std::string GetName(GetNameContext& nameContext) const override
+    {
+        return nameContext.GetSourceByRange();
+    }
 };
 
 };  // namespace Processor

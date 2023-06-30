@@ -11,13 +11,13 @@
 
 namespace HCXX {
 
-class TryExpression : public HCXX::Node {
+class TryExpression : public HCXX::CompoundNode {
 public:
     TryExpression(const Node* body, std::vector<const CatchExpression*>&& handlers) : myBody(body), myHandlers(handlers)
     {}
     ~TryExpression() = default;
 
-    DECLARE_KIND(Node, Node::Kind::TRY_EXPRESSION);
+    DECLARE_KIND(CompoundNode, Node::Kind::TRY_EXPRESSION);
     DECLARE_SERIALIZE(TryExpression, myBody << myHandlers);
 
     const Node* GetBody() const

@@ -11,7 +11,6 @@
 
 #include <ast/Type.h>
 #include <utils/EnumMapping.h>
-#include <utils/Memory.h>
 
 #include <algorithm>
 #include <atomic>
@@ -98,7 +97,8 @@ public:
                  LAMBDA_EXPRESSION, CXX_CONVERSION_DECL, ACCESS_SPEC_DECL, ASM_STATEMENT, DECL_NAME, DECL_QUALIFIER,
                  CXX_OPERATOR_TOKEN, INT_LITERAL_EXPRESSION, CXX_NEW_EXPRESSION, EMPTY_STMT, STRING_LITERAL_EXPRESSION,
                  CXX_CONSTRUCT_EXPRESSION, BOOL_LITERAL_EXPRESSION, CXX_CTOR_INITIALIZER, RECORD_DECL, CXX_DTOR_DECL,
-                 CXX_DTOR_EXPRESSION, CONTINUE_STATEMENT, CHAR_LITERAL_EXPRESSION, FLOAT_LITERAL_EXPRESSION);
+                 CXX_DTOR_EXPRESSION, CONTINUE_STATEMENT, CHAR_LITERAL_EXPRESSION, FLOAT_LITERAL_EXPRESSION,
+                 COMPOUND_NODE);
 
     /// Dump detailed node info taking up an entire string
     virtual std::string Dump() const;
@@ -114,10 +114,7 @@ public:
         return myTU;
     }
 
-    const Node* GetParent() const
-    {
-        return myParent;
-    }
+    const Node* GetParent() const;
 
     template <class TNode>
     const TNode* GetParentOfType() const
@@ -134,14 +131,16 @@ public:
     std::vector<const TNode*> GetChildren(bool recursively = false) const
     {
         std::vector<const TNode*> result;
-        GetChildren<TNode>(recursively, result);
-        std::reverse(result.begin(), result.end());
+        std::function<void(const Node&)> callback = [&](const Node& node) {
+            if (node.IsKindOf(TNode::KIND) && !node.IsSystem()) {
+                result.emplace_back(static_cast<const TNode*>(&node));
+            }
+            if (recursively) {
+                node.TraverseChildren(callback);
+            }
+        };
+        TraverseChildren(callback);
         return result;
-    }
-
-    const Node* GetChild() const
-    {
-        return myChildren;
     }
 
     // LCOV_EXCL_START
@@ -176,7 +175,7 @@ public:
 
     bool IsSystem() const
     {
-        return myIndexPos == 0;
+        return myIsSystem;
     }
 
     /**
@@ -207,18 +206,11 @@ public:
 
     void Release() const;
 
-    void ReleaseChildren();
-
     uint32_t GetSizeOfType() const;
 
     virtual void Init() {}
 
-    virtual void Clear()
-    {
-        for (Node* node = myChildren; node != nullptr; node = node->myNext) {
-            node->Clear();
-        }
-    }
+    virtual void Clear() {}
 
     virtual Type GetType() const
     {
@@ -264,22 +256,11 @@ public:
 
     virtual void Traverse(TraverseCallback callback) const
     {
-        TraverseCallback cb = [&](const Node& node) { node.Traverse(callback); };
-        TraverseChildren(cb);
+        TraverseChildren([&](const Node& node) { node.Traverse(callback); });
         callback(*this);
     }
 
-    virtual void TraverseChildren(TraverseCallback callback) const
-    {
-        std::vector<Node*> result;
-        for (Node* node = myChildren; node != nullptr; node = node->myNext) {
-            result.emplace_back(node);
-        }
-
-        for (auto it = result.crbegin(); it != result.crend(); ++it) {
-            callback(**it);
-        }
-    }
+    virtual void TraverseChildren(TraverseCallback callback) const {}
 
     enum UsageFlags { READ = 0, WRITE = 1, INCREMENT = 2, DECREMENT = 4 };
 
@@ -331,39 +312,18 @@ public:
     void SafePrint(std::string& source, int entryOffset, const std::string& text, SourceRange range,
                    int offset = 0) const;
 
-    virtual void GetMemorySize(MemCounter& counter) const
-    {
-        counter << *this;
-    }
+    virtual uint32_t GetMemorySize() const = 0;
 
 protected:
-    explicit Node() : myIndexPos(0), myInMacro(0) {}
-    Node(const Node& other) : myIndexPos(other.myIndexPos), myInMacro(other.myInMacro) {}
+    explicit Node() : myIndexPos(0), myInMacro(0), myIsSystem(0) {}
+    Node(const Node& other) : myIndexPos(other.myIndexPos), myInMacro(other.myInMacro), myIsSystem(other.myIsSystem) {}
 
 private:
-    template <class TNode>
-    void GetChildren(bool recursively, std::vector<const TNode*>& result) const
-    {
-        for (Node* node = myChildren; node != nullptr; node = node->myNext) {
-            if (node->IsKindOf(TNode::KIND)) {
-                result.emplace_back(static_cast<const TNode*>(node));
-            }
-
-            // LCOV_EXCL_START
-            if (recursively) {
-                node->GetChildren<TNode>(recursively, result);
-            }
-            // LCOV_EXCL_STOP
-        }
-    }
-
     TranslationUnit* myTU{};
     SourceRange mySourceRange{};
-    Node* myParent{};
-    Node* myNext{};
-    Node* myChildren{};
-    uint32_t myIndexPos : 31;
+    uint32_t myIndexPos : 30;
     uint32_t myInMacro : 1;
+    uint32_t myIsSystem : 1;
     mutable std::atomic<uint32_t> myRefCount;
 
     friend class AstManager;
@@ -395,10 +355,9 @@ extern void RegisterNodeCreator(Node::Kind kind, std::function<Node*()> creator)
         stream << body;                                                     \
         return Base::Serialize(stream);                                     \
     }                                                                       \
-    virtual void GetMemorySize(MemCounter& counter) const                   \
+    uint32_t GetMemorySize() const override                                 \
     {                                                                       \
-        counter << body;                                                    \
-        Base::GetMemorySize(counter);                                       \
+        return sizeof(*this);                                               \
     }
 
 template <class TNode>
@@ -474,6 +433,26 @@ void Serialize(IOStream& stream, NodePtr<T>& node)
         node = stream.GetPtr<const T*>();
     }
 }
+
+class CompoundNode : public Node {
+public:
+    DECLARE_KIND(Node, Node::Kind::COMPOUND_NODE);
+    DECLARE_SERIALIZE(CompoundNode, myChildren);
+
+    void AddChild(const Node* node)
+    {
+        myChildren.emplace_back(node);
+    }
+    void TraverseChildren(TraverseCallback callback) const override
+    {
+        for (auto& node : myChildren) {
+            CALL_CALLBACK(node, callback);
+        }
+    }
+
+protected:
+    std::vector<NodePtr<Node>> myChildren;
+};
 
 };  // namespace HCXX
 

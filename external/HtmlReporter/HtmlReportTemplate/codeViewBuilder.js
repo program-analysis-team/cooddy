@@ -7,7 +7,7 @@ var hasCollapseGroups = false;
 var preventCollapseCode = false;
 var viewSarif = false;
 
-function getCodeForTracePoint(tp) {
+function GetCodeForTracePoint(tp) {
 	let codeSnippet = cooddyResults.code_snippets[tp.snippet_path];
 	if(!codeSnippet || !codeSnippet.code)
 		return;
@@ -16,24 +16,23 @@ function getCodeForTracePoint(tp) {
 	row = [row.slice(0, tp.col - 1), '<b>', row.slice(tp.col - 1)].join('');
 	return "<b>" + tp.line + "&#x29D0;</b> " + row.trim();
 }
-function appendCode(text) {
+function appendCode(text, block) {
 	if(text[text.length - 1] != '\n')
 		text += '\n';
-	var preContainer = ge("preContainer");
+	var block = ge(block);
 	var codeContainer = ce('div');
 	codeContainer.innerHTML = text;
-	preContainer.appendChild(codeContainer);
+	block.appendChild(codeContainer);
 }
-
 function CreateCollapsableCodeSnippet(before) {
 	if(before.length >= 5)
 		hasCollapseGroups = true;
 	if(preventCollapseCode || !collapseCode || before.length < 5)
-		appendCode(before.join("\n"));
+		appendCode(before.join("\n"), "preContainer");
 	else {
-		appendCode(before[0]);
-		appendCode('...\n');
-		appendCode(before.last());
+		appendCode(before[0], "preContainer");
+		appendCode('...\n', "preContainer");
+		appendCode(before.last(), "preContainer");
 	}
 }
 function createPopup(st, visibleRowNumber, rowNumSize, col, cols) {
@@ -57,13 +56,13 @@ function createPopup(st, visibleRowNumber, rowNumSize, col, cols) {
         return '<table class="variable_popup '+cl+'"><tbody><tr><td valign="top"><div>' + resultRow + '</div></td><td></td></tr></tbody></table>';
 	return '';
 }
-
-function HighlightRow(needHighlightCode, visibleRowNumber, visibleRowCount, rowNumSize, line, text, textOffset, highlightedLocations, tracePoints, branches) {
-	function pad(num, size) {
-		num = num.toString();
-		while (num.length < size) num = " " + num;
-		return num;
-	}
+function pad(num, size) {
+    num = num.toString();
+    while (num.length < size) num = " " + num;
+    return num;
+}
+function HighlightRow(needHighlightCode, visibleRowNumber, visibleRowCount, rowNumSize,
+    line, text, textOffset, highlightedLocations, tracePoints, branches) {
 	let resultRow = Prism.highlight(pad(line, rowNumSize).toString() + " ", Prism.languages.clike, 'clike');
 	let highlights = [];
 	highlightedLocations.forEach(([k, v]) => {
@@ -127,7 +126,7 @@ function HighlightRow(needHighlightCode, visibleRowNumber, visibleRowCount, rowN
 function CreateCodeSnippet(visibleRowNumber, visibleRowsCount, tracePoints, problem) {
 	var preContainer = ge("preContainer");
 	var codeSnippet = cooddyResults.code_snippets[tracePoints[0].snippet_path];
-    appendCode("<span style='opacity:0.3'>" + codeSnippet.file + "<span/>");
+    appendCode("<span style='opacity:0.3'>" + codeSnippet.file + "<span/>", "preContainer");
 	var text = codeSnippet.code;
 
 	let allRows = text.split('\n');
@@ -179,7 +178,6 @@ function CreateCodeSnippet(visibleRowNumber, visibleRowsCount, tracePoints, prob
 	CreateCollapsableCodeSnippet(before);
     return allRows.length;
 }
-
 function GetTraceHeader(problem) {
     let desc = ce('div');
     desc.className = "codeHeader";
@@ -211,7 +209,6 @@ function GetTraceHeader(problem) {
     desc.innerHTML = descContent;
     return desc;
 }
-
 function RenderTrace(problem) {
     if(problem.htmlTraceFileContent) {
         let container = ge("codeSnippetContainer");
@@ -256,11 +253,11 @@ function RenderTraceFromCodeSnippets(problem) {
     let curRow = 0
     for(let k in groups) {
         if(i > 0)
-            appendCode("...\n...\n");
+            appendCode("...\n...\n","preContainer");
         i++;
         curRow += CreateCodeSnippet(curRow, lineCount, groups[k], problem);
     }
-    appendCode("\n\n\n\n\n\n\n\n");
+    appendCode("\n\n\n\n\n\n\n\n", "preContainer");
 
     function navFunc(currentValue, currentIndex) {
         var hrefValue = currentValue.getAttribute("href");

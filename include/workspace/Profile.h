@@ -102,7 +102,7 @@ public:
     const CheckerCfg& GetCheckerCfg(const std::string& checkerName) const;
 
     /// Create or replace a CheckerCfg for this checkerName.
-    void SetCheckerCfg(const std::string& checkerName, const CheckerCfg& config);
+    void SetCheckerCfg(const std::string& checkerName, std::string_view data);
 
     const std::string& GetTaintOptions() const
     {

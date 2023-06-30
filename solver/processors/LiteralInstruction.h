@@ -48,10 +48,11 @@ private:
             case LiteralExpression::LiteralType::CHAR:
                 context.Add<uint32_t>(Node::Cast<CharLiteralExpression>(&node)->GetSLimitedValue());
                 break;
-
+                // LCOV_EXCL_START
             default:
                 // TODO: implement other types of literal HCAT-483
                 break;
+                // LCOV_EXCL_STOP
         }
     }
     z3::expr Execute(ExecutionContext& context, SymbolId& symbolId) override

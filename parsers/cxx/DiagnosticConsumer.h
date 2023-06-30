@@ -85,6 +85,21 @@ private:
         return true;
     }
 
+    std::string GetIssueReason(const std::string& errorMessage)
+    {
+        if (HCXX::StrUtils::StartsWith(errorMessage, "error reading")) {
+            return "source file not found";
+        }
+        if (errorMessage.find("file not found") != std::string::npos) {
+            return "header file not found";
+        }
+        auto compilerPaths = HCXX::EnvironmentUtils::GetExecutablePaths(myUnit->GetCompilerOptions().compiler, 1);
+        if (compilerPaths.empty() || compilerPaths[0].empty() || !std::filesystem::exists(compilerPaths[0])) {
+            return "compiler not found";
+        }
+        return "compilation issue";
+    }
+
     void HandleDiagnostic(clang::DiagnosticsEngine::Level diagLevel, const clang::Diagnostic& info) override
     {
         HCXX::LogLevel logLevel = HCXX::LogLevel::OFF;
@@ -105,22 +120,17 @@ private:
         if (IsSkippedMessage(message) || !presumedLoc.isValid() && IsUnknownArgumentMessage(message)) {
             return;
         }
-
-        HCXX::Parser::ParserStatistics::CompilationIssue issue{
-            myUnit->GetMainFileName(),
-            presumedLoc.isValid() ? presumedLoc.getFilename() : "<unknown>",
-            message.c_str(),
-            logLevel == HCXX::LogLevel::FATAL ? "FATAL" : "ERROR",
-            presumedLoc.isValid() ? presumedLoc.getLine() : 0,
-            presumedLoc.isValid() ? presumedLoc.getColumn() : 0};
-
         if (myUnit->GetParseErrors().size() < MAX_LOG_ERROR_COUNT) {
-            HCXX::Log(logLevel) << "File: " << issue.file << ", "
-                                << "Line: " << issue.line << ", "
-                                << "Pos: " << issue.column << ", " << issue.message << std::endl;
-
+            HCXX::Log(logLevel) << "CLang: " << (presumedLoc.isValid() ? presumedLoc.getFilename() : "<unknown>") << ":"
+                                << (presumedLoc.isValid() ? presumedLoc.getLine() : 0) << ":"
+                                << (presumedLoc.isValid() ? presumedLoc.getColumn() : 0) << ": " << message.c_str()
+                                << std::endl;
             std::unique_lock<std::mutex> lock(myParserStatistics->mutex);
-            myParserStatistics->compilationIssues.emplace_back(issue);
+            auto& issue = myParserStatistics->compilationIssues[myUnit];
+            if (issue.reason.empty()) {
+                issue.reason = GetIssueReason(message.c_str());
+            }
+            issue.errors.emplace_back(message.c_str());
         }
         if (myUnit) {
             myUnit->AddParseError(HCXX::ConvertLocation(info.getSourceManager(), info.getLocation()));

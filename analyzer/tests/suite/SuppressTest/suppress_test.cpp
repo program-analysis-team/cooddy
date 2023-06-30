@@ -19,8 +19,8 @@ double Test(T &container, std::size_t n = 10000000)
 //  COODDY_SUPPRESS
 int main()
 {
-    std::vector<int> a;
-    std::list<int> b;
+    std::vector<size_t> a;
+    std::list<size_t> b;
 
     double timeA;
     // COODDY_SUPPRESS        LocalVariableInitialValueChecker UnusedVariablesChecker

@@ -11,9 +11,7 @@ namespace HCXX {
 
 class FloatLiteralExpression : public LiteralExpression {
 public:
-    explicit FloatLiteralExpression(const LiteralExpression& base, double myValue)
-        : LiteralExpression(base), myValue(myValue)
-    {}
+    explicit FloatLiteralExpression(const Type& type, double myValue) : LiteralExpression(type), myValue(myValue) {}
 
     DECLARE_KIND(LiteralExpression, Node::Kind::FLOAT_LITERAL_EXPRESSION);
 
@@ -24,6 +22,10 @@ public:
     double GetValue() const
     {
         return myValue;
+    }
+    LiteralType GetLiteralType() const override
+    {
+        return LiteralType::FLOAT;
     }
 
 private:

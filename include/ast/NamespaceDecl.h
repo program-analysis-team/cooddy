@@ -11,11 +11,11 @@
 
 namespace HCXX {
 
-class NamespaceDecl : public NamedNode<Node> {
+class NamespaceDecl : public NamedNode<CompoundNode> {
 public:
     NamespaceDecl(Node* qualifier, std::string&& name) : Base(qualifier, std::move(name)) {}
 
-    DECLARE_KIND(NamedNode<Node>, Node::Kind::NAMESPACE);
+    DECLARE_KIND(NamedNode<CompoundNode>, Node::Kind::NAMESPACE);
     DECLARE_SERIALIZE(NamespaceDecl, nullptr);
 };
 

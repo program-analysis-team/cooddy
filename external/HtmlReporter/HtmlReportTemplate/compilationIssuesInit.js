@@ -1,94 +1,95 @@
 var compilationIssuesTable;
-var currentGrouping = [];
-
-function compilationIssuesTabulatorInit() {
-    createCompilationIssuesMenu();
-    compilationIssuesTable = new Tabulator("#compilationIssuesData", {
+var compilationIssuesCategories;
+function compilationIssuesCategoriesInit() {
+    compilationIssuesCategories = new Tabulator("#compilationIssuesCategories", {
         data: cooddyResults.compilation_issues,
+        index:"id",
         layout: "fitColumns",
-        height: window.innerHeight - 90,
+        height: window.innerHeight - 53,
         autoResize: true,
         resizableRows: false,
-        selectable: false,
+        selectable: 1,
+        selectablePersistence: false,
         movableRows: false,
+        headerVisible: false,
+        groupBy: "reason",
+        groupStartOpen: false,
         groupToggleElement: "header",
         placeholder: "No Data Available",
-        initialSort: [{column: "tu", dir: "asc"}],
-        groupHeader: function (value, count, data, group) {
-            let item = "items";
-            if (count === 1)
-                item = "item";
-            return "<span style='color:#d00; margin-left:10px;'>" + value + " (" + count + " " + item + ")</span>";
-        },
+        initialSort: [{column: "unit", dir: "asc"}],
+        groupHeader:[
+            function(value, count, data){
+                let item = "items";
+                if (count === 1)
+                    item = "item";
+                return "<span style='color:#d00; margin-left:10px; direction:rtl'>"+value+" ("+count+" "+item+")</span>";
+            },
+        ],
         columns: [
-            {
-                title: "Translation unit", field: "tu", visible: true, minWidth: 200,
+            {title: "Translation unit", field: "unit", visible: true, minWidth: 200,
                 formatter: function (cell, formatterParams, onRendered) {
                     cell.getElement().style['direction'] = "rtl";
                     return '<bdo dir="ltr">' + cell.getValue() + '</bdo>';
                  },
+                 tooltip:function(e, cell, onRendered){
+                     return cell.getData().unit;
+                 },
              },
-            {title: "File", field: "file", visible: true, minWidth: 200,
-                 formatter:function(cell, formatterParams, onRendered){
-                    cell.getElement().style['direction'] = "rtl";
-                    return '<bdo dir="ltr">' + cell.getValue() + '</bdo>';
-                 }
-             },
-            {title: "Message", field: "message", visible: true, },
-            {title: "Line", field: "line", visible: true, maxWidth: 100},
-            {title: "Column", field: "column", visible: true, maxWidth: 100},
-            {title: "Severity", field: "severity", visible: true, maxWidth: 150},
+            {title: "Reason", field: "reason", visible: false}
         ]
     });
-    window.addEventListener('resize',(event) => {
-        compilationIssuesTable.redraw(true);
+    compilationIssuesCategories.on("rowClick", function(e, row){
+        loadCompileIssue(null);
+        classRemove("cooddyCompilationIssuesContainer","invisible");
+        compilationIssuesTable=new Tabulator("#compilationIssuesData",{
+            data:row.getData().errors,
+            layout:"fitColumns",
+            height:window.innerHeight-390,
+            autoResize:true,
+            resizableRows:false,
+            selectable:1,
+            movableRows:false,
+            groupToggleElement:"header",
+            placeholder:"No Data Available",
+            groupHeader: function (value, count, data, group) {
+                let item = "items";
+                if (count === 1)
+                    item = "item";
+                return "<span style='color:#d00; margin-left:10px;'>" + value + " (" + count + " " + item + ")</span>";
+            },
+            columns: [
+                {title: "Id", field: "id", visible: false},
+                {title: "Location", field: "file", visible: true, minWidth: 200, widthGrow: 1, sorter:"string",
+                    sorterParams:{
+                        locale:true,
+                        alignEmptyValues:"top",
+                    },
+                    formatter:function(cell, formatterParams, onRendered){
+                        if(cell.getValue().length === 0)
+                            return '<bdo dir="ltr">No location</bdo>';
+                        let d = cell.getData();
+                        cell.getElement().style['direction'] = "rtl";
+                        let innerCompileIssue = "";
+                        if(d.line && d.column)
+                            innerCompileIssue = ':' + d.line + ':' + d.column;
+                        return '<bdo dir="ltr">' + cell.getValue() + innerCompileIssue + '</bdo>';
+                    },
+                    tooltip:function(e, cell, onRendered){
+                        return cell.getData().file;
+                    }
+                 },
+                {title: "Line", field: "line", visible: false},
+                {title: "Column", field: "column", visible: false},
+                {title: "Message", field: "message", minWidth:150, widthGrow:1, visible: true},
+                {title: "CodeSnippet", field: "codeSnippet", visible: false}
+            ]
+        });
+        compilationIssuesTable.on("rowClick", function(e, row){
+            let data = row.getData();
+            loadCompileIssue(data);
+        });
     });
-    document.getElementById("issuesByDefault").addEventListener("click", function () { groupCompilationIssuesBy("default"); });
-    document.getElementById("issuesByFile").addEventListener("click", function () { groupCompilationIssuesBy("file"); });
-    document.getElementById("issuesByTU").addEventListener("click", function () { groupCompilationIssuesBy("tu"); });
-    document.getElementById("issuesBySeverity").addEventListener("click", function () { groupCompilationIssuesBy("severity"); });
-}
-
-function groupCompilationIssuesBy(par) {
-    qsa(".groupPopupItem", s => s.classList.remove("dropdown-row-item-selected"));
-    switch(par) {
-        case "file":
-            currentGrouping = ["file"];
-            classAdd("issuesByFile", "dropdown-row-item-selected");
-            break;
-        case "tu":
-            currentGrouping = ["tu"];
-            classAdd("issuesByTU", "dropdown-row-item-selected");
-            break;
-        case "severity":
-            currentGrouping = ["severity"];
-            classAdd("issuesBySeverity", "dropdown-row-item-selected");
-            break;
-        default:
-            currentGrouping = [];
-            compilationIssuesTable.setGroupBy();
-            compilationIssuesTable.setSort("tu", "asc");
-            return;
-    }
-    compilationIssuesTable.setGroupBy(currentGrouping);
-    compilationIssuesTable.setSort(currentGrouping.map(g=>{return {column:g, dir:"asc"}}));
-}
-
-function createCompilationIssuesMenu() {
-    let content = document.getElementById("cooddyCompilationIssuesContainer");
-    let d = document.createElement("div");
-    d.innerHTML = `
-    <div class="menu" id="compilationIssuesMenu">
-        <div class="dropdown" id="compilationIssuesGroupBtn">
-            <button class="dropbtn" id="groupCompilationIssuesInnerBtn">&#10697 Group</button>
-            <div class="dropdown-content">
-                <div class="dropdown-header">Group by:</div>
-                <a class="dropdown-row-item groupPopupItem" id="issuesByDefault" href="#">Default</a>
-                <a class="dropdown-row-item groupPopupItem" id="issuesByFile" href="#">File</a>
-                <a class="dropdown-row-item groupPopupItem" id="issuesByTU" href="#">Translation unit</a>
-                <a class="dropdown-row-item groupPopupItem" id="issuesBySeverity" href="#">Severity</a>
-            </div>
-        </div>
-    </div>`;
-    content.insertBefore(d, content.firstChild);
+    window.addEventListener('resize',(event) => {
+        compilationIssuesCategories.redraw(true);
+    });
 }

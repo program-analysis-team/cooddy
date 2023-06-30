@@ -63,9 +63,11 @@ const Profile::CheckerCfg& Profile::GetCheckerCfg(const std::string& checkerName
     return it != myCheckersCfg.end() ? it->second : emptyCfg;
 }
 
-void Profile::SetCheckerCfg(const std::string& checkerName, const CheckerCfg& config)
+void Profile::SetCheckerCfg(const std::string& checkerName, std::string_view data)
 {
-    myCheckersCfg.insert_or_assign(checkerName, config);
+    auto& config = myCheckersCfg[checkerName];
+    config.settings.inplaceJson = data;
+    config.profileName = name;
 }
 
 static fs::path FindProfile(std::string_view profileName, const std::vector<std::string>& searchPaths)

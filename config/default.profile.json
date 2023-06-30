@@ -2,5 +2,7 @@
   "name": "Default",
   "taint-options": "sup",
   "min-problem-severity": "error",
-  "profiles": ["cwe"]
+  "profiles": [
+    "cwe"
+  ]
 }

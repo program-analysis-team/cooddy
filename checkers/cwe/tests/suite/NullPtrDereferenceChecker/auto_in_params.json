@@ -1,0 +1,8 @@
+{
+  "kind": "NULL.DEREF",
+  "description": "Dereferencing of \"foo(p)\" which can be null",
+  "positive": true,
+  "line": 10,
+  "pos": 6,
+  "compiler_flags": "-std=c++1z"
+}

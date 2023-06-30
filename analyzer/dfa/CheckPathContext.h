@@ -65,7 +65,7 @@ private:
         SourceRange sourceRange;
         PathPtr parent;
         ExecId execId = 0;
-        const FunctionContext* sinkFunction = nullptr;
+        const FunctionContext* function = nullptr;
     };
 
     struct CallInfo {
@@ -122,10 +122,14 @@ private:
 
     PathArray& GetPathArray(PathsMapping& paths, Instruction instr);
 
+    VirtualOffset GetCallArgOffset(Annotation& annotation);
+
     bool IsRecursionLimit() const
     {
         return myRecursionDepth + 1 >= MAX_RECURSION_DEPTH;
     }
+
+    void SetUndefCallResult(FunctionContext& callee);
 
     void Dump();
 
@@ -138,6 +142,7 @@ private:
     std::unordered_map<ExprId, PathPtr> myExprMapping;
     std::unordered_map<ExecId, CallInfo> myCallsMapping;
     std::unordered_set<PathKey, PathHash> myCalleePaths;
+    std::unordered_map<FunctionContext*, uint64_t> myUndefCallsMap;
     std::vector<OutArgSource> myOutArgSources;
     uint32_t myExecutedInstructions = 0;
     Timer myExecutionTimer;

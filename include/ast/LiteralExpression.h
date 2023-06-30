@@ -12,32 +12,31 @@
 
 namespace HCXX {
 
-class LiteralExpression : public TypedNode {
+class LiteralExpression : public TypedNodeBase {
 public:
-    DECLARE_ENUM(LiteralType, UNKNOWN, INTEGER, FLOAT, DOUBLE, STRING, NULLPTR, BOOL,
-                 CHAR);  //  TODO: Do we need UNKNOWN here?
+    DECLARE_ENUM(LiteralType, INTEGER, FLOAT, STRING, NULLPTR, BOOL, CHAR);
 
-    LiteralExpression(SourceRange spellingRange, LiteralType literalType, std::string&& literal, const Type& type)
-        : TypedNode(type), mySpellingRange(spellingRange), myLiteralType(literalType), myLiteral(std::move(literal))
-    {}
+    LiteralExpression(Type type) : myTypeFlags(type.GetFlags()) {}
 
-    DECLARE_KIND(TypedNode, Node::Kind::LITERAL_EXPRESSION);
-    DECLARE_SERIALIZE(LiteralExpression, myLiteralType);
+    DECLARE_KIND(TypedNodeBase, Node::Kind::LITERAL_EXPRESSION);
+    DECLARE_SERIALIZE(LiteralExpression, myTypeFlags);
 
-    /**
-     * Supposed to return the way literal is written in source code. This string is not normalized. I.e. for long
-     * it can return either "0x2A", "42", "42L" or "42l" depending on what exactly is present in source.
-     *
-     * Currently returns empty string for strings.
-     */
-    const std::string& GetLiteral() const
+    Type GetType() const override
     {
-        return myLiteral;
+        return Type(myTypeFlags);
     }
 
-    LiteralType GetLiteralType() const
+    virtual LiteralType GetLiteralType() const
     {
-        return myLiteralType;
+        return LiteralType::NULLPTR;
+    }
+
+    /**
+     * Supposed to return the way literal is written in source code.
+     */
+    std::string GetLiteral() const
+    {
+        return GetTranslationUnit()->GetSourceInRange(GetRange());
     }
 
     virtual std::optional<std::string> GetAttribute(std::string_view attrName) const override
@@ -48,13 +47,7 @@ public:
         if (attrName == "LiteralType") {
             return LiteralTypeToCStr(GetLiteralType());
         }
-
-        return TypedNode::GetAttribute(attrName);
-    }
-
-    const SourceRange& GetSpellingRange() const
-    {
-        return mySpellingRange;
+        return Base::GetAttribute(attrName);
     }
 
     virtual bool IsTreatedAsNullPtr() const
@@ -70,15 +63,11 @@ public:
     bool IsEqualNode(const Node* comparedNode) const override
     {
         auto literalExpression = CompareAndCast<LiteralExpression>(comparedNode);
-        return literalExpression != nullptr && myLiteralType == literalExpression->GetLiteralType() &&
-               myLiteral == literalExpression->GetLiteral();
+        return literalExpression != nullptr && GetLiteralType() == literalExpression->GetLiteralType();
     }
     // LCOV_EXCL_STOP
-
 private:
-    SourceRange mySpellingRange;
-    LiteralType myLiteralType = LiteralType::UNKNOWN;
-    std::string myLiteral;
+    uint64_t myTypeFlags = 0;
 };
 
 };  // namespace HCXX

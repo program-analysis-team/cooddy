@@ -38,7 +38,7 @@ public:
                                            StrLocales::GetStringLocale("FIRST_INC"));
                 problemTraces.emplace_back(node.GetTranslationUnit(), unary->GetRange(),
                                            StrLocales::GetStringLocale("STRING.OVERFLOW_DESCRIPTION"));
-                holder.RegisterProblem(*this, *unary, {{}, problemTraces});
+                state.RegisterProblem(holder, *this, *unary, {{}, problemTraces});
             }
         };
 

@@ -1,7 +1,7 @@
 [
   {
     "directory": ".",
-    "command": "g++ -O3 -DDEF_FOO=\"\\\"some val\\\"\"  @include.rsp -isystem .",
+    "command": "g++ -O3 -DDEF_FOO=\"\\\"some val\\\"\"  @include.txt -isystem .",
     "file": "foo.cpp"
   },
   {

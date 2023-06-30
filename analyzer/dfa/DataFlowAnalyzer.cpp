@@ -113,18 +113,22 @@ void DataFlowAnalyzer::CheckState(DfaState& state, HCXX::ProblemsHolder& holder,
     CALL_CHECKERS(checkers, checker->ExitState(state), analysis);
 }
 
-void DataFlowAnalyzer::LogMemoryStatistics()
+void DataFlowAnalyzer::LogAnalysisInfo()
 {
+    extern void LogMemUsage(HCXX::Log & log, const char* name, uint64_t size, uint64_t count = 0);
     static uint32_t loggedFunctionsCount = 0;
-    static const uint32_t functionsCountFrameSize = 1000;
-    static const uint32_t mbSize = 1024 * 1024;
+    static const uint32_t functionsCountFrameSize = 3000;
 
     if (functionsCount - loggedFunctionsCount >= functionsCountFrameSize) {
         // LCOV_EXCL_START
-        HCXX::Log(HCXX::LogLevel::INFO) << "Analysis info: functions=" << functionsCount << "("
-                                        << (functionsMemorySize / mbSize)
-                                        << " mbytes), pending=" << pendingFunctionsCount << "("
-                                        << (pendingMemorySize / mbSize) << " mbytes)\n";
+        HCXX::Log log(HCXX::LogLevel::INFO);
+        log << "Analysis info: units=" << unitsCount;
+        LogMemUsage(log, "mem", EnvironmentUtils::GetProcessMemoryUsage());
+        LogMemUsage(log, "ast", AstManager::nodesSize, AstManager::nodesCount);
+        LogMemUsage(log, "func", functionsMemorySize, functionsCount);
+        LogMemUsage(log, "code", FileEntriesCache::GetInstance().GetMemUsage());
+        LogMemUsage(log, "desc", TranslationUnit::memUsage);
+        log << ", pending=" << pendingFunctionsCount << "\n";
         loggedFunctionsCount = functionsCount;
         // LCOV_EXCL_STOP
     }
@@ -271,6 +275,7 @@ void DataFlowAnalyzer::AnalyzeContext::CheckUnit(TranslationUnitPtr& unit)
 
     std::unique_lock<std::mutex> lock(myMutex);
     myUnitFunctions.emplace(unit.get(), std::move(functionCtxs));
+    ++myAnalyzer.unitsCount;
 }
 
 static bool IsFunctionPublic(const FunctionDecl& funcDecl)

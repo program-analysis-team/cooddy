@@ -23,12 +23,26 @@ public:
     DECLARE_KIND(NamedNode<TypedNode>, Node::Kind::ENUM_DECL);
     DECLARE_SERIALIZE(EnumDecl, myMembers);
 
+    void Clear() override
+    {
+        myMembers = EnumMembers();
+    }
+
     const EnumMembers& GetMembers() const
     {
         return myMembers;
     }
 
+    void TraverseChildren(TraverseCallback callback) const override
+    {
+        for (auto& node : myMembers) {
+            CALL_CALLBACK(node, callback);
+        }
+    }
+
     // LCOV_EXCL_START
+    void Traverse(TraverseCallback callback) const override {}
+
     bool IsDeclaration() const override
     {
         return true;

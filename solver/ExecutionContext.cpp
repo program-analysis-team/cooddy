@@ -35,8 +35,11 @@ public:
 std::shared_mutex MemoryMonitor::myMutex;
 bool MemoryMonitor::myNeedResetMemory = false;
 
-ExecutionContext::ExecutionContext(FunctionBehaviorImpl* functionBehavior)
-    : myContext(ConfigWithParams::GetInstance()), myTrueExpr(CreateBoolExpr(true)), myFunctionBehavior(functionBehavior)
+ExecutionContext::ExecutionContext(FunctionBehaviorImpl* functionBehavior, bool useMemMonitor)
+    : myMemMonitor(useMemMonitor),
+      myContext(ConfigWithParams::GetInstance()),
+      myTrueExpr(CreateBoolExpr(true)),
+      myFunctionBehavior(functionBehavior)
 {}
 
 ExecutionContext::~ExecutionContext()
@@ -46,7 +49,7 @@ ExecutionContext::~ExecutionContext()
 
 const SymbolId ExecutionContext::THROW_SYMBOL_ID = SymbolId{{0, 0}, THROW_INSTRUCTION};
 
-bool ExecutionContext::EnterFunction(FunctionBehaviorImpl& function, SymbolsContextPtr entrySymbols,
+void ExecutionContext::EnterFunction(FunctionBehaviorImpl& function, SymbolsContextPtr entrySymbols,
                                      uint32_t entryBlock)
 {
     uint16_t curCallId = myCallInfo.size();
@@ -70,12 +73,11 @@ bool ExecutionContext::EnterFunction(FunctionBehaviorImpl& function, SymbolsCont
         }
     }
     entrySymbols->Init(prevSymbols, curCallId, myTrueExpr);
-    return true;
 }
 
 void ExecutionContext::LeaveFunction(SymbolsContextPtr exitSymbols)
 {
-    myExitSymbols = exitSymbols;
+    myExitSymbols = std::move(exitSymbols);
     auto curStackPos = GetStackPos();
     auto endlessLoopCondition = myCurStack.back().endlessLoopExitCondition;
     if (!endlessLoopCondition.is_false()) {
@@ -99,7 +101,7 @@ void ExecutionContext::LeaveFunction(SymbolsContextPtr exitSymbols)
 
 z3::expr ExecutionContext::Execute(const BasicBlock& block, SymbolsContextPtr symbols, ExecutionCallbackRef callback)
 {
-    myCurStack.back().symbols = symbols;
+    myCurStack.back().symbols = std::move(symbols);
     UpdateLoopsState(block);
 
     auto result = myTrueExpr;

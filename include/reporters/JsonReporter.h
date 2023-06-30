@@ -25,15 +25,9 @@ struct ProblemTraceEvent : public LocationInfoBase {
     int id;
     string kind;
 
-    template <class X>
-    // HCAT-513
-    // COODDY_SUPPRESS CamelCaseChecker
-    void serialize(jsoncpp::Stream<X>& stream)
-    {
-        jsoncpp::fields(*this, stream, "file", file, "line", line, "col", column, "end_line", endLine, "end_col",
-                        endColumn, "length", length, "desc", desc, "snippet_path", snippetPath, "parentEventId",
-                        parentEventId, "id", id, "kind", kind);
-    }
+    DECLARE_FIELDS("file", file, "line", line, "col", column, "end_line", endLine, "end_col", endColumn, "length",
+                   length, "desc", desc, "snippet_path", snippetPath, "parentEventId", parentEventId, "id", id, "kind",
+                   kind);
 
     bool operator==(const ProblemTraceEvent& other) const
     {
@@ -58,14 +52,7 @@ public:
         std::string profileName;
         std::string inspectionName;
 
-        template <class X>
-        // TODO HCAT-513
-        // COODDY_SUPPRESS CamelCaseChecker
-        void serialize(jsoncpp::Stream<X>& stream)
-        {
-            jsoncpp::fields(*this, stream, "name", name, "severity", severity, "profile", profileName,
-                            "inspection_name", inspectionName);
-        }
+        DECLARE_FIELDS("name", name, "severity", severity, "profile", profileName, "inspection_name", inspectionName);
 
         bool operator==(const ProblemClass& other) const
         {
@@ -92,14 +79,9 @@ public:
               filename(info.filename),
               code(code)
         {}
-        template <class X>
-        // TODO HCAT-513
-        // COODDY_SUPPRESS CamelCaseChecker
-        void serialize(jsoncpp::Stream<X>& stream)
-        {
-            jsoncpp::fields(*this, stream, "file", filename, "line", line, "column", column, "end_line", endLine,
-                            "end_column", endColumn, "code", code, "highlighted_locations", highlightedLocations);
-        }
+        DECLARE_FIELDS("file", filename, "line", line, "column", column, "end_line", endLine, "end_column", endColumn,
+                       "code", code, "highlighted_locations", highlightedLocations);
+
         bool operator==(const CodeSnippet& other) const
         {
             return filename == other.filename && line == other.line && endLine == other.endLine &&
@@ -125,18 +107,11 @@ public:
         std::string sinkFunction;
         std::string codeSnippet;
 
-        template <class X>
-        // TODO HCAT-513
-        // COODDY_SUPPRESS CamelCaseChecker
-        void serialize(jsoncpp::Stream<X>& stream)
-        {
-            jsoncpp::fields(*this, stream, "file", file, "line", line, "offset", offset, "length", length,
-                            "problem_class", problemClass, "highlighted_element", highlightedElement, "description",
-                            description, "language", codeLanguage, "source", source, "reason", reason, "unique_id",
-                            uniqueId, "trace", problemTrace, "html_trace", htmlReport, "solver_duration",
-                            solverDuration, "function", functionName, "sink_function", sinkFunction, "code_snippet",
-                            codeSnippet);
-        }
+        DECLARE_FIELDS("file", file, "line", line, "offset", offset, "length", length, "problem_class", problemClass,
+                       "highlighted_element", highlightedElement, "description", description, "language", codeLanguage,
+                       "source", source, "reason", reason, "unique_id", uniqueId, "trace", problemTrace, "html_trace",
+                       htmlReport, "solver_duration", solverDuration, "function", functionName, "sink_function",
+                       sinkFunction, "code_snippet", codeSnippet);
 
         bool operator==(const ProblemDescriptor& other) const
         {
@@ -161,27 +136,19 @@ public:
         std::vector<ProblemDescriptor> problems;
         std::unordered_map<std::string, std::string> configurations;
         std::unordered_map<string, CodeSnippet> codeSnippets;
-        std::vector<Parser::ParserStatistics::CompilationIssue> compilationIssues;
+        std::vector<CompilationIssue> compilationIssues;
         std::string taintManUrl;
 
-        template <class X>
-        // HCAT-513
-        // COODDY_SUPPRESS CamelCaseChecker
-        void serialize(jsoncpp::Stream<X>& stream)
-        {
-            jsoncpp::fields(*this, stream, "start_time", startTime, "end_time", endTime, "start_timestamp",
-                            startTimeStamp, "end_timestamp", endTimeStamp, "profile", profile, "command_line",
-                            commandLine, "git_commit", gitCommit, "git_version", gitVersion, "project_git_summary",
-                            projectGitSummary, "problems", problems, "code_snippets", codeSnippets, "configurations",
-                            configurations, "taint_man_url", taintManUrl, "compilation_issues", compilationIssues);
-        }
+        DECLARE_FIELDS("start_time", startTime, "end_time", endTime, "start_timestamp", startTimeStamp, "end_timestamp",
+                       endTimeStamp, "profile", profile, "command_line", commandLine, "git_commit", gitCommit,
+                       "git_version", gitVersion, "project_git_summary", projectGitSummary, "problems", problems,
+                       "code_snippets", codeSnippets, "configurations", configurations, "taint_man_url", taintManUrl,
+                       "compilation_issues", compilationIssues);
     };
 
     std::string ConvertProblemSeverity(Problem::Severity severity);
 
     void RegisterProblemImpl(const Problem& problem) override;
-
-    void CopyCompilationIssues();
 
     ReportDescriptor descriptor;
     bool flushed = false;

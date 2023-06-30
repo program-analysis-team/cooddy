@@ -217,12 +217,26 @@ TEST_P(ParserTest, TestCase)
 
 TEST(ParserFailTest, IgnoreTUTest)
 {
-    std::unique_ptr<HCXX::Parser> parser = HCXX::Parser::Create();
     HCXX::CompilerOptions parseOptions;
     parseOptions.options.emplace_back("main.S");
     HCXX::TranslationUnit tu(parseOptions);
-    auto res = parser->ParseAST(tu);
+    auto res = TestBaseClass::GetParser().ParseAST(tu);
     ASSERT_FALSE(res);
+}
+
+TEST(ParserTest, MacroDescriptions)
+{
+    auto path = TEST_SUITE_PATH("ParserTest/macro_descriptions.cpp").string();
+    HCXX::CrossTUContext context;
+    HCXX::TranslationUnit tu(HCXX::CompilerOptions{{std::move(path)}});
+    tu.SetCrossTUContext(context);
+    TestBaseClass::GetParser().ParseAST(tu);
+    for (auto& child : tu.GetChildren()) {
+        if (child->IsKindOf(HCXX::Node::Kind::FUNCTION_DECL)) {
+            auto desc = tu.GetCodeDescriptions(child->GetRange());
+            ASSERT_EQ(desc.size(), 13);
+        }
+    }
 }
 
 INSTANTIATE_TEST_SUITE_P(ParserTestSuite, ParserTest, testing::ValuesIn(ParserTest::EnumerateTestCases()));

@@ -9,6 +9,12 @@
 #include <string>
 
 namespace HCXX {
+
+const Node* Node::GetParent() const
+{
+    return myIndexPos != 0 ? myTU->GetParentByIndex(myIndexPos) : nullptr;
+}
+
 void Node::SafePrint(std::string& source, int entryOffset, const std::string& text, SourceRange range, int offset) const
 {
     int cur = range.begin + offset - entryOffset;
@@ -24,12 +30,12 @@ void Node::SafePrint(std::string& source, int entryOffset, const std::string& te
 }
 void Node::Print(std::string& source, int entryOffset) const
 {
-    for (Node* node = myChildren; node != nullptr; node = node->myNext) {
-        auto range = node->GetRange();
+    TraverseChildren([&](const Node& node) {
+        auto range = node.GetRange();
         if (range.begin - entryOffset >= 0 && range.end - entryOffset < source.size()) {
-            node->Print(source, entryOffset);
+            node.Print(source, entryOffset);
         }
-    }
+    });
 }
 
 // LCOV_EXCL_START
@@ -99,7 +105,7 @@ void Node::Serialize(IOStream& stream)
     if (stream.IsOut()) {
         sizeAndInMacro = ((mySourceRange.end - mySourceRange.begin) << 1U) | myInMacro;
     }
-    stream << mySourceRange.begin << sizeAndInMacro << myParent << myNext << myChildren;
+    stream << mySourceRange.begin << sizeAndInMacro << myTU->GetParentByIndex(myIndexPos);
     if (!stream.IsOut()) {
         myInMacro = sizeAndInMacro & 1U;
         mySourceRange.end = mySourceRange.begin + (sizeAndInMacro >> 1U);
@@ -116,23 +122,12 @@ void Node::Release() const
         Log(LogLevel::ERROR) << "Node is destroying before TU is initialized: " << KindToCStr(GetKind()) << std::endl;
     }
 
-    // COODDY_SUPPRESS
-    const_cast<Node*>(this)->ReleaseChildren();
     if (this != myTU) {
+        --AstManager::nodesCount;
+        AstManager::nodesSize -= GetMemorySize();
         // COODDY_SUPPRESS
         delete this;
     }
-}
-
-void Node::ReleaseChildren()
-{
-    for (Node* node = myChildren; node != nullptr;) {
-        Node* toRelease = node;
-        node->myParent = nullptr;
-        node = node->myNext;
-        toRelease->Release();
-    }
-    myChildren = nullptr;
 }
 
 std::string Node::GetSourceText() const

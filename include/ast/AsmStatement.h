@@ -9,9 +9,9 @@
 
 namespace HCXX {
 
-class AsmStatement : public HCXX::Node {
+class AsmStatement : public HCXX::CompoundNode {
 public:
-    DECLARE_KIND(Node, Node::Kind::ASM_STATEMENT);
+    DECLARE_KIND(CompoundNode, Node::Kind::ASM_STATEMENT);
     DECLARE_SERIALIZE(AsmStatement, nullptr);
 };
 

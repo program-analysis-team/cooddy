@@ -1,0 +1,8 @@
+{
+  "kind": "NULL.DEREF",
+  "description": "Dereferencing of \"s->foo()\" which can be null",
+  "line": 12,
+  "pos": 12,
+  "source": "S::foo",
+  "positive": true
+}

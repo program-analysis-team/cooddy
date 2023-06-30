@@ -264,11 +264,10 @@ public:
 
     void TraverseChildren(TraverseCallback callback) const override
     {
-        CALL_CALLBACK(myBody, callback);
-        CALL_CALLBACK(myDefinition, callback);
         for (auto& node : myParams) {
             CALL_CALLBACK(node, callback);
         }
+        CALL_CALLBACK(myBody, callback);
     }
 
     std::vector<const RefExpression*> FindDeclarationUsages(const Node& declNode) const;

@@ -22,13 +22,13 @@ namespace HCXX {
 
 class FunctionDecl;
 
-class RecordDecl : public NamedNode<Node> {
+class RecordDecl : public NamedNode<CompoundNode> {
 public:
     using Fields = std::vector<NodePtr<FieldDecl>>;
 
     DECLARE_ENUM(RecordType, CLASS, STRUCT, UNION, UNKNOWN);
 
-    DECLARE_KIND(NamedNode<Node>, Node::Kind::RECORD_DECL);
+    DECLARE_KIND(NamedNode<CompoundNode>, Node::Kind::RECORD_DECL);
 
     DECLARE_SERIALIZE(RecordDecl, myFields << myRecordType << myUniqueId << myIsFirstDeclaration << myIsImplicit
                                            << mySizeInBits << myCommentBlocks << myIsSensitive);
@@ -121,12 +121,7 @@ public:
         return Base::GetAttribute(attrName);
     }
 
-    void TraverseChildren(TraverseCallback callback) const override
-    {
-        for (auto& node : myFields) {
-            CALL_CALLBACK(node, callback);
-        }
-    }
+    void Traverse(TraverseCallback callback) const override {}
 
     // LCOV_EXCL_STOP
 
@@ -134,8 +129,7 @@ public:
 
     void Clear() override
     {
-        Base::Clear();
-        ReleaseChildren();
+        myChildren = std::vector<NodePtr<Node>>();
     }
 
     uint64_t GetSizeInBits() const
@@ -196,7 +190,7 @@ private:
     bool myIsImplicit = false;
     uint64_t mySizeInBits = 0;
     std::vector<SourceRange> myCommentBlocks;
-    bool myIsSensitive;
+    bool myIsSensitive = false;
 };
 
 class CxxRecordDecl : public RecordDecl {
@@ -236,17 +230,6 @@ public:
     void SetMethods(Methods&& methods);
 
     const CxxMethodDecl* GetMethod(std::string_view methodName) const;
-
-    // LCOV_EXCL_START
-    void TraverseChildren(TraverseCallback callback) const override
-    {
-        CALL_CALLBACK(myDestructor, callback);
-        RecordDecl::TraverseChildren(callback);
-        for (auto& node : myConstructors) {
-            CALL_CALLBACK(node, callback);
-        }
-    }
-    // LCOV_EXCL_STOP
 
     void Clear() override
     {

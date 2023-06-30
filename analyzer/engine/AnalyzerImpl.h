@@ -75,6 +75,7 @@ private:
         void OnTaskCompleted() override;
         std::string GetStreamHash(const TranslationUnit& unit, const FileEntry& entry);
         bool ParseAST(TranslationUnit& unit, bool fullParse);
+        void LogUnitsInfo();
 
         void TUnitCreated(std::shared_ptr<TranslationUnit> unit) override;
         // LCOV_EXCL_START

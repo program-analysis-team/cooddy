@@ -6,7 +6,7 @@ Check following page on [how-to build Cooddy.](Build.md)
 
 ```
 extensibility
-├─include					// cooddy includes directory 
+├─include					// cooddy includes directory
 └─sample_checker
   ├─CMakeLists.txt
   ├─Checkers.cpp			// declaration of checkers, if you want to create a new checker, you have to declare a new checker with DECLARE_CHECKER(<CheckerClassName>) macro

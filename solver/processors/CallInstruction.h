@@ -170,9 +170,19 @@ protected:
     {
         result = context->LeaveCall();
     }
+
+    std::string GetName(GetNameContext& nameContext) const override
+    {
+        return nameContext.GetCalleeName() + "()";
+    }
 };
 
 class CxxMemberCallInstruction : public CallInstruction {
+    struct CxxMmeberCallInfo {
+        uint8_t isVirtualCall : 1;
+        uint8_t isArrow : 1;
+    };
+
     CallType GetCallType(const CallExpression& call) override
     {
         auto method = Node::Cast<CxxMethodDecl>(call.GetFunction());
@@ -188,17 +198,32 @@ class CxxMemberCallInstruction : public CallInstruction {
     void CompileCallee(const CallExpression& callExpr, CompileContext& context) override
     {
         auto& memberCall = static_cast<const CxxMemberCallExpression&>(callExpr);
+        auto callee = Node::Cast<MemberExpression>(memberCall.GetCallee());
+        CxxMmeberCallInfo callInfo{memberCall.IsVirtualCall(), callee && callee->IsArrow()};
+        context.Add<CxxMmeberCallInfo>(callInfo);
         context.Compile(memberCall.GetObject());
         context.Add(ArgType{1});
-        context.Add<bool>(memberCall.IsVirtualCall());
     }
 
     void ExecuteCallee(ExecutionContext& context, z3::expr& callExpr, SymbolId& symbolId) override
     {
+        auto callInfo = context.Get<CxxMmeberCallInfo>();
         auto objExpr = ExecuteArg(context, true);
-        if (context.Get<bool>()) {
+        if (callInfo.isVirtualCall) {
             context->SetCallExpr(objExpr, true);
         }
+    }
+
+    std::string GetName(GetNameContext& nameContext) const override
+    {
+        auto instruction = nameContext.GetCurInstruction();
+        auto& set = nameContext.GetInstructionsSet();
+        (void)set.Get<uint8_t>(&instruction);
+        (void)set.Get<ArgType>(&instruction);
+        auto callInfo = set.Get<CxxMmeberCallInfo>(&instruction);
+        auto calleeName = nameContext.GetCalleeName();
+        auto memberExpr = nameContext.GetLastSiblingName();
+        return memberExpr + (callInfo.isArrow ? "->" : ".") + calleeName + "()";
     }
 };
 

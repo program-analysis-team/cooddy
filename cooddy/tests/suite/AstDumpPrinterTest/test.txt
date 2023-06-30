@@ -13,31 +13,31 @@
                           
 int foo(int c, void* d, int e)            
 {
-    int* p   = ""        
-    void* h       
-    S_53842 j= Som
-    h.SomeMethod( c, 0) 
-    int o             = 5 
-    void f    [10]     
-    void n  [2]    = {{1  2  3}  {4  5  6}} 
-    void m    = {1  2  3} 
-    int l = 10 
-    int g        
+    int* f   = ""        
+    void* g       
+    S_53842 h= Som
+    g.SomeMethod( c, 0) 
+    int i             = 5 
+    void j    [10]     
+    void k  [2]    = {{1  2  3}  {4  5  6}} 
+    void l    = {1  2  3} 
+    int m = 10 
+    int n        
 
     do {
     } while (0) 
     while (false) {
     }
-    for (int k    {1  2  3}) {
+    for (int o    {1  2  3}) {
     }
-    for (int i = 0; i < 10; i++) {
+    for (int p = 0; p < 10; p++) {
         c++ 
         c-- 
         ++c 
         &c 
         c = c 
         c |= c 
-        c = c + (h->w         + j .w        ) + bar(c, 10) + h.SomeMethod( c, i) 
+        c = c + (g->w         + h .w        ) + bar(c, 10) + g.SomeMethod( c, p) 
         break;
     }
     if (e        == 1          ) {
@@ -54,7 +54,7 @@ int foo(int c, void* d, int e)
     c = 1 + 2 
     c = 1 + 2 + 3 
     c = 1 * 2 / 3 + 4 - 5 
-    g       = (1 | 2) & (3 ^ 4 & 5) || true 
-    f     [20][10] 
+    n       = (1 | 2) & (3 ^ 4 & 5) || true 
+    j     [20][10] 
     return 0 
 }

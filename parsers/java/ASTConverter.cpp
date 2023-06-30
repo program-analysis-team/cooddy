@@ -573,15 +573,12 @@ Node* ConvertFloatLiteralExpression(ASTConverter& converter, JavaParser::FloatLi
 {
     auto literalStr = context.getText();
     auto suffix = literalStr.back();
-    auto literalType = LiteralExpression::LiteralType::DOUBLE;
     auto typeKind = ASTConverter::PrimitiveTypeKind::DOUBLE;
     if (suffix == 'f' || suffix == 'F') {
-        literalType = LiteralExpression::LiteralType::FLOAT;
         typeKind = ASTConverter::PrimitiveTypeKind::FLOAT;
     }
-    return converter.CreateNode<FloatLiteralExpression>(
-        LiteralExpression(SourceRange(), literalType, "", converter.ConvertPrimitiveType(typeKind)),
-        std::stod(literalStr));
+    return converter.CreateNode<FloatLiteralExpression>(converter.ConvertPrimitiveType(typeKind),
+                                                        std::stod(literalStr));
 }
 
 Node* ConvertIntLiteralExpression(ASTConverter& converter, JavaParser::IntegerLiteralContext& context)
@@ -604,27 +601,22 @@ Node* ConvertIntLiteralExpression(ASTConverter& converter, JavaParser::IntegerLi
         literalStr = literalStr.substr(2);
         base = 2;
     }
-    return converter.CreateNode<IntLiteralExpression>(
-        LiteralExpression(SourceRange(), LiteralExpression::LiteralType::INTEGER, "",
-                          converter.ConvertPrimitiveType(typeKind)),
-        std::stoull(literalStr, nullptr, base));
+    return converter.CreateNode<IntLiteralExpression>(converter.ConvertPrimitiveType(typeKind),
+                                                      std::stoull(literalStr, nullptr, base));
 }
 
 DECLARE_CONVERTER(Literal)
 {
     if (auto nullContext = context->NULL_LITERAL(); nullContext != nullptr) {
-        return converter->CreateNode<LiteralExpression>(SourceRange(), LiteralExpression::LiteralType::NULLPTR, "",
-                                                        Type());
+        return converter->CreateNode<LiteralExpression>(Type());
     } else if (auto boolContext = context->BOOL_LITERAL(); boolContext != nullptr) {
         return converter->CreateNode<BoolLiteralExpression>(
-            LiteralExpression(SourceRange(), LiteralExpression::LiteralType::BOOL, "",
-                              converter->ConvertPrimitiveType(ASTConverter::PrimitiveTypeKind::BOOLEAN)),
+            converter->ConvertPrimitiveType(ASTConverter::PrimitiveTypeKind::BOOLEAN),
             boolContext->getText() == "true");
     } else if (auto charContext = context->CHAR_LITERAL(); charContext != nullptr) {
         return converter->CreateNode<CharLiteralExpression>(
-            LiteralExpression(SourceRange(), LiteralExpression::LiteralType::CHAR, "",
-                              converter->ConvertPrimitiveType(ASTConverter::PrimitiveTypeKind::CHAR)),
-            charContext->getText()[0], CharLiteralExpression::CharKind::UTF16);
+            converter->ConvertPrimitiveType(ASTConverter::PrimitiveTypeKind::CHAR), charContext->getText()[0],
+            CharLiteralExpression::CharKind::UTF16);
     } else if (auto stringContext = context->STRING_LITERAL(); stringContext != nullptr) {
         return converter->CreateNode<StringLiteralExpression>(Type(), stringContext->getText());
     } else if (auto intContext = context->integerLiteral(); intContext != nullptr) {
@@ -633,7 +625,7 @@ DECLARE_CONVERTER(Literal)
         return ConvertFloatLiteralExpression(*converter, *floatContext);
     }
     // LCOV_EXCL_START
-    return converter->CreateNode<LiteralExpression>(SourceRange(), LiteralExpression::LiteralType::UNKNOWN, "", Type());
+    return converter->CreateNode<LiteralExpression>(Type());
     // LCOV_EXCL_STOP
 }
 

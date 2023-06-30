@@ -10,7 +10,7 @@ void* MSG_FreeMsgSub(void* pMsg);
 
 #define Msg_Alloc(uiLength) MSG_AllocMsgSub(uiLength, __FUNCTION__, __LINE__)
 #define Msg_Free(pMsg) MSG_FreeMsgSub(pMsg)
- 
+
 int test_check_func(void* pValue) {
     return RETURN_ERR;
 }
@@ -19,7 +19,7 @@ void test_case_02() {
     int iRet;
     int tmpMsgLen = 1;
     void* tmpMsg = NULL;
-    
+
     tmpMsg = Msg_Alloc(tmpMsgLen);
 
     iRet = test_check_func(tmpMsg);
@@ -34,7 +34,7 @@ void test_case_02() {
 void test_case_02_test() {
     int tmpMsgLen = 0;
     void* tmpMsg = NULL;
-    
+
     /*tmpMsg = MSG_AllocMsgSub(tmpMsgLen,__FUNCTION__,__LINE__);*/
     tmpMsg = malloc(tmpMsgLen);
 }

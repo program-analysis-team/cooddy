@@ -1,0 +1,7 @@
+{
+  "kind": "NULL.DEREF",
+  "description": "Dereferencing of \"(aa->a->fptr)\" which can be null",
+  "line": 11,
+  "pos": 5,
+  "positive": true
+}

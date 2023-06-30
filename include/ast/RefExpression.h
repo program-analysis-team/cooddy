@@ -9,11 +9,11 @@
 
 namespace HCXX {
 
-class RefExpression : public TypedNode {
+class RefExpression : public TypedNodeBase {
 public:
-    explicit RefExpression(const Node* declaration, const Type& type) : TypedNode(type), myDeclaration(declaration) {}
+    explicit RefExpression(const Node* declaration, const Type& type) : myDeclaration(declaration) {}
 
-    DECLARE_KIND(TypedNode, Node::Kind::REF_EXPRESSION);
+    DECLARE_KIND(TypedNodeBase, Node::Kind::REF_EXPRESSION);
     DECLARE_SERIALIZE(RefExpression, myDeclaration);
 
     const Node* GetDeclaration() const override
@@ -26,10 +26,16 @@ public:
         return VirtualOffset(VirtualOffset::Kind::REF);
     }
 
+    Type GetType() const override
+    {
+        return myDeclaration != nullptr ? myDeclaration->GetType() : Type();
+    }
+
     void Traverse(TraverseCallback callback) const override
     {
+        CALL_CALLBACK(GetType().GetPointedDeclaration(), callback);
         CALL_CALLBACK(myDeclaration, callback);
-        TypedNode::Traverse(callback);
+        TypedNodeBase::Traverse(callback);
     }
 
     void TraverseDeclUsage(TraverseDeclCallback callback, uint32_t usageFlags) const override

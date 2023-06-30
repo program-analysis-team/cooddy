@@ -3,7 +3,7 @@
 
 void fillArray(int* arr, size_t size)
 {
-    
+
     if (size <= 0 || size >= 10) {
         return;
     }

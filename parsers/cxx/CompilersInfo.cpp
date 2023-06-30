@@ -57,8 +57,7 @@ bool CompilersInfo::ShouldAddCompilerMacro(const std::string& define)
 CompilersInfo::CompilerInfo CompilersInfo::CollectNewCompilerInfo(const std::string& compiler,
                                                                   std::string&& extraOptions)
 {
-    std::filesystem::path curPath = std::filesystem::current_path();
-    std::filesystem::path compilerInfoPath = curPath;
+    std::filesystem::path compilerInfoPath = std::filesystem::temp_directory_path();
 
     std::stringstream ss;
     ss << std::this_thread::get_id() << "_" << std::time(nullptr) << "_" << getpid();

@@ -6,7 +6,7 @@ class A {
     {
         fo222[1] = fo111.field;
     }
-    
+
     int main()
     {
         Foo f11;

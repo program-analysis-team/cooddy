@@ -11,7 +11,7 @@ namespace HCXX {
 
 class BoolLiteralExpression : public LiteralExpression {
 public:
-    BoolLiteralExpression(const LiteralExpression& base, bool value) : LiteralExpression(base), myValue(value) {}
+    BoolLiteralExpression(const Type& type, bool value) : LiteralExpression(type), myValue(value) {}
 
     DECLARE_KIND(LiteralExpression, Node::Kind::BOOL_LITERAL_EXPRESSION);
     DECLARE_SERIALIZE(BoolLiteralExpression, myValue);
@@ -20,7 +20,10 @@ public:
     {
         return myValue;
     }
-
+    LiteralType GetLiteralType() const override
+    {
+        return LiteralType::BOOL;
+    }
     int64_t GetSLimitedValue() const override
     {
         return int64_t(myValue);

@@ -175,8 +175,12 @@ ProblemTrace RichHtmlReporter::ConvertProblemTrace(const TracePath& problemTrace
 }
 void RichHtmlReporter::EmbedExpansions(const TraceNode& it, CodeSnippet& snippet)
 {
-    for (auto& exp : it.tu->GetDescriptions(it.scopeRange)) {
-        EmbedExpansion(it, snippet, exp.codeRange, exp.descriptionRange, exp.ToString(*it.tu));
+    for (auto& exp : it.tu->GetCodeDescriptions(it.scopeRange)) {
+        std::string descText = it.tu->GetSourceInRange(exp.descriptionRange);
+        if (exp.type == TranslationUnit::CodeDescription::MACRO) {
+            descText = "#define " + descText;
+        }
+        EmbedExpansion(it, snippet, exp.codeRange, exp.descriptionRange, descText);
     }
 }
 void RichHtmlReporter::EmbedExpansion(const TraceNode& it, CodeSnippet& snippet, const SourceRange& codeRange,
@@ -204,22 +208,39 @@ void RichHtmlReporter::UpdateDescriptor()
     descriptor.endTime = to_string(utc_clock::now());
     descriptor.endTimeStamp = std::time(0);
 }
+
+void RichHtmlReporter::GetCompilationIssues()
+{
+    descriptor.compilationIssues =
+        GetParseInfo([&](LocationInfo& location) {
+            auto snippetPath = CreateLocation(location, GetWorkspace());
+            if (descriptor.codeSnippets.find(snippetPath) == descriptor.codeSnippets.end()) {
+                CodeSnippet snippet{location, CreateCodeSnippet(location.filename, location.line)};
+                descriptor.codeSnippets.insert({snippetPath, snippet});
+            }
+            return snippetPath;
+        }).compilationIssues;
+}
+
 void RichHtmlReporter::Flush()
 {
     if (flushed) {
         return;
     }
     flushed = true;
+    Reporter::Flush();
     FlushStream(myResultPath);
 }
 void RichHtmlReporter::FlushStream(const std::filesystem::path& fileName)
 {
+    if (myInitFlags & PARSE_ERRORS_IN_REPORT) {
+        GetCompilationIssues();
+    }
     UpdateDescriptor();
     if (templateStrHead.empty()) {
         InvalidateTemplateStr();
     }
 
-    CopyCompilationIssues();
     string jsonStr = PackData(jsoncpp::to_string(descriptor, "\n"));
 
     if (myFileStream.is_open()) {
@@ -231,4 +252,5 @@ void RichHtmlReporter::FlushStream(const std::filesystem::path& fileName)
     myFileStream.flush();
     myFileStream.close();
 }
+
 }  // namespace HCXX

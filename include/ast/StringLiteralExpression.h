@@ -12,8 +12,7 @@ namespace HCXX {
 
 class StringLiteralExpression : public LiteralExpression {
 public:
-    StringLiteralExpression(const Type& type, std::string&& value)
-        : LiteralExpression({}, LiteralExpression::LiteralType::STRING, {}, type), myValue(std::move(value))
+    StringLiteralExpression(const Type& type, std::string&& value) : LiteralExpression(type), myValue(std::move(value))
     {}
 
     DECLARE_KIND(LiteralExpression, Node::Kind::STRING_LITERAL_EXPRESSION);
@@ -31,6 +30,11 @@ public:
     const std::string& GetValue() const
     {
         return myValue;
+    }
+
+    LiteralType GetLiteralType() const override
+    {
+        return LiteralType::STRING;
     }
 
     void Print(std::string& source, int entryOffset) const override

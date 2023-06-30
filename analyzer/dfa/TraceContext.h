@@ -35,7 +35,7 @@ private:
     bool AddSources();
     void FillDescriptions(Problem& problem, Annotation::Kind sinkKind);
     void FillSourceInfoAndSeverity(Problem& problem);
-    void ReportProblem(DataFlowAnalyzer& analyzer, CheckPathContext::PathPtr& sinkPath);
+    void ReportProblem(DataFlowAnalyzer& analyzer);
 
     Annotation GetUntrustedSourceAnnotation(ExecId callerExecId, SourceId sourceId, uint32_t calleeArgPos);
     Instruction GetInstructionByArgPos(ExecId execId, uint32_t argPos, Instruction defValue = 0);

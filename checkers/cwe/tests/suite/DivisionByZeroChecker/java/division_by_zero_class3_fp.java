@@ -14,4 +14,3 @@ class A {
         return 1; //this source
     }
 }
-

@@ -18,12 +18,17 @@ class CharLiteralExpression : public LiteralExpression {
 public:
     DECLARE_ENUM(CharKind, ASCII, WIDE, UTF8, UTF16, UTF32);
 
-    CharLiteralExpression(const LiteralExpression& base, uint32_t value, CharKind kind)
-        : LiteralExpression(base), myValue(value), myKind(kind)
+    CharLiteralExpression(const Type& type, uint32_t value, CharKind kind)
+        : LiteralExpression(type), myValue(value), myKind(kind)
     {}
 
     DECLARE_KIND(LiteralExpression, Node::Kind::CHAR_LITERAL_EXPRESSION);
     DECLARE_SERIALIZE(CharLiteralExpression, myValue << myKind);
+
+    virtual LiteralType GetLiteralType() const
+    {
+        return LiteralType::CHAR;
+    }
 
     // LCOV_EXCL_START
     virtual std::optional<std::string> GetAttribute(std::string_view attrName) const override

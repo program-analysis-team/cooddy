@@ -35,10 +35,10 @@ public:
     static const Instruction THIS_INSTRUCTION = 3;
     static const SymbolId THROW_SYMBOL_ID;
 
-    explicit ExecutionContext(FunctionBehaviorImpl* owner);
+    explicit ExecutionContext(FunctionBehaviorImpl* owner, bool useMemMonitor);
     ~ExecutionContext();
 
-    bool EnterFunction(FunctionBehaviorImpl& function, SymbolsContextPtr entrySymbols, uint32_t entryBlock);
+    void EnterFunction(FunctionBehaviorImpl& function, SymbolsContextPtr entrySymbols, uint32_t entryBlock);
 
     void LeaveFunction(SymbolsContextPtr exitSymbols);
 
@@ -303,7 +303,7 @@ protected:
     ExecBranchesInfo myExecBranchesInfo;
     SymbolAliases mySymbolAliases;
     FunctionBehaviorImpl* myFunctionBehavior = nullptr;
-    std::shared_ptr<SymbolsContext> myExitSymbols = nullptr;
+    SymbolsContextPtr myExitSymbols = nullptr;
     SymbolsSet myExitSetSymbols;
     UntrustedSources myUntrustedSources;
 };

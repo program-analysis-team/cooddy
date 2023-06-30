@@ -11,17 +11,11 @@
 
 /// Declaration of node with type
 namespace HCXX {
-class TypedNode : public Node {
+class TypedNodeBase : public Node {
 public:
-    explicit TypedNode(const Type& type) : myType(type) {}
-
-    Type GetType() const override
-    {
-        return myType;
-    };
+    explicit TypedNodeBase() {}
 
     DECLARE_KIND(Node, Node::Kind::TYPED_NODE);
-    DECLARE_SERIALIZE(TypedNode, myType);
 
     virtual const Node* GetInitializer() const
     {
@@ -58,20 +52,32 @@ public:
         return UNDEF_VALUE;
     }
 
+    static const int64_t UNDEF_VALUE = INT64_MAX;
+};
+
+class TypedNode : public TypedNodeBase {
+public:
+    explicit TypedNode(const Type& type) : myType(type) {}
+
+    DECLARE_SERIALIZE(TypedNode, myType);
+
+    Type GetType() const override
+    {
+        return myType;
+    }
+
     void Traverse(TraverseCallback callback) const override
     {
         CALL_CALLBACK(myType.GetPointedDeclaration(), callback);
         Node::Traverse(callback);
     }
 
-    static const int64_t UNDEF_VALUE = INT64_MAX;
-
 private:
     Type myType;
 };
 
 #define CALL_TYPED_NODE(node, method) \
-    (Node::Cast<TypedNode>(node) != nullptr ? Node::Cast<TypedNode>(node)->method() : TypedNode::method())
+    (Node::Cast<TypedNode>(node) != nullptr ? Node::Cast<TypedNode>(node)->method() : TypedNodeBase::method())
 
 }  // namespace HCXX
 #endif  // COODDY_TYPEDNODE_H

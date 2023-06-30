@@ -17,7 +17,7 @@ void foo2()
 
 void foo3()
 {
-    int arr[10];
+    long long arr[10];
     for (long long i = 9; i > 0; --i) {  // no error here
         arr[i] = i;
     }

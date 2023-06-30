@@ -1,0 +1,7 @@
+{
+  "kind": "NULL.DEREF",
+  "description": "Dereferencing of \"(bbbObj.aaaPtr)\" which can be null",
+  "line": 19,
+  "pos": 5,
+  "positive": true
+}

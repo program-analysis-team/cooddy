@@ -86,10 +86,9 @@ public:
         return true;
     };
 
-    // If result is true, than source or sink annotation
+    // If result is true, then source or sink annotation
     // will be added to paths checking in solver
-    virtual bool ShouldProcessAnnotation(const Annotation& annotation, bool defResult,
-                                         const DfaFunctionContext* funcContext)
+    virtual bool ShouldProcessAnnotation(const Annotation& annotation, bool defResult, bool sourceFound)
     {
         return defResult;
     };

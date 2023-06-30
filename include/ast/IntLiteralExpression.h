@@ -15,7 +15,7 @@ namespace HCXX {
 
 class IntLiteralExpression : public LiteralExpression {
 public:
-    IntLiteralExpression(const LiteralExpression& base, uint64_t myValue) : LiteralExpression(base), myValue(myValue) {}
+    IntLiteralExpression(const Type& type, uint64_t myValue) : LiteralExpression(type), myValue(myValue) {}
 
     DECLARE_KIND(LiteralExpression, Node::Kind::INT_LITERAL_EXPRESSION);
     DECLARE_SERIALIZE(IntLiteralExpression, myValue);
@@ -37,6 +37,11 @@ public:
     uint64_t GetValue() const
     {
         return myValue;
+    }
+
+    LiteralType GetLiteralType() const override
+    {
+        return LiteralType::INTEGER;
     }
 
     virtual bool IsTreatedAsNullPtr() const override

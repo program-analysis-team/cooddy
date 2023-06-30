@@ -12,4 +12,3 @@ void EXTER_ATTACK foo(char *str) {
     d.resize(size);
     d.push_back(25);
 }
-

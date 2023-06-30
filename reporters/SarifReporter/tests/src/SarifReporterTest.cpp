@@ -21,7 +21,7 @@ public:
     Json Analyze(std::string_view id)
     {
         fs::path outputPath = fs::temp_directory_path();
-        outputPath += id;
+        outputPath /= id;
         outputPath += ".sarif";
         TempFile output(outputPath);
 
@@ -34,7 +34,9 @@ public:
         }  // Result written to file here
 
         Json j;
-        std::ifstream ifs(outputPath);
+        std::ifstream ifs;
+        ifs.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+        ifs.open(outputPath);
         ifs >> j;
 
         ValidateBasicStructure(j);

@@ -103,12 +103,7 @@ public:
         }
         VirtualOffset result;
         if (myOperation == Operation::DEREF) {
-            auto castNode = Node::Cast<CastExpression>(myOperand);
-            if (castNode != nullptr && castNode->GetCastKind() == CastExpression::Kind::ARRAY_TO_POINTER_DECAY) {
-                result += VirtualOffset(VirtualOffset::Kind::INDEX, 0);
-            } else {
-                result += VirtualOffset(VirtualOffset::Kind::DEREF);
-            }
+            result += VirtualOffset(VirtualOffset::Kind::DEREF);
         } else {
             result += VirtualOffset(VirtualOffset::Kind::ADDR_OF);
         }

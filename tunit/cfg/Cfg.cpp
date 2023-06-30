@@ -36,9 +36,7 @@ Cfg::~Cfg()
             elem.GetNode()->Traverse([](const Node& node) { node.Release(); });
         }
     }
-    for (auto& param : myFunction->GetParams()) {
-        param->Traverse([&](const Node& node) { node.Release(); });
-    }
+    myFunction->Traverse([&](const Node& node) { node.Release(); });
 }
 
 void Cfg::Serialize(IOStream& stream)
@@ -46,15 +44,6 @@ void Cfg::Serialize(IOStream& stream)
     stream.Add<uint32_t>(myBlocks.size());
     for (auto& block : myBlocks) {
         block.Serialize(stream);
-    }
-}
-
-void Cfg::AddNodeMemorySize(const Node& node)
-{
-    for (auto& child : node.GetChildren(true)) {
-        MemCounter counter;
-        child->GetMemorySize(counter);
-        myMemorySize += counter.GetSize();
     }
 }
 
@@ -106,6 +95,7 @@ std::vector<HCXX::CfgElement> Cfg::ProcessElementsOfBlock(CfgBlock& block, uint3
 
 void Cfg::Init()
 {
+    myMemorySize = sizeof(Cfg) + myBlocks.capacity() * sizeof(CfgBlock);
     myEntryBlock = myBlocks.size() - 1;
 #ifdef CODE_COVERAGE
     myBlocks.clear();  // clear existing Cfg in code coverage mode to test CfgBuilder
@@ -141,8 +131,8 @@ void Cfg::Init()
         }
         auto elements = ProcessElementsOfBlock(block, blocks.size(), b == order.back(), globals);
 
-        myMemorySize += sizeof(Cfg) + blocks.capacity() * sizeof(CfgBlock) +
-                        (successors.capacity() + predecessors.capacity()) * sizeof(CfgBlock::BlocksRef);
+        myMemorySize += (successors.capacity() + predecessors.capacity()) * sizeof(CfgBlock::BlocksRef) +
+                        elements.capacity() * sizeof(CfgElement);
 
         blocks.emplace_back(blocks.size(), std::move(elements), std::move(successors), std::move(predecessors),
                             block.GetTerminatorCondition(), block.GetLabelStatement(), block.GetTerminatorStatement(),
@@ -152,10 +142,7 @@ void Cfg::Init()
     myEntryBlock = myBlocks.size() - 1;
     myExitBlock = 0;
 
-    for (auto& param : myFunction->GetParams()) {
-        param->Traverse([&](const Node& node) { node.AddRef(); });
-    }
-    AddNodeMemorySize(*myFunction);
+    myFunction->Traverse([&](const Node& node) { node.AddRef(); });
 }
 
 void Cfg::AddCtorInitializers(std::vector<HCXX::CfgElement>& elements)

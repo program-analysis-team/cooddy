@@ -12,4 +12,3 @@ int main()
     char source[SIZE_BUF] = "TESTSTG";
     Foo(dest, source);
 }
-

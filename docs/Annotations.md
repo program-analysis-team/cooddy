@@ -134,7 +134,7 @@ Each annotation description has the following structure:
 
 
 *Annotation name* is one of the predefined names that explains what information this annotation is conveying to the analysis. See the [annotation reference](Annotations.md) below for a list of names.
-*Offset* is useful for memory blocks, and specifies where in the block does the annotation apply. Possible values are `*`, `&`, `[<number>]` and any combination of those values. 
+*Offset* is useful for memory blocks, and specifies where in the block does the annotation apply. Possible values are `*`, `&`, `[<number>]` and any combination of those values.
 
 **Write to the value itself**
 
@@ -217,9 +217,9 @@ Examples:
 // function which returns value is greater then 10 and less then 20
 "myFoo3": [["Condition::>10", "Condition::<20"]]
 // function which returns value is greater then 1st argument and less then 2nd argument
-"myFoo4": [["Condition::>$1", "Condition::<$2"]], [], []] 
-// function which returns value is calculated as (<1st arg> + <2nd arg> * <3rd arg>) 
-"myFoo5": [["Result::$1 + $2 * $3"]], [], [], []] 
-// functions which returns minimum of two numbers 
+"myFoo4": [["Condition::>$1", "Condition::<$2"]], [], []]
+// function which returns value is calculated as (<1st arg> + <2nd arg> * <3rd arg>)
+"myFoo5": [["Result::$1 + $2 * $3"]], [], [], []]
+// functions which returns minimum of two numbers
 "myFoo6": [["Result::ite($1 < $2, $1, $2)"], [], []]
 ```

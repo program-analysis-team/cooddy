@@ -54,7 +54,8 @@ public:
         auto base = Node::Cast<TypedNode>(GetBase());
         auto idx = Node::Cast<IntLiteralExpression>(GetIdx());
         if (base != nullptr && idx != nullptr) {
-            VirtualOffset result(VirtualOffset::Kind::INDEX, idx->GetSLimitedValue());
+            auto idxVal = idx->GetSLimitedValue();
+            VirtualOffset result(idxVal != 0 ? VirtualOffset::Kind::INDEX : VirtualOffset::Kind::DEREF, idxVal);
             auto baseOffset = base->GetOffsetInDeclaration();
             return baseOffset ? *baseOffset + result : result;
         }
@@ -93,8 +94,8 @@ public:
     // LCOV_EXCL_STOP
 
 private:
-    const Node* myLHS = nullptr;
-    const Node* myRHS = nullptr;
+    NodePtr<Node> myLHS;
+    NodePtr<Node> myRHS;
     bool myReveresed = false;
 };
 

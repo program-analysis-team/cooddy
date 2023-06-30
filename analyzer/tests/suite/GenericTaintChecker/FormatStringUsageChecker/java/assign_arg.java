@@ -5,7 +5,7 @@ class Holder<T> {
     }
     public T value;
 }
-public class FormatExample {  
+public class FormatExample {
     A(Holder<String> output) {
         Scanner in = new Scanner(System.in);
         output.value = in.nextLine();
@@ -15,4 +15,4 @@ public class FormatExample {
         A(h);
         String sf1 = String.format(h.value, 1, 2, 3);
     }
-}  
+}

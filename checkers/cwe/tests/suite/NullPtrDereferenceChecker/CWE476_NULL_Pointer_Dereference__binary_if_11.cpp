@@ -26,4 +26,3 @@ int main(int argc, char * argv[])
     printLine("Finished bad()");
     return 0;
 }
-

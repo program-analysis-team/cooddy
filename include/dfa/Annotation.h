@@ -51,6 +51,7 @@ public:
         NOT_PROPAGATED_FROM_PARAMETER = 0b100000000,
         ANNOTATE_CALL_INSTRUCTION     = 0b1000000000,
         NOT_PROPAGATED_BY_STATIC_VAR  = 0b10000000000,
+        PROPAGATED_BY_RETVALUE        = 0b100000000000,
     };
     // clang-format on
 
@@ -120,6 +121,12 @@ public:
     static bool IsPropagatedByStaticVar(Annotation::Kind kind)
     {
         return !(myTraits[kind] & NOT_PROPAGATED_BY_STATIC_VAR);
+    }
+
+    /// If true, this annotation should be propagated to return values of the function
+    static bool IsPropagatedByRetValue(Annotation::Kind kind)
+    {
+        return !IsPropagatedByDecl(kind) || (myTraits[kind] & PROPAGATED_BY_RETVALUE);
     }
 
     static uint32_t GetAnnotationsCount()

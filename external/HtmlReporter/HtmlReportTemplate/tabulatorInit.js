@@ -703,13 +703,13 @@ function createGridMenu() {
         content.appendChild(d);
         document.getElementById("downloadTrace").addEventListener("click", function () {
             let text = sourceHtmlText;
-            let heder = "<script id='cooddyResults' type='text/json'>";
-            let startPos = text.indexOf(heder);
+            let header = "<script id='cooddyResults' type='text/json'>";
+            let startPos = text.indexOf(header);
             if(startPos < 0) {
-                const heder = '<script id="cooddyResults" type="text/json">';
-                startPos = text.indexOf(heder);
+                const header = '<script id="cooddyResults" type="text/json">';
+                startPos = text.indexOf(header);
             }
-            startPos += heder.length;
+            startPos += header.length;
             const endPos = text.indexOf('</script>', startPos);
             let json = {problems:[lastLoadedProblem], code_snippets: {}};
             for(const [k, v] of Object.entries(cooddyResults)) {

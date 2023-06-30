@@ -34,6 +34,8 @@ std::string GetCanonicalPath(const std::string& path);
 
 tcb::span<const char* const> Argv();
 
+uint64_t GetProcessMemoryUsage();
+
 }  // namespace HCXX::EnvironmentUtils
 
 #endif  // COODDY_ANALYZER_INCLUDE_UTILS_ENVIRONMENTUTILS_H_

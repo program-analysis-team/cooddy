@@ -30,6 +30,7 @@
 #include "ProblemsHolder.h"
 #include "TaintMacroCliDefinition.h"
 #include "deps/cxxopts.hpp"
+#include "dfa/SensitiveDataSettings.h"
 #include "reporters/CompositeReporter.h"
 #include "reporters/OutReporter.h"
 #include "workspace/GenAnnoSettings.h"
@@ -95,6 +96,8 @@ inline cxxopts::Options ConstructOptions()
     ("taint-macro", "set macro used as an annotation to tainted functions",
         cxxopts::value<std::string>()->default_value("EXTER_ATTACK"))
     ("taint-macro-summary", "print summary of issues found in functions annotated by macro",
+        cxxopts::value<bool>()->default_value("true"))
+    ("sensi-info-summary", "print summary of issues found by sensitive data exposure",
         cxxopts::value<bool>()->default_value("true"))
     ("taint-sde", "set macro used as an annotation to sensitive data exposure sources",
         cxxopts::value<std::string>()->default_value("SENSI_INFO"))
@@ -189,53 +192,17 @@ struct ExitStatus {
     };
 };
 
-std::string GetSourceTextLine(const std::string& filePath, uint32_t line, uint32_t linesOfContext)
-{
-    auto file = HCXX::FileEntriesCache::GetInstance().GetFileEntry(filePath);
-
-    if (file == nullptr || file->lineOffsets.empty() || line >= file->lineOffsets.size()) {
-        return "";  // LCOV_EXCL_LINE
-    }
-
-    auto& lineOffsets = file->lineOffsets;
-
-    uint32_t startPos = line > linesOfContext ? lineOffsets[line - linesOfContext] : lineOffsets[0];
-    uint32_t endPos = line + linesOfContext >= lineOffsets.size() ? lineOffsets[lineOffsets.size() - 1]
-                                                                  : lineOffsets[line + linesOfContext];
-    return file->fileSource.substr(startPos, endPos - startPos);
-}
-
-inline void SaveParserErrorLog(HCXX::Parser& parser, const std::string& parseErrorLog)
-{
-    auto& issues = parser.statistics.compilationIssues;
-    if (issues.empty()) {
-        return;
-    }
-    std::filesystem::path logPath(parseErrorLog);
-    if (logPath.is_relative()) {
-        logPath = HCXX::EnvironmentUtils::GetSelfExecutableDir() / logPath;
-    }
-    if (std::filesystem::is_directory(logPath)) {
-        logPath = logPath / "parse_errors.csv";
-    }
-    static constexpr uint32_t linesOfContext = 5;
-    std::ofstream os(logPath);
-    HCXX::CsvUtils::WriteRow(os, {"Translation unit", "File", "Line", "Column", "Severity", "Message", "Source code"});
-    for (auto& issue : issues) {
-        HCXX::CsvUtils::WriteRow(
-            os, {issue.tu, issue.file, std::to_string(issue.line), std::to_string(issue.column), issue.severity,
-                 issue.message, GetSourceTextLine(issue.file, issue.line, linesOfContext)});
-    }
-}
-
 // Wrapper for analysis to add AR_ENABLE flag to consumer
 inline void RunAnalysis(const cxxopts::ParseResult& parsedArgs, std::unique_ptr<HCXX::Analyzer> analyzer,
-                        const CompilerOptionsList& unitsOptions, ProblemsHolder& holder, Analyzer::Consumer& consumer)
+                        const CompilerOptionsList& unitsOptions, Reporter& reporter, Analyzer::Consumer& consumer)
 {
+    if (auto parseErrorsPath = parsedArgs["parse-errors-log"].as<std::string>(); !parseErrorsPath.empty()) {
+        reporter.SetParseErrorsPath(parseErrorsPath);
+    }
     if (parsedArgs["ast-dump"].as<bool>()) {
         consumer.SetParseFlags(Parser::DUMP_AST | consumer.GetParseFlags());
     }
-    analyzer->Analyze(unitsOptions, holder, consumer);
+    analyzer->Analyze(unitsOptions, reporter, consumer);
 }
 
 inline Problem::Severity ConvertCLIOpToSeverity(const std::string& op)
@@ -291,6 +258,9 @@ inline int RunAnalyses(cxxopts::ParseResult& parsedArgs)
     bool taintMacroSummaryArg = parsedArgs["taint-macro-summary"].as<bool>();
     auto taintSettings = TaintSettings{taintFlagsArg, taintMacroSummaryArg};
     workspace.SetConfiguration("#UntrustedSourceChecker", jsoncpp::to_string(taintSettings));
+    bool sensiInfoSummaryArg = parsedArgs["sensi-info-summary"].as<bool>();
+    auto sensiInfoSettings = SensitiveDataSettings{sensiInfoSummaryArg};
+    workspace.SetConfiguration("SensitiveDataExposureChecker", jsoncpp::to_string(sensiInfoSettings));
 
     if (workspace.GetProfile().IsEmpty()) {
         std::cout << HCXX::StrLocales::GetStringLocale("PROFILE_FILE") << profile
@@ -343,7 +313,7 @@ inline int RunAnalyses(cxxopts::ParseResult& parsedArgs)
     } else {
         auto parsedReps = parsedArgs["reporter"].as<std::vector<std::string>>();
         CompositeReporter reporter(parsedReps, workspace);
-        uint32_t initFlags = 0;
+        uint32_t initFlags = Reporter::PARSE_ERRORS_IN_REPORT;
         for (auto& repArg : parsedReps) {
             if (repArg != "html" && repArg.find("html") != std::string::npos) {
                 initFlags |= Reporter::HTML_REPORT;
@@ -385,11 +355,6 @@ inline int RunAnalyses(cxxopts::ParseResult& parsedArgs)
             RunAnalysis(parsedArgs, std::move(analyzer), compileOptions, reporter, consumer);
             consumer.OutReport(callGraphFileName);
         }
-    }
-
-    auto parseErrorLog = parsedArgs["parse-errors-log"].as<std::string>();
-    if (!parseErrorLog.empty()) {
-        SaveParserErrorLog(*parser, parseErrorLog);
     }
 
     return ExitStatus::SUCCESS;

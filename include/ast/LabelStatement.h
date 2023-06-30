@@ -18,6 +18,11 @@ public:
     DECLARE_KIND(NamedNode<Node>, Node::Kind::LABEL_STATEMENT);
     DECLARE_SERIALIZE(LabelStatement, mySubStatement);
 
+    void TraverseChildren(TraverseCallback callback) const override
+    {
+        CALL_CALLBACK(mySubStatement, callback);
+    }
+
     const Node* GetSubStatement() const
     {
         return mySubStatement;

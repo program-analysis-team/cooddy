@@ -1,8 +1,8 @@
 #include <memory>
 #include <string>
- 
+
 std::shared_ptr<std::string> global;
- 
+
 struct StringPtr {
     void Set(const ::std::string* default_value, const ::std::string* value)
     {
@@ -12,16 +12,16 @@ struct StringPtr {
             *ptr_ = *value;
         }
     }
- 
+
     void Destroy()
     {
         delete ptr_;
         ptr_ = nullptr;
     }
- 
+
     std::string* ptr_;
 };
- 
+
 struct share {
     ~share()
     {
@@ -32,10 +32,10 @@ struct share {
     {
         name.Set(global.get(), &value);
     }
- 
+
     StringPtr name;
 };
- 
+
 struct B {
     share* get_share()
     {
@@ -44,14 +44,14 @@ struct B {
         }
         return a;
     }
- 
+
     ~B()
     {
         delete a;
     }
     share* a;
 };
- 
+
 void test(B& b)
 {
     std::string val;

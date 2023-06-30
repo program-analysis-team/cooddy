@@ -15,7 +15,6 @@ class AllocSourceChecker : public BuildInDfaChecker {
     Annotation::Kind myFreeSinkKind;
     Annotation::Kind myFreeSourceKind;
     Annotation::Kind myPassByRef;
-    Annotation::Kind myAliasKind;
     Annotation::Kind myCreateObjectKind;
 
 public:
@@ -28,11 +27,11 @@ public:
         Annotation::RegisterKind("AllocDescriptor", Annotation::PROPAGATED_BY_POINTER);
         Annotation::RegisterKind("FreeDescriptor", Annotation::PROPAGATED_BY_DECL);
         myAllocSourceKind = Annotation::RegisterKind("AllocSource", 0);
-        myFreeSinkKind = Annotation::RegisterKind("FreeSink", Annotation::PROPAGATED_BY_DECL);
+        myFreeSinkKind =
+            Annotation::RegisterKind("FreeSink", Annotation::PROPAGATED_BY_DECL | Annotation::PROPAGATED_BY_RETVALUE);
         myFreeSourceKind =
             Annotation::RegisterKind("FreeSource", Annotation::PROPAGATED_BY_POINTER | Annotation::PROPAGATED_BY_ALIAS);
         myPassByRef = Annotation::GetKind("PassByRef");
-        myAliasKind = Annotation::GetKind("Alias");
         myCreateObjectKind = Annotation::RegisterKind("CreateObject", Annotation::NOT_PROPAGATED_FROM_PARAMETER);
     }
 
@@ -80,33 +79,9 @@ public:
         }
     }
 
-    void AnnotateAliasStates(DfaState& state)
-    {
-        if (!state.HasAnnotation(myAllocSourceKind)) {
-            return;
-        }
-        for (auto& alias : state.GetAnnotationSources(myAliasKind)) {
-            if (alias.first.GetArgPos() == 0) {
-                auto function = state.GetFuncState().GetContext().GetFunction();
-                auto& retState = state.GetFuncState().GetState(function);
-                for (auto& it : state.GetAnnotationSources(myFreeSinkKind)) {
-                    retState.Annotate(Annotation(it.first, VirtualOffset()), *it.second);
-                }
-            } else if (alias.second->IsKindOf(HCXX::Node::Kind::PARAM_VAR_DECL)) {
-                // store annotations propagated by pointer in the alias declaration states
-                auto& aliasState = state.GetFuncState().GetState(alias.second);
-                for (auto& it : state.GetAnnotationSources(myFreeSinkKind)) {
-                    aliasState.Annotate(Annotation(it.first, alias.first.GetMemoryOffset()), *it.second);
-                }
-            }
-        }
-    }
-
     void ExitState(DfaState& state) override
     {
-        if (state.HasAnnotation(myFreeSinkKind)) {
-            AnnotateAliasStates(state);
-        } else {
+        if (!state.HasAnnotation(myFreeSinkKind)) {
             for (auto [annotation, node] : state.GetAnnotationSources(myFreeSourceKind)) {
                 auto& userData = annotation.GetUserData<FreeUserData>();
                 userData.isFromAliasState = true;

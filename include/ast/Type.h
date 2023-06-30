@@ -140,10 +140,15 @@ public:
         return !operator==(other);
     }
 
-    void Serialize(IOStream& stream)
+    uint64_t& GetFlags()
     {
         // COODDY_SUPPRESS
-        stream.SerializePod(*reinterpret_cast<uint64_t*>(&mySizeInBits));
+        return *reinterpret_cast<uint64_t*>(&mySizeInBits);
+    }
+
+    void Serialize(IOStream& stream)
+    {
+        stream << GetFlags();
         if (myIsDeclaration) {
             stream << myDeclNode;
         }
@@ -151,22 +156,10 @@ public:
 
     ~Type() = default;
 
-    Type()
-        : myDeclNode(nullptr),
-          mySizeInBits(0),
-          myIsUnsigned(0),
-          myIsDeclaration(0),
-          myPointerFlags(0),
-          myReferenceFlags(0),
-          myConstantFlags(0),
-          myIsVariableArray(0),
-          myIsConstantArray(0),
-          myIsArray(0),
-          myIsFloatingType(0),
-          myIsIntegerType(0),
-          myIsRvalueType(0),
-          myIsSensitiveData(0)
-    {}
+    Type(uint64_t flags = 0) : myDeclNode(nullptr)
+    {
+        GetFlags() = flags;
+    }
 
 private:
     const Node* myDeclNode;

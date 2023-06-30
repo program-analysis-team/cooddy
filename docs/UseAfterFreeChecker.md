@@ -18,7 +18,7 @@ When a program frees the same memory twice, the memory management data structure
 
 ```cpp
 
-#include "stdlib.h" 
+#include "stdlib.h"
 void foo()
 {
     int* a = (int*)malloc(sizeof(int));

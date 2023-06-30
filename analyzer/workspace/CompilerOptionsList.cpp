@@ -9,14 +9,12 @@
 #include <workspace/CompileCommand.h>
 
 namespace HCXX {
-
 void CompilerOptionsList::ParseResponseFile(const std::string& curDir, const std::string& rspFile,
                                             CompilerOptions& options)
 {
-    std::filesystem::path filePath(curDir);
-    filePath.append(rspFile);
-    if (filePath.extension() != ".rsp") {
-        return;
+    std::filesystem::path filePath = rspFile;
+    if (!filePath.is_absolute()) {
+        filePath = curDir / filePath;
     }
 
     std::ifstream scopeStream(filePath.string());

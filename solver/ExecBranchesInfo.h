@@ -25,6 +25,9 @@ public:
 
     void SetCurExecId(uint32_t pos, uint16_t callId, ExecId execId)
     {
+        if (callId >= myBlocks.size() || pos >= myBlocks[callId].size()) {
+            return;
+        }
         myBlocks[callId][pos].lastExecId = execId;
     }
 

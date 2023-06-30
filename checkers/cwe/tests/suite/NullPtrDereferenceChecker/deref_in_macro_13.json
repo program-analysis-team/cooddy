@@ -1,0 +1,7 @@
+{
+  "kind": "NULL.DEREF",
+  "description": "Dereferencing of \"(bbbPtr->aaaObj.AAA::Foo())\" which can be null",
+  "line": 18,
+  "pos": 5,
+  "positive": true
+}

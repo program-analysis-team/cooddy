@@ -87,12 +87,17 @@ public:
         return myBlocks;
     }
 
+    std::optional<Instruction> GetInstructionOffset(Instruction instruction) const;
+
     InstructionHeader* GetInstructionHeader(Instruction instruction);
 
     uint32_t GetMaxInstruction() override
     {
         return myIntructionsSet.Count();
     }
+
+    std::string GetName(Instruction instr, GetCalleeNameCb& getCalleeNameCb,
+                        GetSourceInRangeCb& getSourceInRangeCb) override;
 
 private:
     void ProcessBlockSuccessors(ExecutionContext& execCtx, const BasicBlock& block,

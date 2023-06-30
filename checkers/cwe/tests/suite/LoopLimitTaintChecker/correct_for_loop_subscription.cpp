@@ -1,6 +1,8 @@
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
+#include <cstdint>
+
 struct A {
     char* str;
 };

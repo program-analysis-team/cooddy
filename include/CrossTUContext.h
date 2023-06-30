@@ -7,6 +7,8 @@
 
 #include <TranslationUnit.h>
 
+#include <set>
+
 namespace HCXX {
 
 class CrossTUContext {
@@ -102,10 +104,58 @@ public:
         }
     }
 
+    uint64_t GetMemUsage() const
+    {
+        uint64_t result = 0;
+        for (auto& it : myFunctions) {
+            result += sizeof(it) + it.first.capacity() + it.second.capacity() * sizeof(FuncInfo);
+        }
+        for (auto& it : myGlobalVars) {
+            result += sizeof(it) + it.first.capacity() + it.second.capacity() * sizeof(VarInfo);
+        }
+        for (auto& it : myDeclarations) {
+            result += sizeof(it) + it.nestedDecls.capacity() * sizeof(uint64_t);
+        }
+        return result;
+    }
+
+    struct Declaration {
+        EntryOffset declOffset;
+        uint32_t declSize : 31;
+        uint32_t isMacro : 1;
+        std::vector<std::pair<uint32_t, uint32_t>> nestedDecls;
+
+        bool operator<(const Declaration& d) const
+        {
+            return declOffset < d.declOffset;
+        }
+    };
+
+    bool AddDeclaration(Declaration&& decl)
+    {
+        std::unique_lock<std::mutex> lock(myMutex);
+        return myDeclarations.emplace(decl).second;
+    }
+
+    const Declaration* FindDeclaration(EntryOffset offset)
+    {
+        std::unique_lock<std::mutex> lock(myMutex);
+        auto it = myDeclarations.find(Declaration{offset});
+        return it != myDeclarations.end() && offset == it->declOffset ? &*it : nullptr;
+    }
+
+    const Declaration* FindInclusiveDeclaration(EntryOffset offset)
+    {
+        std::unique_lock<std::mutex> lock(myMutex);
+        auto it = myDeclarations.upper_bound(Declaration{offset});
+        return it-- != myDeclarations.begin() && offset < it->declOffset + it->declSize ? &*it : nullptr;
+    }
+
 private:
     std::mutex myMutex;
     std::unordered_map<std::string, std::vector<FuncInfo>> myFunctions;
     std::unordered_map<std::string, std::vector<VarInfo>> myGlobalVars;
+    std::set<Declaration> myDeclarations;
 };
 
 }  // namespace HCXX

@@ -238,6 +238,28 @@ void AnalyzerImpl::AnalyzeContext::StartProcessing(Parser::ParseStages parseStag
     }
 }
 
+void LogMemUsage(HCXX::Log& log, const char* name, uint64_t size, uint64_t count = 0)
+{
+    log << ", " << name << '=' << (size / (1024 * 1024)) << "Mb";
+    if (count != 0) {
+        log << '(' << count << ')';  // LCOV_EXCL_LINE
+    }
+}
+
+void AnalyzerImpl::AnalyzeContext::LogUnitsInfo()
+{
+    uint64_t optionsSize = 0;
+    for (auto& unit : myUnits) {
+        optionsSize += unit->GetCompilerOptions().GetMemUsage();
+    }
+    HCXX::Log log(HCXX::LogLevel::INFO);
+    log << "Project info: units=" << myUnits.size();
+    LogMemUsage(log, "code", FileEntriesCache::GetInstance().GetMemUsage());
+    LogMemUsage(log, "options", optionsSize);
+    LogMemUsage(log, "globals", myCrossTUContext.GetMemUsage());
+    log << "\n";
+}
+
 void AnalyzerImpl::AnalyzeContext::ProcessUnit(TranslationUnitPtr& unit)
 {
     switch (myParseStage) {
@@ -256,6 +278,7 @@ void AnalyzerImpl::AnalyzeContext::ProcessUnit(TranslationUnitPtr& unit)
             }
             if (--myUnitsToProcess == 0) {
                 myCrossTUContext.InitUniqueIds();
+                LogUnitsInfo();
                 StartProcessing(HCXX::Parser::AST);
             }
             break;
@@ -298,7 +321,7 @@ void AnalyzerImpl::AnalyzeContext::AnalyzeUnit(TranslationUnitPtr& unit)
     }
     myConsumer->OnAnalysisEnd(*unit);
     HCXX::Log(HCXX::LogLevel::INFO) << "Analysis finished: " << unit->GetMainFileName() << std::endl;
-    myAnalyzer->myDfaAnalyzer->LogMemoryStatistics();
+    myAnalyzer->myDfaAnalyzer->LogAnalysisInfo();
     unit->ClearUnusedData();
 }
 

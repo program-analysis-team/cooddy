@@ -58,14 +58,14 @@
 #include <new> // for placement new
 
 /* classes used in some test cases as a custom type */
-class TwoIntsClass 
+class TwoIntsClass
 {
     public: // Needed to access variables from label files
         int intOne;
         int intTwo;
 };
 
-class OneIntClass 
+class OneIntClass
 {
     public: // Needed to access variables from label files
         int intOne;
@@ -104,7 +104,7 @@ extern "C" {
 #endif
 
 /* The variables below are declared "const", so a tool should
-   be able to identify that reads of these will always return their 
+   be able to identify that reads of these will always return their
    initialized values. */
 const int GLOBAL_CONST_TRUE = true;
 const int GLOBAL_CONST_FALSE = false;

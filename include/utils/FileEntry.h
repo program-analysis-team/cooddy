@@ -8,6 +8,7 @@
 #include <utils/IOStream.h>
 #include <utils/UniqueId.h>
 
+#include <atomic>
 #include <functional>
 #include <mutex>
 #include <string>
@@ -16,9 +17,12 @@
 
 namespace HCXX {
 
+using EntryOffset = uint32_t;
+
 struct FileEntry {
     std::string filePath;
     uint32_t fileSize = 0;
+    EntryOffset entryOffset = 0;
     std::vector<uint32_t> lineOffsets;
     std::string fileSource;
     UniqueId hash;
@@ -29,6 +33,7 @@ struct FileEntry {
 class FileEntriesCache {
 public:
     static FileEntriesCache& GetInstance();
+
     FileEntry* GetFileEntry(const std::string& sourcePath,
                             const std::function<bool(std::string&)>& sourceProvider = nullptr);
 
@@ -36,9 +41,15 @@ public:
 
     void Serialize(IOStream& stream);
 
+    uint64_t GetMemUsage() const
+    {
+        return myMemUsage;
+    }
+
 private:
     std::mutex myMutex;
     std::unordered_map<std::string, HCXX::FileEntry> myEntries;
+    std::atomic<uint64_t> myMemUsage;
 };
 
 };  // namespace HCXX

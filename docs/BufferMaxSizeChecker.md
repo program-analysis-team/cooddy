@@ -58,7 +58,7 @@ int undefined_local_memcpy_s(void * destination, size_t dest_size const void * s
 void foo() {
     int* ptr = (int*) malloc(3 * sizeof(int));
     int source[5];
-    undefined_local_memcpy(ptr, 3, source, 5); 				// <- error here 
+    undefined_local_memcpy(ptr, 3, source, 5); 				// <- error here
 }
 ```
 

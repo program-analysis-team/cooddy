@@ -20,8 +20,11 @@ enum class ExecutionResult {
     CANCEL,  // cancel execution
     REPEAT   // repeat execution of the current instruction (for example, to process the next virtual call)
 };
+
 using ExecutionCallback = std::function<ExecutionResult()>;
-using ExecutionCallbackRef = const std::function<ExecutionResult()>&;
+using ExecutionCallbackRef = const ExecutionCallback&;
+using GetCalleeNameCb = std::function<std::string(Instruction)>;
+using GetSourceInRangeCb = std::function<std::string(SourceRange)>;
 
 class FunctionBehavior {
 public:
@@ -53,6 +56,9 @@ public:
     virtual void CleanUpMapping() = 0;
 
     virtual uint32_t GetMaxInstruction() = 0;
+
+    virtual std::string GetName(Instruction instr, GetCalleeNameCb& getCalleeNameCb,
+                                GetSourceInRangeCb& getSourceInRangeCb) = 0;
 
     // create FunctionBehavior instance
     static std::unique_ptr<FunctionBehavior> Create(const Cfg& cfg);

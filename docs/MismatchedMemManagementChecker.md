@@ -14,7 +14,7 @@ When the memory management functions are mismatched, the consequences may be as 
 
 Examples
 
-**Confirmed examples.** 
+**Confirmed examples.**
 
 **attempt to delete memory, allocated by malloc**
 

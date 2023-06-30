@@ -14,13 +14,19 @@
 // LCOV_EXCL_START
 class MemoryMonitor {
 public:
-    MemoryMonitor()
+    MemoryMonitor(bool useMemMonitor)
     {
-        myMutex.lock_shared();
+        if (useMemMonitor) {
+            myMutex.lock_shared();
+            myWasLocked = true;
+        }
     }
 
     ~MemoryMonitor()
     {
+        if (!myWasLocked) {
+            return;
+        }
         myMutex.unlock_shared();
         if (myNeedResetMemory) {
             std::unique_lock lock(myMutex);
@@ -49,6 +55,7 @@ public:
     }
 
 private:
+    bool myWasLocked = false;
     static std::shared_mutex myMutex;
     static bool myNeedResetMemory;
 };

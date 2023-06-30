@@ -28,6 +28,11 @@ public:
         }
         if (IsIncompatiblePointerCast(castExpression->GetType(), typedInnerNode->GetType())) {
             holder.RegisterProblem(*this, *typedInnerNode, {{typedInnerNode->GetSourceText()}});
+        } else if (IsWarningPointerCast(castExpression->GetType(), typedInnerNode->GetType())) {
+            Problem problem;
+            problem.kind = "CAST.TO.SMALLER.PTR";
+            problem.replacements = {typedInnerNode->GetSourceText()};
+            holder.RegisterProblem(*this, *typedInnerNode, std::move(problem));
         }
     }
 
@@ -39,7 +44,15 @@ private:
         }
         return type.GetSizeInBits();
     }
-
+    bool IsWarningPointerCast(Type castExprType, Type innerExprType)
+    {
+        auto castExprTypeSize = GetPointedFinalSize(castExprType);
+        auto innerExprTypeSize = GetPointedFinalSize(innerExprType);
+        return castExprType != innerExprType && castExprTypeSize != 0 && innerExprTypeSize != 0 &&
+               !castExprType.GetPointedType().IsUnsigned() && !innerExprType.GetPointedType().IsUnsigned() &&
+               castExprType.IsPointedToConstant() == innerExprType.IsPointedToConstant() &&
+               castExprTypeSize < innerExprTypeSize;
+    }
     bool IsIncompatiblePointerCast(Type castExprType, Type innerExprType)
     {
         auto castExprTypeSize = GetPointedFinalSize(castExprType);

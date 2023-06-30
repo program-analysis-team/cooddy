@@ -76,7 +76,7 @@ For example, we have the following test-case:
 
 ```cpp
 1  void* my_malloc(size_t size);
-2   
+2  
 3  void foo() {
 4      size_t size = 0;
 5      fscanf(stdin, "%d", &size);

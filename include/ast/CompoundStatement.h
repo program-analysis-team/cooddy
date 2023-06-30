@@ -9,9 +9,9 @@
 
 namespace HCXX {
 
-class CompoundStatement : public Node {
+class CompoundStatement : public CompoundNode {
 public:
-    DECLARE_KIND(Node, Node::Kind::COMPOUND_STATEMENT);
+    DECLARE_KIND(CompoundNode, Node::Kind::COMPOUND_STATEMENT);
     DECLARE_SERIALIZE(CompoundStatement, nullptr);
 };
 

@@ -11,6 +11,7 @@
 #include <ast/UnaryExpression.h>
 #include <utils/Log.h>
 
+#include "GetNameContext.h"
 #include "PathChecker.h"
 #include "SymbolsContext.h"
 
@@ -85,7 +86,7 @@ Node::Kind FunctionBehaviorImpl::GetInstructionKind(Instruction instruction)
 
 std::unique_ptr<SolverContext> FunctionBehaviorImpl::StartExecution()
 {
-    return std::make_unique<PathChecker>(this);
+    return std::make_unique<PathChecker>(this, true);
 }
 
 void FunctionBehaviorImpl::ProcessBlockSuccessors(ExecutionContext& execCtx, const BasicBlock& block,
@@ -118,9 +119,7 @@ void FunctionBehaviorImpl::Execute(SolverContext& context, ExecutionCallbackRef 
     std::vector<SymbolsContext::Ptr> symbolsContext(myBlocks.size());
 
     auto& entrySymbols = GetSymbolsContext(symbolsContext, myBlocks.size() - 1, execCtx);
-    if (!execCtx.EnterFunction(*this, entrySymbols, myBlocks.back().GetPosition())) {
-        return;  // LCOV_EXCL_LINE
-    }
+    execCtx.EnterFunction(*this, entrySymbols, myBlocks.back().GetPosition());
 
     auto exitSymbols = GetSymbolsContext(symbolsContext, 0, execCtx);
 
@@ -195,14 +194,19 @@ ArgType FunctionBehaviorImpl::MakeArgType(const Type& type, const Node* argNode)
     return result;
 }
 
-InstructionHeader* FunctionBehaviorImpl::GetInstructionHeader(Instruction instruction)
+std::optional<Instruction> FunctionBehaviorImpl::GetInstructionOffset(Instruction instruction) const
 {
     SymbolId::ClearFlags(instruction);
     if (instruction < sizeof(InstructionHeader) || instruction >= myIntructionsSet.Count()) {
-        return nullptr;
+        return std::nullopt;
     }
-    instruction -= sizeof(InstructionHeader);
-    return myIntructionsSet.GetPtr<InstructionHeader>(&instruction);
+    return instruction - sizeof(InstructionHeader);
+}
+
+InstructionHeader* FunctionBehaviorImpl::GetInstructionHeader(Instruction instruction)
+{
+    auto offset = GetInstructionOffset(instruction);
+    return offset ? myIntructionsSet.GetPtr<InstructionHeader>(&offset.value()) : nullptr;
 }
 
 std::unique_ptr<FunctionBehavior> FunctionBehavior::Create(const Cfg& cfg)
@@ -229,4 +233,34 @@ SymbolsContext::Ptr& FunctionBehaviorImpl::GetSymbolsContext(std::vector<Symbols
         symbolsContext[position] = std::make_shared<SymbolsContext>(execCtx.CreateBoolExpr(false));
     }
     return symbolsContext[position];
+}
+
+std::string FunctionBehaviorImpl::GetName(Instruction instr, GetCalleeNameCb& getCalleeNameCb,
+                                          GetSourceInRangeCb& getSourceByRangeCb)
+{
+    auto offset = GetInstructionOffset(instr);
+    if (!offset) {
+        return {};  // LCOV_EXCL_LINE
+    }
+
+    PathChecker execCtx(this, false);
+    std::vector<SymbolsContext::Ptr> symbolsContext(2);
+    auto& entrySymbols = GetSymbolsContext(symbolsContext, 1, execCtx);
+    execCtx.EnterFunction(*this, entrySymbols, 0);
+
+    InstructionTree instrTree;
+    InstructionProcessor::ExecutionContext ctx{myIntructionsSet, *offset, execCtx};
+    ExecutionCallback cb = [&]() {
+        instrTree.emplace_back(InstructionTreeNode{ctx->GetCurInstruction(), ctx.curDepth});
+        return ExecutionResult::OK;
+    };
+    ctx.callback = cb;
+
+    ctx.Execute();
+    auto& exitSymbols = GetSymbolsContext(symbolsContext, 0, execCtx);
+    execCtx.LeaveFunction(exitSymbols);
+
+    std::reverse(instrTree.begin(), instrTree.end());
+    GetNameContext nameCtx(instrTree, *this, getCalleeNameCb, getSourceByRangeCb);
+    return nameCtx.GetName();
 }

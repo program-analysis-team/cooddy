@@ -13,5 +13,3 @@ class Bar {
         return foo.field.length();
     }
 }
-
-

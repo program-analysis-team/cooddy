@@ -1004,44 +1004,78 @@ TEST_F(AnalyzerToolTest, OutReporterSmokeTest)
 
 TEST_F(AnalyzerToolTest, ParseErrorLogTest)
 {
-    std::string parseLog("parse_errors.csv");
-    TempFile result(EnvironmentUtils::GetSelfExecutableDir() / parseLog);
+    TempFile result("parse_errors.csv");
+    TempFile resultHtml("cooddy_result.html");
+
     auto file = TEST_SUITE_PATH("analyzerToolTest").append("test_parse_error_log.cpp").string();
     Workspace workspace(std::move(file));
     auto parser = Parser::Create();
     parser->statistics.maxFatalErrorCount = 10;
     auto analyzer = Analyzer::Create(*parser, workspace);
-    ProblemsList problemsList(workspace);
+    CompositeReporter problemsList({"html"}, workspace);
+    problemsList.Init(*parser, current_path().string(), Reporter::HTML_REPORT | Reporter::PARSE_ERRORS_IN_REPORT);
+    problemsList.SetParseErrorsPath(".");
     TestErrorCheckConsumer testConsumer;
     analyzer->Analyze(workspace.GetCompilerOptions(), problemsList, testConsumer);
-    ASSERT_FALSE(parser->statistics.compilationIssues.empty());
-    ASSERT_EQ(parser->statistics.compilationIssues.size(), 2);
+    ASSERT_EQ(parser->statistics.compilationIssues.size(), 1);
+    ASSERT_EQ(parser->statistics.compilationIssues.begin()->second.errors.size(), 2);
     ASSERT_TRUE(testConsumer.HasToolError());
-    SaveParserErrorLog(*parser, parseLog);
     ASSERT_FALSE(result.IsEmpty());
-    parser->statistics.compilationIssues.clear();
-    SaveParserErrorLog(*parser, parseLog);
 }
 
 TEST_F(AnalyzerToolTest, ParseErrorLogTest2)
 {
     auto dirPath = TEST_SUITE_PATH("analyzerToolTest") / "AnalyzerToolTest.ParseErrorLogTest2";
     TempDir dir(dirPath);
-    TempFile result(dirPath / "parse_errors.csv");
+    TempFile result(dirPath / "parse_errors.json");
+
     create_directory(dirPath);
     auto file = TEST_SUITE_PATH("analyzerToolTest").append("test_parse_error_log.cpp").string();
     Workspace workspace(std::move(file));
     auto parser = Parser::Create();
     parser->statistics.maxFatalErrorCount = 10;
     auto analyzer = Analyzer::Create(*parser, workspace);
-    ProblemsList problemsList(workspace);
+    OutReporter problemsList(workspace);
+    problemsList.Init(*parser, current_path().string(), Reporter::PARSE_ERRORS_IN_REPORT);
+    problemsList.SetParseErrorsPath(result);
     TestErrorCheckConsumer testConsumer;
     analyzer->Analyze(workspace.GetCompilerOptions(), problemsList, testConsumer);
     ASSERT_TRUE(testConsumer.HasToolError());
-    ASSERT_FALSE(parser->statistics.compilationIssues.empty());
-    ASSERT_EQ(parser->statistics.compilationIssues.size(), 2);
-    SaveParserErrorLog(*parser, dirPath.string());
+    ASSERT_EQ(parser->statistics.compilationIssues.size(), 1);
+    ASSERT_EQ(parser->statistics.compilationIssues.begin()->second.errors.size(), 2);
     ASSERT_FALSE(result.IsEmpty());
+}
+
+TEST_F(AnalyzerToolTest, ParseErrorLogTest3)
+{
+    struct TestReporter : public Reporter {
+        TestReporter(Workspace& workspace) : Reporter(workspace, ""){};
+
+        void Flush() override
+        {
+            for (auto& issue : GetParseInfo().compilationIssues) {
+                if (StrUtils::EndsWith(issue.unitFile, "boo.cpp")) {
+                    ASSERT_EQ(issue.reason, "compiler not found");
+                } else if (StrUtils::EndsWith(issue.unitFile, "foo.cpp")) {
+                    ASSERT_EQ(issue.reason, "header file not found");
+                } else if (StrUtils::EndsWith(issue.unitFile, "goo.c")) {
+                    ASSERT_EQ(issue.reason, "compilation issue");
+                } else if (StrUtils::EndsWith(issue.unitFile, "wrong_file.c")) {
+                    ASSERT_EQ(issue.reason, "source file not found");
+                }
+            }
+        }
+    };
+
+    Workspace workspace(TEST_SUITE_PATH("analyzerToolTest").append("parseErrors").string());
+    auto parser = Parser::Create();
+    parser->statistics.maxFatalErrorCount = 10;
+    auto analyzer = Analyzer::Create(*parser, workspace);
+    TestReporter problemsList(workspace);
+    problemsList.Init(*parser, ".", Reporter::PARSE_ERRORS_IN_REPORT);
+    TestErrorCheckConsumer testConsumer;
+    analyzer->Analyze(workspace.GetCompilerOptions(), problemsList, testConsumer);
+    ASSERT_EQ(parser->statistics.compilationIssues.size(), 4);
 }
 
 TEST_F(AnalyzerToolTest, EntryFuncTest)
@@ -1106,4 +1140,52 @@ TEST_F(AnalyzerToolTest, UnknownArgLongDashTest)
     ASSERT_TRUE(myTestErrorCheckConsumer.ContainsToolError("Unexpected positional argument ignored"));
     ASSERT_TRUE(myTestErrorCheckConsumer.ContainsToolError("this argument appears to start with a long dash"));
     myTestErrorCheckConsumer.ClearToolError();
+}
+
+TEST_F(AnalyzerToolTest, NonExistingReportPathTest)
+{
+    std::filesystem::remove_all(current_path().string() + "/non");
+    {
+        string path = current_path().string() + "/non/existing/report/path/";
+        TempDir dir(path + "html_traces");
+        TempFile result(path + "cooddy_result.csv");
+        ASSERT_FALSE(std::filesystem::exists(result));
+        ASSERT_FALSE(std::filesystem::exists(dir));
+        auto file = TEST_SUITE_PATH("analyzerToolTest").append("test_trace.cpp").string();
+        Workspace workspace(std::move(file));
+        auto parser = Parser::Create();
+        parser->statistics.maxFatalErrorCount = 10;
+        auto analyzer = Analyzer::Create(*parser, workspace);
+        CompositeReporter problemsList({"csv-html"}, workspace);
+        problemsList.Init(*parser, path, Reporter::HTML_REPORT);
+        TestErrorCheckConsumer testConsumer;
+        analyzer->Analyze(workspace.GetCompilerOptions(), problemsList, testConsumer);
+        ASSERT_TRUE(std::filesystem::exists(result));
+        ASSERT_TRUE(std::filesystem::exists(dir));
+    }
+    std::filesystem::remove_all(current_path().string() + "/non");
+}
+
+TEST_F(AnalyzerToolTest, SensiInfoVarsTest)
+{
+    TempFile result("cooddy_result.csv");
+    {
+        auto file = TEST_SUITE_PATH("analyzerToolTest").append("SensiInfoTest.cpp").string();
+        WorkspaceOptions ops;
+        Workspace workspace(std::move(file), {}, ops, "cwe");
+        workspace.SetConfiguration("SensitiveDataExposureChecker", jsoncpp::to_string(SensitiveDataSettings{true}));
+
+        CsvReporter problemsList(workspace);
+        problemsList.Init(TestBaseClass::GetParser(), current_path().string());
+        TestAnalyze(workspace, problemsList);
+    }
+    auto content = result.GetText();
+    ASSERT_TRUE(
+        content.find(
+            "10,5,c/c++,NotAnIssue,,IssuesFound,SENSI_INFO char* pwd,Annotated by macro as sensitive data source") !=
+        std::string::npos);
+    ASSERT_TRUE(
+        content.find(
+            "8,5,c/c++,NotAnIssue,,NoIssues,SENSI_INFO char* usr = cc,Annotated by macro as sensitive data source") !=
+        std::string::npos);
 }

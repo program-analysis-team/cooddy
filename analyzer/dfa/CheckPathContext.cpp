@@ -196,6 +196,18 @@ void CheckPathContext::ExecuteSolver(PathsMapping& paths)
     });
 }
 
+void CheckPathContext::SetUndefCallResult(FunctionContext& callee)
+{
+    if (!callee.IsClassMember() || myContext->GetCallArgsCount() != 1) {
+        return;
+    }
+    auto& offset = myUndefCallsMap[&callee];
+    if (offset == 0) {
+        offset = myContext->CreateUniqueOffset().GetRawValue();
+    }
+    myContext->CopyCallArg(0, -1, VirtualOffset(offset));
+}
+
 bool CheckPathContext::IsOutArgSource(PathPtr& path)
 {
     auto callInstr = myContext->GetCurCallInstruction();
@@ -219,6 +231,16 @@ bool CheckPathContext::IsOutArgSource(PathPtr& path)
             OutArgSource{callInstr, myRecursionDepth, path, annotations.front().GetMemoryOffset()});
     }
     return hasAnnotation;
+}
+
+VirtualOffset CheckPathContext::GetCallArgOffset(Annotation& annotation)
+{
+    if (auto callee = myCurFuncCtx->GetCallee(annotation.GetInstruction()); callee != nullptr) {
+        if (auto innerAnno = callee->CollectAnnotations(annotation); !innerAnno.empty()) {
+            return innerAnno[0].GetMemoryOffset();
+        }
+    }
+    return VirtualOffset{};  // LCOV_EXCL_LINE
 }
 
 void CheckPathContext::ProcessOutArgSources(Instruction callInstr)
@@ -251,6 +273,9 @@ void CheckPathContext::ProcessSourceExpr(PathPtr& path, ExprId exprId)
 void CheckPathContext::ProcessPath(PathPtr& path)
 {
     auto& pathctx = path->context;
+    if (path->annotation.IsSourceRange() && path->annotation.GetArgPos() != Annotation::ArgInfo::MAX_ARG_POS) {
+        path->function = path->owner.GetCallee(myContext->GetCurCallInstruction());
+    }
     if (path->annotation.GetKind() == pathctx.path.sourceKind) {
         pathctx.isSourceFound = true;
         if (!IsOutArgSource(path)) {
@@ -261,11 +286,12 @@ void CheckPathContext::ProcessPath(PathPtr& path)
     auto exprId = myContext->GetExprId();
     if (!path->annotation.IsSourceRange()) {
         exprId = myContext->GetExprId(ExprLocation::CALL_ARG, path->annotation.GetArgPos() - 1);
+        if (auto offset = GetCallArgOffset(path->annotation); !offset.IsSourceObject()) {
+            myContext->AddOffset(exprId, offset);
+        }
         if (exprId == UNDEF_EXPR_ID) {
             return;  // LCOV_EXCL_LINE
         }
-    } else if (path->annotation.GetArgPos() != Annotation::ArgInfo::MAX_ARG_POS) {
-        path->sinkFunction = path->owner.GetCallee(myContext->GetCurCallInstruction());
     }
     DfaChecker::SinkExecInfo sinkInfo{exprId, path->annotation, *myContext, pathctx.path, pathctx.sources};
     if (pathctx.path.checker->OnSinkExecuted(sinkInfo)) {
@@ -280,7 +306,7 @@ bool CheckPathContext::ShouldProcessPath(PathPtr& path)
     bool defResult = path->annotation.IsSourceRange() &&
                      (path->annotation.GetKind() != suspPath.sinkKind || path->context.canAddSink ||
                       (suspPath.checkPathFlags & CheckPathParams::SINK_CAN_BE_BEFORE_SOURCE));
-    return suspPath.checker->ShouldProcessAnnotation(path->annotation, defResult, myCurFuncCtx);
+    return suspPath.checker->ShouldProcessAnnotation(path->annotation, defResult, path->context.isSourceFound);
 }
 
 bool CheckPathContext::CollectCalleePaths(FunctionContext& calleeCtx, PathPtr& path, PathsMapping& calleePaths)
@@ -351,6 +377,9 @@ FunctionContext* CheckPathContext::ProcessCallInstruction(uint32_t& indexOfOverr
         if (indexOfOverridden != 0 && indexOfOverridden <= callee->GetOverriddenContexts().size()) {
             callee = static_cast<FunctionContext*>(callee->GetOverriddenContexts()[indexOfOverridden - 1]);
         }
+    }
+    if (callee->GetBehavior() == nullptr) {
+        SetUndefCallResult(*callee);
     }
     ProcessArgsAnnotations(callee);
     InitCallInfo(*callee);

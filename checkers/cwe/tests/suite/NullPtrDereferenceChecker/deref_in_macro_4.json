@@ -1,0 +1,7 @@
+{
+  "kind": "NULL.DEREF",
+  "description": "Dereferencing of \"a->dst\" which can be null",
+  "line": 13,
+  "pos": 17,
+  "positive": true
+}

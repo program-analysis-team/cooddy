@@ -67,6 +67,7 @@ public:
         CALL_CALLBACK(myCondition, callback);
         CALL_CALLBACK(myCondVarDeclStmt, callback);
         CALL_CALLBACK(myThenPart, callback);
+        CALL_CALLBACK(myElseKeyword, callback);
         CALL_CALLBACK(myElsePart, callback);
         CALL_CALLBACK(myInitPart, callback);
     }

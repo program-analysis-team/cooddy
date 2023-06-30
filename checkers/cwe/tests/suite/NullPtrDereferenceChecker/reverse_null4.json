@@ -1,0 +1,7 @@
+{
+  "kind": "NULL.DEREF",
+  "description": "Dereferencing of \"q\" which can be null",
+  "positive": true,
+  "line": 2,
+  "pos": 6
+}

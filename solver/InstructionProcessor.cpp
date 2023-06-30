@@ -5,6 +5,7 @@
 #include "InstructionProcessor.h"
 
 #include "FunctionBehaviorImpl.h"
+#include "GetNameContext.h"
 #include "ast/ParenExpression.h"
 #include "processors/ArraySubscriptInstruction.h"
 #include "processors/AsmInstruction.h"
@@ -81,6 +82,7 @@ z3::expr InstructionProcessor::ExecutionContext::Execute(SymbolId* symbolId)
         Get<uint32_t>();
     }
 
+    ++curDepth;
     SymbolId resultSymbol(context.GetStackPos(), instr);
     z3::expr result = processor.Execute(*this, resultSymbol);
 
@@ -96,6 +98,7 @@ z3::expr InstructionProcessor::ExecutionContext::Execute(SymbolId* symbolId)
     }
     processor.PostExecute(*this, result);
     context.ClearOperands();
+    --curDepth;
 
     if (callbackResult != ExecutionResult::OK) {
         throw ExecutionException(callbackResult);
@@ -153,7 +156,7 @@ InstructionProcessor& InstructionProcessor::GetProcessor(Node::Kind kind)
         BIND(ARRAY_SUBSCRIPT_EXPRESSION, ArraySubscriptInstruction)
         BIND(CAST_EXPRESSION, CastInstruction)
         BIND(TEMPORARY_EXPRESSION, ProxyInstruction)
-        BIND(PAREN_EXPRESSION, ProxyInstruction)
+        BIND(PAREN_EXPRESSION, ParenInstruction)
         BIND(RETURN_STATEMENT, ReturnInstruction)
         BIND(DECL_STATEMENT, DeclInstruction)
         BIND(MEMBER_EXPRESSION, MemberExprInstruction)
@@ -172,3 +175,8 @@ InstructionProcessor& InstructionProcessor::GetProcessor(Node::Kind kind)
     static InstructionProcessor defProcessor;
     return defProcessor;
 }
+
+std::string InstructionProcessor::GetName(GetNameContext& nameContext) const
+{
+    return nameContext.GetName();
+};

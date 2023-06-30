@@ -58,6 +58,13 @@ public:
         }
         return myStream.is_open();
     }
+    std::string GetText()
+    {
+        if (!myStream.is_open()) {
+            myStream.open(myFileName);
+        }
+        return std::string((std::istreambuf_iterator<char>(myStream)), std::istreambuf_iterator<char>());
+    }
     std::string GetLine(int n = 1)
     {
         if (!myStream.is_open()) {
@@ -94,6 +101,18 @@ public:
     ~TempDir()
     {
         std::filesystem::remove_all(myDirName);
+    }
+    operator std::string() const
+    {
+        return myDirName;
+    }
+    operator std::string_view() const
+    {
+        return myDirName;
+    }
+    operator std::filesystem::path() const
+    {
+        return myDirName;
     }
 
 private:

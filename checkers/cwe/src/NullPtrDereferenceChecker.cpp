@@ -77,7 +77,9 @@ public:
         }
         auto callee = state.GetFuncState().GetContext().GetCalleeContext(state.GetInstruction());
         if (callee != nullptr && callee->GetOverriddenContexts().size() <= 1) {
-            state.Annotate(myInitNullKind);
+            Annotation annotation{myInitNullKind, Annotation::ArgInfo(0), state.GetInstruction(),
+                                  state.GetMemoryOffset()};
+            state.Annotate(std::move(annotation), *state.GetNode());
         }
     }
 
@@ -162,7 +164,8 @@ public:
         if (state.HasAnnotation((myZeroMemorySourceKind)) && !state.GetNode()->GetType().IsArray()) {
             auto derefAnnotations = state.GetDeclNestedAnnotations(myDerefKind, state.GetMemoryOffset());
             if (derefAnnotations.size() > 0) {
-                SuspiciousPath path(*this, myDerefKind, myZeroMemorySourceKind);
+                SuspiciousPath path(*this, myDerefKind, myZeroMemorySourceKind,
+                                    StrLocales::GetStringLocale("NULL_POINTER"));
                 path.sinkAnnotations = std::move(derefAnnotations);
                 state.AddSuspiciousPath(std::move(path));
             }
@@ -231,8 +234,6 @@ public:
 
     bool OnReportProblem(ProblemInfo& problemInfo) override
     {
-        problemInfo.replacements.push_back(GetVarName(problemInfo.trace.back()));
-
         auto kind = problemInfo.trace.front().annotation.GetKind();
         if (kind == myUntrustedSourceKind) {
             problemInfo.kind = "NULL.UNTRUSTED.DEREF";
@@ -255,6 +256,7 @@ public:
                 }
             }
         }
+        problemInfo.replacements.push_back(GetVarName(problemInfo.trace.back()));
         return true;
     }
 };

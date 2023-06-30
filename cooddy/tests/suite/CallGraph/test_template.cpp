@@ -16,4 +16,3 @@ void func6()
     MyClass<5>().func5();
 }
 };  // namespace MyNamespace
-

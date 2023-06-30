@@ -283,7 +283,7 @@ std::unique_ptr<clang::ASTUnit> ParserImpl::CreateASTUnit(HCXX::TranslationUnit&
 
 bool ParserImpl::ParseAST(HCXX::TranslationUnit& unit, Consumer& consumer, Context* context)
 {
-    for (auto& excl : {".S", ".s", "CMakeCCompilerId.c", "CMakeCXXCompilerId.cpp"}) {
+    for (auto& excl : {".S", ".s", "CMakeCCompilerId.c", "CMakeCXXCompilerId.cpp", "CMakeCCompilerABI.c"}) {
         if (HCXX::StrUtils::EndsWith(unit.GetMainFileName(), excl)) {
             ++statistics.skippedCount;
             return false;

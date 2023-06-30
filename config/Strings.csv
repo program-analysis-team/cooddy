@@ -1,4 +1,4 @@
-﻿ID;EN;CN
+ID;EN;CN
 ERROR_SIGNAL;Error: signal %1% (%2%);
 MSG_FROM_UNCOVERED;msg from uncovered, subExpr kind: %1%;
 INCORRECT_VALUE_FOR_ENUM;Incorrect value for the enum: [%1%];

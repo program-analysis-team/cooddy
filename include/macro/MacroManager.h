@@ -13,6 +13,8 @@ namespace HCXX {
 
 class MacroManager {
 public:
+    using LocToDeclArray = std::vector<std::pair<Location, Location>>;
+
     // COODDY_SUPPRESS ParameterNumberChecker
     void AddMacro(std::string name, SourceRange declRange, SourceRange nameRange, bool isSystem, unsigned numParams);
 
@@ -22,13 +24,25 @@ public:
 
     std::vector<const MacroExpansion*> GetMacroExpansionsInRange(const char* macroName, const SourceRange& range) const;
 
+    bool IsMacroExpansionRange(SourceRange sourceRange) const;
+
+    const LocToDeclArray& GetExpansions() const
+    {
+        return myExpansions;
+    }
+
 protected:
     ~MacroManager() = default;
 
+    void Init();
     void Clear();
+
+    virtual Location AddMacroDeclaration(const std::vector<SourceRange>& macroDecls) = 0;
 
 private:
     std::unordered_map<std::string, Macro> myMacros;  // key is macro name
+    std::unordered_map<Location, std::vector<SourceRange>> myExpansionsMap;
+    LocToDeclArray myExpansions;
 };
 
 };  // namespace HCXX

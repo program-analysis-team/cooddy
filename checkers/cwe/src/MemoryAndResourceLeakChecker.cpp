@@ -65,7 +65,7 @@ public:
             return;
         }
     }
-    void TryAddSuspiciousPath(DfaState& state, Annotation::Kind sink, Annotation::Kind source, const string& sourceName,
+    void TryAddSuspiciousPath(DfaState& state, Annotation::Kind sink, Annotation::Kind source, const char* sourceName,
                               uint32_t flags = 0)
     {
         if (state.HasAnnotation(source)) {
@@ -98,26 +98,13 @@ public:
         return true;
     }
 
-    bool ShouldProcessAnnotation(const Annotation& annotation, bool defResult,
-                                 const DfaFunctionContext* funcContext) override
+    bool ShouldProcessAnnotation(const Annotation& annotation, bool defResult, bool sourceFound) override
     {
         if (annotation.GetKind() != myFreeSinkKind && annotation.GetKind() != myUnlockResourceKind &&
             annotation.GetKind() != myFreeDescriptorKind) {
             return defResult;
         }
-        // add FreeSink annotation as sink point when it is passed as is as parameter (see arithmetic_in_return_fp)
-        if (!annotation.IsSourceRange() && !annotation.IsRetValueSource()) {
-            auto calleeContext = funcContext->GetCalleeContext(annotation.GetInstruction());
-            if (calleeContext != nullptr) {
-                auto innerAnnos = calleeContext->CollectAnnotations(annotation);
-                for (auto& anno : innerAnnos) {
-                    if (anno.IsSourceRange() && anno.IsSourceObject()) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return annotation.IsSourceRange();
+        return sourceFound;
     }
 
     bool OnReportProblem(ProblemInfo& problemInfo) override
@@ -149,7 +136,6 @@ private:
                 return true;
             }
         }
-
         for (auto& [anno, node] : state.GetAnnotationSources(myPassedToUndefFuncKind)) {
             if (!anno.IsSourceRange()) {
                 return true;

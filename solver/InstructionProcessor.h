@@ -15,6 +15,7 @@
 using namespace HCXX;
 class FunctionBehaviorImpl;
 class ExecutionContext;
+class GetNameContext;
 
 struct InstructionHeader {
     uint32_t kind : 7;
@@ -59,6 +60,7 @@ public:
         ExecutionCallback callback;
         Instruction instruction = 0;
         std::vector<std::pair<SymbolId, int32_t>> postIncs;
+        uint32_t curDepth = 0;
 
         z3::expr Execute(SymbolId* symbolId = nullptr);
 
@@ -88,6 +90,8 @@ public:
     virtual void PostExecute(ExecutionContext& context, z3::expr& result) {}
 
     static InstructionProcessor& GetProcessor(Node::Kind kind);
+
+    virtual std::string GetName(GetNameContext& nameContext) const;
 };
 
 #endif  // COODDY_ANALYZER_SOURCE_SOLVER_INSTRUCTIONPROCESSOR_H_

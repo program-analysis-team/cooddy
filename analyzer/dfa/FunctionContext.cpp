@@ -17,10 +17,12 @@ FunctionContext::FunctionContext(DataFlowAnalyzer& analyzer, const RecordsTree& 
     : myAnalyzer(analyzer), myRecordsTree(recordsTree), mySignatureRef(signature)
 {
     ++myAnalyzer.functionsCount;
+    myAnalyzer.functionsMemorySize += sizeof(FunctionContext) + mySignatureRef.capacity();
 }
 
 FunctionContext::~FunctionContext()
 {
+    myAnalyzer.functionsMemorySize -= sizeof(FunctionContext) + mySignatureRef.capacity();
     --myAnalyzer.functionsCount;
 }
 
@@ -57,7 +59,6 @@ void FunctionContext::Attach(TranslationUnitPtr& unit, std::shared_ptr<Cfg> cfg)
     if (cfg != nullptr) {
         myBehavior = FunctionBehavior::Create(*cfg);
         ++myAnalyzer.pendingFunctionsCount;
-        myAnalyzer.pendingMemorySize += cfg->GetMemorySize();
         myAnalyzer.functionsMemorySize += cfg->GetMemorySize() + myBehavior->GetMaxInstruction();
     }
     myIsAttached = true;
@@ -68,6 +69,7 @@ void FunctionContext::AddCallee(Instruction calleeInstr, FunctionContext& callee
     if (calleeInstr == 0) {
         return;
     }
+    myAnalyzer.functionsMemorySize += sizeof(std::pair<Instruction, CalleeRef>);
     myCallees.emplace(calleeInstr, CalleeRef{overriddenIndex, &calleeCtx});
     if (!calleeCtx.IsUndefined()) {
         calleeCtx.myCallers.emplace_back(this);
@@ -280,7 +282,6 @@ void FunctionContext::CleanUp()
         myBehavior->CleanUpMapping();
     }
     if (myCfg != nullptr) {
-        myAnalyzer.pendingMemorySize -= myCfg->GetMemorySize();
         myAnalyzer.functionsMemorySize -= myCfg->GetMemorySize();
         --myAnalyzer.pendingFunctionsCount;
         myCfg.reset();
@@ -325,6 +326,7 @@ void FunctionContext::SortAnnotations()
         for (auto& a : it) {
             myHasConditions |= (a.GetKind() == myAnalyzer.conditionKind) || (a.GetKind() == myAnalyzer.resultKind);
         }
+        myAnalyzer.functionsMemorySize += it.capacity() * sizeof(Annotation);
     }
 }
 
@@ -490,8 +492,16 @@ std::string FunctionContext::GetArgName(Instruction argInstr, uint32_t argPos) c
 std::string FunctionContext::GetVarName(Instruction instr) const
 {
     auto range = GetSourceRange(instr);
-    if (range.IsValid() && !myUnit->IsMacroExpansionRange(range)) {
-        return myUnit->GetSourceInRange(range);
+    if (!range.IsValid()) {
+        return {};  // LCOV_EXCL_LINE
     }
-    return "";
+    if (myUnit->IsMacroExpansionRange(range)) {
+        GetCalleeNameCb getCalleeNameCb = [this](Instruction instruction) {
+            auto funcCtx = GetCallee(instruction);
+            return funcCtx ? funcCtx->GetFQN() : "";
+        };
+        GetSourceInRangeCb getSourceByRangeCb = [this](SourceRange range) { return myUnit->GetSourceInRange(range); };
+        return myBehavior->GetName(instr, getCalleeNameCb, getSourceByRangeCb);
+    }
+    return myUnit->GetSourceInRange(range);
 }

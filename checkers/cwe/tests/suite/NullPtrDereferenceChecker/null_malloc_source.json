@@ -1,0 +1,8 @@
+{
+  "kind": "NULL.DEREF",
+  "description": "Dereferencing of \"p\" which can be null",
+  "line": 6,
+  "pos": 13,
+  "source": "malloc",
+  "positive": true
+}

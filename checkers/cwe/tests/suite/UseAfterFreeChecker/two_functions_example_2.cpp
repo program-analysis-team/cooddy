@@ -18,4 +18,3 @@ int foo ()
     free(a);
     return b;
 }
-

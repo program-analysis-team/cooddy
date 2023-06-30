@@ -5,18 +5,25 @@
 #ifndef COODDY_ANALYZER_SOURCE_SOLVER_PROCESSORS_PROXYINSTRUCTION_H_
 #define COODDY_ANALYZER_SOURCE_SOLVER_PROCESSORS_PROXYINSTRUCTION_H_
 
-#include <ast/CastExpression.h>
+#include <ast/TemporaryExpression.h>
 
 namespace Processor {
 
 class ProxyInstruction : public InstructionProcessor {
     void Compile(const Node& node, CompileContext& context) override
     {
-        context.Compile(node.GetChild());
+        context.Compile(static_cast<const TemporaryExpression*>(&node)->GetSubExpr());
     }
     z3::expr Execute(ExecutionContext& context, SymbolId& symbolId) override
     {
         return context.Execute(&symbolId);
+    }
+};
+
+class ParenInstruction : public ProxyInstruction {
+    std::string GetName(GetNameContext& nameContext) const override
+    {
+        return "(" + nameContext.GetName() + ")";
     }
 };
 

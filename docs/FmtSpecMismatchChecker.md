@@ -112,7 +112,7 @@ Pointer-related type mismatches between a format specifier and an argument occur
 #include <stdio.h>
 void foo(const char* name, int age) {
     // By mistakenly passing age as the first argument instead of name, programmer caused
-    // a memory access at value of age, probably causing a segmentation fault. 
+    // a memory access at value of age, probably causing a segmentation fault.
     //                         ↓
     printf("Value at %s: %d", age, age);
 }

@@ -1,5 +1,5 @@
 /* header file to define functions in io.c.  Not named io.h
-   because that name is already taken by a system header on 
+   because that name is already taken by a system header on
    Windows */
 
 #ifndef _STD_TESTCASE_IO_H

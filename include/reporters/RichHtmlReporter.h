@@ -43,6 +43,7 @@ private:
     void EmbedExpansion(const TraceNode& it, CodeSnippet& snippet, const SourceRange& codeRange,
                         const SourceRange& descriptionRange, const string& description);
     void UpdateDescriptor();
+    void GetCompilationIssues();
 };
 }  // namespace HCXX
 

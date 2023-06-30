@@ -9,7 +9,8 @@
 namespace HCXX {
 class CastExpression : public TypedNode {
 public:
-    DECLARE_ENUM(TypeKind, CSTYLE_CAST, STATIC_CAST, CONST_CAST, DYNAMIC_CAST, REINTERPRET_CAST, IMPLICIT_CAST);
+    DECLARE_ENUM(TypeKind, CSTYLE_CAST, STATIC_CAST, CONST_CAST, DYNAMIC_CAST, REINTERPRET_CAST, IMPLICIT_CAST,
+                 FUNCTIONAL_CAST);
 
     // To get description of each kind, see clang/AST/OperationKinds.def
     DECLARE_ENUM(Kind, DEPENDENT, BIT_CAST, LVALUE_BIT_CAST, LVALUE_TO_RVALUE_BIT_CAST, LVALUE_TO_RVALUE, NO_OP,
@@ -116,6 +117,15 @@ public:
         auto castExpression = CompareAndCast<CastExpression>(comparedNode);
         return castExpression != nullptr && GetCastTypeKind() == castExpression->GetCastTypeKind();
     }
+    // LCOV_EXCL_START
+    std::string Dump() const override
+    {
+        return Node::Dump() + ", CastKind: " + KindToCStr(GetCastKind()) +
+               ", CastTypeKind: " + TypeKindToCStr(GetCastTypeKind()) +
+               ", fromBits: " + std::to_string(GetCastedExpression()->GetType().GetSizeInBits()) +
+               ", toBits: " + std::to_string(GetType().GetSizeInBits());
+    }
+    // LCOV_EXCL_STOP
 
 private:
     Kind myCastKind = Kind::UNKNOWN;

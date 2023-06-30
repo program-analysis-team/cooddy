@@ -1,0 +1,5 @@
+{
+  "description": "Cast of pointer &b to a smaller type may cause an issues",
+  "kind": "CAST.TO.SMALLER.PTR",
+  "positive": false
+}

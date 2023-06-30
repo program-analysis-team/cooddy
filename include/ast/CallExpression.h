@@ -19,7 +19,7 @@ public:
     {}
 
     DECLARE_KIND(TypedNode, Node::Kind::CALL_EXPRESSION);
-    DECLARE_SERIALIZE(CallExpression, myStubDeclNode << myCallee << myDecl << myArguments);
+    DECLARE_SERIALIZE(CallExpression, myCallee << myDecl << myArguments);
 
     const Node* GetCallee() const
     {

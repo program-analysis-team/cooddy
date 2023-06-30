@@ -97,7 +97,7 @@ To detect cases with these function user has to annotate them in .annotations.js
 ```json
 {
   "custom_alloc_func(custom_alloc_func)": [["AllocSource::1"], []],
-  "custom_dealloc_func(custom_dealloc_func)": [[], ["FreeSink::1"]] 
+  "custom_dealloc_func(custom_dealloc_func)": [[], ["FreeSink::1"]]
 }
 ```
 
@@ -117,7 +117,7 @@ To detect cases with these function user has to annotate them in .annotations.js
 ```json
 {
   "custom_open(custom_open)": [[], ["AllocDescriptor::4"]],
-  "custom_close(custom_close)": [[], ["FreeDescriptor::4"]] 
+  "custom_close(custom_close)": [[], ["FreeDescriptor::4"]]
 }
 ```
 
@@ -137,7 +137,7 @@ To detect cases with these function user has to annotate them in .annotations.js
 ```json
 {
   "custom_lock(custom_lock)": [[], ["LockResource::5"]],
-  "custom_unlock(custom_unlock)": [[], ["UnlockResource::5"]] 
+  "custom_unlock(custom_unlock)": [[], ["UnlockResource::5"]]
 }
 ```
 

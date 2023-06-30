@@ -1,0 +1,7 @@
+{
+  "kind": "NULL.DEREF",
+  "description": "Dereferencing of \"(GetSome())\" which can be null",
+  "line": 10,
+  "pos": 14,
+  "positive": true
+}

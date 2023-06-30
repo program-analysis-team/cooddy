@@ -1,0 +1,5 @@
+{
+  "description": "Possible integer truncation",
+  "kind": "INT.TRUNC",
+  "positive": false
+}

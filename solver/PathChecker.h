@@ -15,10 +15,12 @@ using PathSources = std::vector<ExprId>;
 
 class PathChecker : public ExecutionContext {
 public:
-    explicit PathChecker(FunctionBehaviorImpl* owner)
-        : ExecutionContext(owner), mySolver(myContext, z3::solver::simple()), myConstraints(myTrueExpr)
+    explicit PathChecker(FunctionBehaviorImpl* owner, bool useMemMonitor)
+        : ExecutionContext(owner, useMemMonitor), mySolver(myContext, z3::solver::simple()), myConstraints(myTrueExpr)
     {
-        myMemMonitor.Check(mySolver);
+        if (useMemMonitor) {
+            myMemMonitor.Check(mySolver);
+        }
     }
     ~PathChecker() = default;
 

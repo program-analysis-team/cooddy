@@ -65,6 +65,7 @@
 struct IUnknown;
 #include <Windows.h>
 #include <libloaderapi.h>
+#include <psapi.h>
 #include <shellapi.h>
 #endif
 
@@ -304,6 +305,29 @@ tcb::span<const char* const> Argv()
 {
     return g_argv;
 }
+
+#ifdef _WIN32
+uint64_t GetProcessMemoryUsage()
+{
+    PROCESS_MEMORY_COUNTERS pmc;
+    GetProcessMemoryInfo(GetCurrentProcess(), &pmc, sizeof(pmc));
+    return pmc.WorkingSetSize;
+}
+#else
+uint64_t GetProcessMemoryUsage()
+{
+    uint64_t totalMemSize = 0;
+    std::ifstream memInfo("/proc/self/status");
+    for (std::string token; memInfo >> token; memInfo.ignore(std::numeric_limits<std::streamsize>::max(), '\n')) {
+        if (token == "VmSize:") {
+            memInfo >> totalMemSize;
+            totalMemSize *= 1024;
+            break;
+        }
+    }
+    return totalMemSize;
+}
+#endif
 // LCOV_EXCL_STOP
 
 }  // namespace EnvironmentUtils
@@ -313,6 +337,14 @@ uint32_t GetMaxThreadsCount()
 {
     return std::thread::hardware_concurrency();
 }
+
+uint64_t GetProcessMemoryUsage()
+{
+    PROCESS_MEMORY_COUNTERS pmc;
+    GetProcessMemoryInfo(GetCurrentProcess(), &pmc, sizeof(pmc));
+    return pmc.WorkingSetSize;
+}
+
 #else
 /*
  * Returns the number of concurrent threads supported by the OS environment.
@@ -340,6 +372,7 @@ uint32_t GetMaxThreadsCount()
 
     return std::min(maxThreads, uint32_t(std::min(totalMemSize, memLimitSize) / INT32_MAX) + 1);
 }
+
 #endif
 
 }  // namespace HCXX

@@ -1,6 +1,6 @@
 class Foo {
     {
-       field1 = "abc"; 
+       field1 = "abc";
     }
     String field1;
 };

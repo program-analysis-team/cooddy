@@ -79,8 +79,10 @@ function SetupResizer() {
     w = w > window.innerWidth - 30 ? '400px' : (w+'px');
     sidebar.style.flexBasis = w;
 
-    const compilationIssues = ge("cooddyCompilationIssuesContainer");
-    compilationIssues.style.flexBasis = (window.innerWidth - 30) + 'px';
+    const compilationIssuesSidebar = ge("compilationIssuesSidebar");
+    compilationIssuesSidebar.style.width='550px';
+    const compilationIssuesRightContainer = ge("compilationIssuesRightContainer");
+    compilationIssuesRightContainer.style.flexBasis = window.innerWidth - '505px';
 
     document.querySelector("#resizer").addEventListener("mousedown", (event) => {
         function resize(e) {

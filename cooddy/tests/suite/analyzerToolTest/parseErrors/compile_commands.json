@@ -1,0 +1,22 @@
+[
+  {
+    "directory": ".",
+    "command": "wrong_compiler boo.cpp",
+    "file": "boo.cpp"
+  },
+  {
+    "directory": ".",
+    "command": "g++ foo.cpp",
+    "file": "foo.cpp"
+  },
+  {
+    "directory": ".",
+    "command": "gcc goo.c",
+    "file": "goo.c"
+  },
+  {
+    "directory": ".",
+    "command": "gcc wrong_file.c",
+    "file": "wrong_file.c"
+  }
+]

@@ -9,9 +9,9 @@
 
 namespace HCXX {
 
-class LambdaExpression : public HCXX::Node {
+class LambdaExpression : public HCXX::CompoundNode {
 public:
-    DECLARE_KIND(Node, Node::Kind::LAMBDA_EXPRESSION);
+    DECLARE_KIND(CompoundNode, Node::Kind::LAMBDA_EXPRESSION);
     DECLARE_SERIALIZE(LambdaExpression, nullptr);
 };
 

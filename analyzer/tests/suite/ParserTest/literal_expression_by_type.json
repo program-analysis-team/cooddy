@@ -1,6 +1,6 @@
 {
   "description": "Literal expression is found",
-  "expression": "//LiteralExpression[@LiteralType='Double']",
+  "expression": "//LiteralExpression[@LiteralType='Float']",
   "file_path": "literal_expression.cpp",
   "matches": [
     {

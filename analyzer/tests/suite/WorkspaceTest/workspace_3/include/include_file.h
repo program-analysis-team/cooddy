@@ -1,2 +1,1 @@
 #define NULLPTR_123
-

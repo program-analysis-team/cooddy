@@ -9,9 +9,9 @@
 
 namespace HCXX {
 // LCOV_EXCL_START
-class UndefinedNode : public Node {
+class UndefinedNode : public CompoundNode {
 public:
-    DECLARE_KIND(Node, Node::Kind::UNDEFINED);
+    DECLARE_KIND(CompoundNode, Node::Kind::UNDEFINED);
     DECLARE_SERIALIZE(UndefinedNode, nullptr);
 };
 // LCOV_EXCL_STOP

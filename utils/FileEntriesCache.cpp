@@ -65,6 +65,12 @@ FileEntry* FileEntriesCache::GetFileEntry(const std::string& sourcePath,
         newp = entry.fileSource.find('\n', p);
         entry.lineOffsets.emplace_back(p);
     }
+    static uint64_t curOffset = 1;
+    entry.entryOffset = curOffset;
+    curOffset += entry.fileSize;
+
+    myMemUsage += sizeof(FileEntry) + entry.fileSource.capacity() + entry.filePath.capacity() +
+                  entry.lineOffsets.capacity() * sizeof(uint32_t);
     return &entry;
 }
 

@@ -42,6 +42,7 @@ CompositeReporter::~CompositeReporter()
 void CompositeReporter::Flush()
 {
     myThreadPool.WaitAll();
+    Reporter::Flush();
     for (auto& rep : myReporters) {
         rep->Flush();
     }

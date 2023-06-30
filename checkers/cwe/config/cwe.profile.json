@@ -108,10 +108,11 @@
       "enabled": true
     },
     "IntegerOverflowChecker": {
-      "id": "INT.OVERFLOW",
-      "languages" : ["c", "c++"],
-      "severity": "Error",
-      "enabled": true
+      "inspections" : [
+        {"id": "INT.OVERFLOW", "severity": "Error", "enabled": true},
+        {"id": "INT.TRUNC", "severity": "Error", "enabled": true}
+      ],
+      "languages" : ["c", "c++"]
     },
     "WrongStringIncrementChecker": {
       "id": "STRING.OVERFLOW",
@@ -142,7 +143,14 @@
       }
     },
     "IncompatiblePointerTypeChecker": {
-      "id": "INCOMPATIBLE.PTR",
+      "languages" : ["c", "c++"],
+      "inspections" : [
+        {"id": "INCOMPATIBLE.PTR", "severity": "Error", "enabled": true},
+        {"id": "CAST.TO.SMALLER.PTR", "severity": "Warning", "enabled": true}
+      ]
+    },
+    "NullAfterFreeChecker": {
+      "id": "USE.AFTER.FREE.SET.NULL",
       "languages" : ["c", "c++"],
       "severity": "Error",
       "enabled": true
