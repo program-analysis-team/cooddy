@@ -13,11 +13,19 @@ ln -sf /usr/bin/gcc-8 /usr/bin/gcc && ln -sf /usr/bin/g++-8 /usr/bin/g++
 ln -sf /usr/bin/gcc-8 /usr/bin/cc && ln -sf /usr/bin/g++-8 /usr/bin/c++
 ```
 
+With latest Ubuntu versions, `Package gcc-8 has no installation candidate` may be output upon installation. 
+In this case one may want to update `/etc/apt/sources.list` by executing the following command:
+
+```bash
+echo "deb [arch=amd64] http://archive.ubuntu.com/ubuntu focal main universe" | sudo tee -a /etc/apt/sources.list
+```
+and rerun `update` and `install` commands again.
+
 Install **cmake**, at least version 3.25.0.
 
 ```bash
 wget https://github.com/Kitware/CMake/archive/refs/tags/v3.25.0.zip
-unzip v3.25.0.zip && cd v3.25.0.zip
+unzip v3.25.0.zip && cd CMake-3.25.0
 mkdir build && cd build
 ../configure
 make -j <your_num_of_cores>
@@ -90,6 +98,8 @@ cmake -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_PROJECTS="clang" -DLLVM_ENABLE_TE
 make -j <your_num_of_cores> && make install
 export LLVM_CMAKE=<path_to_clang_installation>lib/cmake
 ```
+
+Note that this may take a while.
 
 After that you can start build a Cooddy project.
 
